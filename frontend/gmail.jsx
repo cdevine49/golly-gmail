@@ -17,7 +17,7 @@ var Gmail = React.createClass({
 document.addEventListener('DOMContentLoaded', function () {
   ReactDOM.render(
     <Gmail />,
-    document.getElementById('root');
+    document.getElementById('root')
   );
 });
 
