@@ -6,11 +6,8 @@
 
 ## Minimum Viable Product
 
-FresherNote is a web application inspired by Evernote built using Ruby on Rails
-and React.js. FresherNote allows users to:
-
-<!-- This is a Markdown checklist. Use it to keep track of your
-progress. Put an x between the brackets for a checkmark: [x] -->
+gollygmail is a gmail clone built using Ruby on Rails and React
+It allows users to:
 
 - [ ] Create an account
 - [ ] Log in / Log out
@@ -42,37 +39,35 @@ progress. Put an x between the brackets for a checkmark: [x] -->
 
 **Objective:** Functioning rails project with Authentication
 
-- [ ] create new project
 - [ ] create `User` model
 - [ ] create `Sessions` controller
 - [ ] authentication
-- [ ] user signup/sign in pages
+- [ ] functional user signup/sign in pages
 - [ ] On sing in, users can sign out
 
 ### Phase 2:  Mailer, API, and basic APIUtil (1.5 days)
 
-**Objective:** Emails can be created, read, edited and destroyed through
-the API.
+**Objective:** Emails can be created, read, edited and destroyed
 
 - [ ] create `Email` mailer
 - [ ] seed the database
-- [ ] CRUD API for emails ('MailerController')
+- [ ] CRUD API for emails
 - [ ] jBuilder views for emails
-- [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
 
 ### Phase 3: Flux Architecture and Router (1.5 days)
 
-**Objective:** Emails can be created, read, edited and destroyed with the
-user interface.
+**Objective:** Basic inbox set up
 
 - [ ] setup the flux loop with skeleton files
 - [ ] setup React Router
-- implement each inbox component, building out the flux loop as needed.
+- implement each inbox component, building out the flux loop as needed
   - [ ] `EmailIndex`
   - [ ] `EmailPreview`
   - [ ] `EmailForm`
-- [ ] setup mailer so emails can be sent out and received.
+- [ ] Email form sends emails
+- [ ] Received emails are added to the inbox as previews
+- [ ] Previews can be clicked on to view in full
 
 ### Phase 4: Start Styling (0.5 days)
 
