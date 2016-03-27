@@ -3,18 +3,18 @@
 ## Rails
 ### Models
 * User
-* Note
+* Email
 
 ### Controllers
 * UsersController (create, new)
 * SessionsController (create, new, destroy)
-* Api::NotesController (create, destroy, index, show, update)
+* Api::MailerController (create, destroy, index, show)
 
 ### Views
 * users/new.html.erb
 * session/new.html.erb
-* notes/index.json.jbuilder
-* notes/show.json.jbuilder
+* email/index.json.jbuilder
+* email/show.json.jbuilder
 
 ## Flux
 ### Views (React Components)

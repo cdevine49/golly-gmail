@@ -1,6 +1,6 @@
 # FresherNote
 
-[Heroku link][http://gollygmail.herokuapp.com/] 
+[Heroku link][http://gollygmail.herokuapp.com/]
 
 [heroku]: http://www.herokuapp.com
 
@@ -14,10 +14,14 @@ progress. Put an x between the brackets for a checkmark: [x] -->
 
 - [ ] Create an account
 - [ ] Log in / Log out
-- [ ] Create, read, edit, and delete notes
-- [ ] Organize notes within Notebooks
-- [ ] Tag notes with multiple tags
-- [ ] Apply complex styling to notes while editing
+- [ ] Send / Receive emails
+- [ ] Mark emails as Read / Unread
+- [ ] Archive / Delete / Recover emails
+- [ ] Label notes with multiple labels
+- [ ] Star emails to mark as important / special
+- [ ] Users can configure inbox based on labels and stars
+- [ ] Search through emails
+
 
 ## Design Docs
 * [View Wireframes][views]
@@ -40,36 +44,35 @@ progress. Put an x between the brackets for a checkmark: [x] -->
 
 - [ ] create new project
 - [ ] create `User` model
+- [ ] create `Sessions` controller
 - [ ] authentication
-- [ ] user signup/signin pages
-- [ ] blank landing page after signin
+- [ ] user signup/sign in pages
+- [ ] On sing in, users can sign out
 
-### Phase 2: Notes Model, API, and basic APIUtil (1.5 days)
+### Phase 2:  Mailer, API, and basic APIUtil (1.5 days)
 
-**Objective:** Notes can be created, read, edited and destroyed through
+**Objective:** Emails can be created, read, edited and destroyed through
 the API.
 
-- [ ] create `Note` model
-- [ ] seed the database with a small amount of test data
-- [ ] CRUD API for notes (`NotesController`)
-- [ ] jBuilder views for notes
+- [ ] create `Email` mailer
+- [ ] seed the database
+- [ ] CRUD API for emails ('MailerController')
+- [ ] jBuilder views for emails
 - [ ] setup Webpack & Flux scaffold
 - [ ] setup `APIUtil` to interact with the API
-- [ ] test out API interaction in the console.
 
 ### Phase 3: Flux Architecture and Router (1.5 days)
 
-**Objective:** Notes can be created, read, edited and destroyed with the
+**Objective:** Emails can be created, read, edited and destroyed with the
 user interface.
 
 - [ ] setup the flux loop with skeleton files
 - [ ] setup React Router
-- implement each note component, building out the flux loop as needed.
-  - [ ] `NotesIndex`
-  - [ ] `NoteIndexItem`
-  - [ ] `NoteForm`
-- [ ] save Notes to the DB when the form loses focus or is left idle
-  after editing.
+- implement each inbox component, building out the flux loop as needed.
+  - [ ] `EmailIndex`
+  - [ ] `EmailPreview`
+  - [ ] `EmailForm`
+- [ ] setup mailer so emails can be sent out and received.
 
 ### Phase 4: Start Styling (0.5 days)
 
@@ -79,55 +82,41 @@ user interface.
 - [ ] position elements on the page
 - [ ] add basic colors & styles
 
-### Phase 5: Notebooks (1 day)
+### Phase 5: EmailIndex Extension (1 day)
 
-**Objective:** Notes belong to Notebooks, and can be viewed by notebook.
+**Objective:** Emails belong to one or more subindexes, and can be viewed accordingly.
 
-- [ ] create `Notebook` model
-- build out API, Flux loop, and components for:
-  - [ ] Notebook CRUD
-  - [ ] adding notes requires a notebook
-  - [ ] moving notes to a different notebook
-  - [ ] viewing notes by notebook
+- [ ] Emails default to inbox, outbox, spam, or trash based on to: line
+- [ ] Emails can be marked as important and/or starred
+- [ ] Index View is dependent on selected attributes
+  - [ ] Inbox/Outbox CRUD
+  - [ ] emails are added to folder based on being sent or received
+  - [ ] emails can be moved to different folders where appropriate
 - Use CSS to style new views
 
-Phase 3 adds organization to the Notes. Notes belong to a Notebook,
-which has its own `Index` view.
+### Phase 6: Labels (2 days)
 
-### Phase 6: Tags (1.5 days)
+**Objective:** Emails can have labels and be searched for and filtered by labels.
 
-**Objective:** Notes can be tagged with multiple tags, and tags are searchable.
-
-- [ ] create `Tag` model and join table
+- [ ] create `Label` polymorphic joins table
 - build out API, Flux loop, and components for:
-  - [ ] fetching tags for notebook
-  - [ ] adding tags to notebook
-  - [ ] creating tags while adding to notebooks
-  - [ ] searching notebooks by tag
-- [ ] Style new elements
+  - [ ] fetching labels for email
+  - [ ] adding labels to emails
+  - [ ] creating labels
+  - [ ] searching and filtering emails by label
 
-### Phase 7: Allow Complex Styling in Notes (0.5 days)
+### Phase 7: Styling Cleanup and Seeding (1 day)
 
-**objective:** Enable complex styling of notes.
-
-- [ ] Integrate `react-quill` (based on Quill.js).
-- [ ] Use Rails helpers to sanitize HTML before rendering.
-- [ ] Style the new Quill elements.
-
-### Phase 8: Styling Cleanup and Seeding (1 day)
-
-**objective:** Make the site feel more cohesive and awesome.
+**objective:** Make the site feel more cohesive and clean.
 
 - [ ] Get feedback on my UI from others
 - [ ] Refactor HTML classes & CSS rules
 - [ ] Add modals, transitions, and other styling flourishes.
 
 ### Bonus Features (TBD)
-- [ ] Search through notes for blocks of text
-- [ ] Pagination / infinite scroll for Notes Index
-- [ ] Set reminders on notes
-- [ ] Changelogs for Notes
-- [ ] Multiple sessions
+- [ ] Add contacts and contact subgroups
+- [ ] Allow users to configure inbox
+- [ ] Add calendar and tasks
 
 [phase-one]: ./docs/phases/phase1.md
 [phase-two]: ./docs/phases/phase2.md

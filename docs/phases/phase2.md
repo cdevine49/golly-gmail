@@ -9,21 +9,21 @@
 
 ## Flux
 ### Views (React Components)
-* NotesIndex
-  - NotesIndexItem
-* NoteForm
+* EmailIndex
+  - EmailPreview
+* EmailForm
 
 ### Stores
-* Note
+* Email
 
 ### Actions
 * ApiActions.receiveAllNotes -> triggered by ApiUtil
 * ApiActions.receiveSingleNote
 * ApiActions.deleteNote
 * NoteActions.fetchAllNotes -> triggers ApiUtil
-* NoteActions.fetchSingleNote 
+* NoteActions.fetchSingleNote
 * NoteActions.createNote
-* NoteActions.editNote 
+* NoteActions.editNote
 * NoteActions.destroyNote
 
 ### ApiUtil
