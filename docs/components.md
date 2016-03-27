@@ -9,9 +9,8 @@
     * `EmailReplyForm`
     * `EmailForwardForm`
   * `Header`
-    * `Search`
-      * `MatchingEmailAuthors`
-      * `MatchingEmailContent`
+    * `SearchIndex`
+      * `SearchIndexItem`
     * `Notifications`
     * `AccountInfo`
   * `TopNav`

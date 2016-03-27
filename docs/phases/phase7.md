@@ -1,4 +1,4 @@
-# Phase 4: EmailIndex Extension (1 day)
+# Phase 7: Search (1 days)
 
 ## Rails
 
@@ -10,15 +10,16 @@
 
 ## Flux
 ### Views (React Components)
-  * EmailIndex
-
+  * Header
+    * Search
 
 ### Stores
+  * labelStore
 
 ### Actions
-
+  * receiveAllSearchMatches
 
 ### ApiUtil
-
+* fetchAllSearchMatches
 
 ## Gems/Libraries

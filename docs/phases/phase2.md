@@ -1,38 +1,29 @@
-# Phase 2: Flux Architecture and Note CRUD (2 days)
+# Phase 2: Mailer, API, and basic APIUtil (0.5 days)
 
 ## Rails
 ### Models
+* Email
+
+### Mailer
 
 ### Controllers
+* EmailsController
 
 ### Views
+* email/index.json.jbuilder
+* email/show.json.jbuilder
 
 ## Flux
 ### Views (React Components)
-* EmailIndex
-  - EmailPreview
-* EmailForm
+
 
 ### Stores
 * Email
 
 ### Actions
-* ApiActions.receiveAllNotes -> triggered by ApiUtil
-* ApiActions.receiveSingleNote
-* ApiActions.deleteNote
-* NoteActions.fetchAllNotes -> triggers ApiUtil
-* NoteActions.fetchSingleNote
-* NoteActions.createNote
-* NoteActions.editNote
-* NoteActions.destroyNote
+* EmailActions.receiveAllEmails
+* EmailActions.receiveSingleEmail
 
 ### ApiUtil
-* ApiUtil.fetchAllNotes
-* ApiUtil.fetchSingleNote
-* ApiUtil.createNote
-* ApiUtil.editNote
-* ApiUtil.destroyNote
-
-## Gems/Libraries
-* Flux Dispatcher (npm)
-* Twitter Bootstrap
+* ApiUtil.fetchAllEmails
+* ApiUtil.fetchSingleEmail
