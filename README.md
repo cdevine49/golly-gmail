@@ -45,12 +45,11 @@ It allows users to:
 - [ ] functional user signup/sign in pages
 - [ ] On sing in, users can sign out
 
-### Phase 2:  Mailer, API, and basic APIUtil (1.5 days)
+### Phase 2:  Mailer, API, and basic APIUtil (0.5 days)
 
 **Objective:** Emails can be created, read, edited and destroyed
 
 - [ ] create `Email` mailer
-- [ ] seed the database
 - [ ] CRUD API for emails
 - [ ] jBuilder views for emails
 - [ ] setup `APIUtil` to interact with the API
@@ -69,15 +68,8 @@ It allows users to:
 - [ ] Received emails are added to the inbox as previews
 - [ ] Previews can be clicked on to view in full
 
-### Phase 4: Start Styling (0.5 days)
 
-**Objective:** Existing pages (including singup/signin) will look good.
-
-- [ ] create a basic style guide
-- [ ] position elements on the page
-- [ ] add basic colors & styles
-
-### Phase 5: EmailIndex Extension (1 day)
+### Phase 4: EmailIndex Extension (1 day)
 
 **Objective:** Emails belong to one or more subindexes, and can be viewed accordingly.
 
@@ -87,20 +79,36 @@ It allows users to:
   - [ ] Inbox/Outbox CRUD
   - [ ] emails are added to folder based on being sent or received
   - [ ] emails can be moved to different folders where appropriate
-- Use CSS to style new views
+
+### Phase 5: Styling (0.5 days)
+
+**Objective:** Existing pages (including singup/signin) will look good.
+
+- [ ] position elements on the page
+- [ ] add basic colors & styles
 
 ### Phase 6: Labels (2 days)
 
-**Objective:** Emails can have labels and be searched for and filtered by labels.
+**Objective:** Emails can have labels and be filtered by labels.
 
 - [ ] create `Label` polymorphic joins table
 - build out API, Flux loop, and components for:
   - [ ] fetching labels for email
   - [ ] adding labels to emails
   - [ ] creating labels
-  - [ ] searching and filtering emails by label
 
-### Phase 7: Styling Cleanup and Seeding (1 day)
+### Phase 7: Search (1 days)
+
+**Objective:** Emails can be searched
+
+- build out API, Flux loop, and components for:
+  - [ ] searching emails be contents and sender
+  - [ ] search emails by labels
+  - [ ] results display SearchIndex
+  - [ ] SearchIndexItems can be selected and viewed
+
+
+### Phase 8: Styling Cleanup and Seeding (1 day)
 
 **objective:** Make the site feel more cohesive and clean.
 
@@ -112,6 +120,8 @@ It allows users to:
 - [ ] Add contacts and contact subgroups
 - [ ] Allow users to configure inbox
 - [ ] Add calendar and tasks
+- [ ] Notifications
+- [ ] Chat
 
 [phase-one]: ./docs/phases/phase1.md
 [phase-two]: ./docs/phases/phase2.md
