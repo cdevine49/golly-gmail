@@ -114,7 +114,7 @@ It allows users to:
 
 - [ ] Get feedback on my UI from others
 - [ ] Refactor HTML classes & CSS rules
-- [ ] Add modals, transitions, and other styling flourishes.
+- [ ] Further approximate gmail's minimalist design
 
 ### Bonus Features (TBD)
 - [ ] Add contacts and contact subgroups

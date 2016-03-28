@@ -3,6 +3,7 @@
 * `App`
   * `EmailIndex`
     * `Label`
+      * `LabelForm`
     * `EmailPreview`
     * `EmailForm`
   * `Email`
