@@ -14,10 +14,10 @@
     * Search
 
 ### Stores
-  * labelStore
+  * searchStore
 
 ### Actions
-  * receiveAllSearchMatches
+  * receiveSearchParams
 
 ### ApiUtil
 * fetchAllSearchMatches
