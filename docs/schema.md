@@ -19,6 +19,14 @@ column name | data type | details
 id          | integer   | not null, primary key
 name        | string    | not null
 
+## emailtype
+
+column name | data type | details
+------------|-----------|-----------------------
+id          | integer   | not null, primary key
+email_id    | integer   | not null, foreign key
+label_id    | integer   | not null, foreign key
+
 ## users
 column name     | data type | details
 ----------------|-----------|-----------------------
