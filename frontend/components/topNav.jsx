@@ -5,12 +5,29 @@ var MoreOptions = require('./moreOptions');
 
 var TopNav = React.createClass({
 
+  getInitialState: function() {
+    return {
+      anySelected: false
+    };
+  },
+
   render: function() {
     return (
       <ul>
-        <SelectorDropDown />
-        <Refresh />
-        <MoreOptions />
+        { this.state.anySelected ?
+        [<SelectorDropDown />,
+        <Refresh />,
+        <MoreOptions />] :
+        [
+          <SelectorDropDown />,
+          <MoreOptions />,
+          <Archive />,
+          <ReportSpam />,
+          <Trash />,
+          <MoveTo />,
+          <Labels />,
+        ]
+        }
       </ul>
     );
   }
