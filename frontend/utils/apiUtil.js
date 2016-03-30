@@ -1,5 +1,22 @@
 
 ApiUtil = {
+
+  // fetchUsername: function (username) {
+  //   $.ajax({
+  //     type: 'GET',
+  //     url: 'api/users',
+  //     datatype: 'json',
+  //     data: { username: username },
+  //     success: function (username) {
+  //       SignInActions.receiveUserName(username);
+  //     },
+  //     error: function () {
+  //       console.log('ApiUtil#fetchUsername error');
+  //     }
+  //   });
+  // },
+
+
   fetchEmails: function () {
     $.ajax({
       type: 'GET',
