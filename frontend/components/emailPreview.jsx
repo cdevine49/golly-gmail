@@ -6,8 +6,8 @@ var EmailPreviews = React.createClass({
   render: function() {
     return (
       <ul>
-        <li>(this.props.email.subject)</li>
-        <li>(this.props.email.body)</li>
+        <li>Subject: {this.props.email.subject}</li>
+        <li>Body: {this.props.email.body}</li>
       </ul>
     );
   }

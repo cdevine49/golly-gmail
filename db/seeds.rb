@@ -5,3 +5,38 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+Email.destroy_all
+Email.create(
+  subject: "The first email seed",
+  body: "what subject says",
+  to: 2,
+  from: 1
+)
+
+Email.create(
+  subject: "I hope this works",
+  body: "it probably wont though",
+  to: 1,
+  from: 3
+)
+
+Email.create(
+  subject: "Another test email",
+  body: "at this point, Im running out of ideas",
+  to: 4,
+  from: 2
+)
+
+Email.create(
+  subject: "Cant stop me now",
+  body: "Im having such a good time",
+  to: 2,
+  from: 2
+)
+
+Email.create(
+  subject: "Where do we go?",
+  body: "where do we go now?",
+  to: 1,
+  from: 2
+)

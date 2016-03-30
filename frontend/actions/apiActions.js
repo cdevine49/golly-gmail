@@ -1,12 +1,13 @@
 var AppDispatcher = require('../dispatcher/dispatcher');
-var EmailConstants = require('../constants/EmailConstants');
+var EmailConstants = require('../constants/emailConstants');
 
 ApiActions = {
   receiveAllEmails: function(emails) {
-    AppDispatcher.dispatch({
+    var action = {
       actionType: EmailConstants.EMAILS_RECEIVED,
       emails: emails
-    });
+    };
+    AppDispatcher.dispatch(action);
   }
 };
 

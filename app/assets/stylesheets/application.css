@@ -75,3 +75,15 @@ button, article, footer, small {
 .yellow {
   color: yellow;
 }
+
+/* Dropdown list */
+
+.hidden {
+  display: none
+}
+
+.shown {
+  display: block;
+}
+
+li:

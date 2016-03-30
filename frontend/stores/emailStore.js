@@ -1,6 +1,6 @@
-var Store = require('flux.utils').Store;
+var Store = require('flux/utils').Store;
 var AppDispatcher = require('../dispatcher/dispatcher');
-var EmailConstants = require('../constants/EmailConstants');
+var EmailConstants = require('../constants/emailConstants');
 
 var _emails = [];
 

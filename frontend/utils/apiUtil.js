@@ -1,3 +1,4 @@
+var ApiActions = require('../actions/apiActions');
 
 ApiUtil = {
 
@@ -17,13 +18,13 @@ ApiUtil = {
   // },
 
 
-  fetchEmails: function () {
+  fetchAllEmails: function () {
     $.ajax({
       type: 'GET',
       url: 'api/emails',
       datatype: 'json',
       success: function (emails) {
-        EmailActions.receiveAllEmails(emails);
+        ApiActions.receiveAllEmails(emails);
       },
       error: function () {
         console.log('ApiUtil#fetchEmails error');
