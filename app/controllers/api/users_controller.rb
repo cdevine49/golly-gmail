@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class Api::UsersController < ApplicationController
   before_filter :require_no_current_user!, :only => [:new, :create]
 
   def new
@@ -14,6 +14,14 @@ class UsersController < ApplicationController
 
     end
   end
+
+  # def index
+  #   if params[:username]
+  #     redirect_to '/#password'
+  #   else
+  #     redirect_to '/#identifier'
+  #   end
+  # end
 
   private
 
