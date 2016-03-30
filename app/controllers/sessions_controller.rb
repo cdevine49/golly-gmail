@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
-  before_action :require_signed_out!, only: [:new, :create]
-  before_action :require_signed_in!, only: [:destroy]
+  before_action :require_logged_out!, only: [:new, :create]
+  before_action :require_logged_in!, only: [:destroy]
 
   def new
     render :new
@@ -14,7 +14,7 @@ class SessionsController < ApplicationController
 
     if @user
       login!(@user)
-      redirect_to 
+      redirect_to :root
     else
       flash.now[:errors] = ["Invalid username or password."]
       render :new
