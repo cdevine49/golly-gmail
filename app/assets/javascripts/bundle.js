@@ -31829,13 +31829,17 @@
 	  displayName: 'TopNav',
 	
 	
+	  getInitialState: function () {
+	    return {
+	      anySelected: false
+	    };
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'ul',
 	      null,
-	      React.createElement(SelectorDropDown, null),
-	      React.createElement(Refresh, null),
-	      React.createElement(MoreOptions, null)
+	      this.state.anySelected ? [React.createElement(SelectorDropDown, null), React.createElement(Refresh, null), React.createElement(MoreOptions, null)] : [React.createElement(SelectorDropDown, null), React.createElement(MoreOptions, null), React.createElement(Archive, null), React.createElement(ReportSpam, null), React.createElement(Trash, null), React.createElement(MoveTo, null), React.createElement(Labels, null)]
 	    );
 	  }
 	
@@ -31863,13 +31867,14 @@
 	    this.setState({ listVisible: !this.state.listVisible });
 	  },
 	
+	  // Add a click event to the li with className="menu" to toggle listVisible
 	  render: function () {
 	    return React.createElement(
 	      "li",
-	      null,
+	      { className: "menu" },
 	      React.createElement(
 	        "ul",
-	        { "class": this.state.listVisible ? "dropdown" : "hidden" },
+	        { className: this.state.listVisible ? "dropdown" : "hidden" },
 	        React.createElement(
 	          "li",
 	          null,
@@ -31934,20 +31939,63 @@
 	var PropTypes = React.PropTypes;
 	
 	var MoreOptions = React.createClass({
-	  displayName: 'MoreOptions',
+	  displayName: "MoreOptions",
 	
 	  getInitialState: function () {
 	    return {
-	      listVisible: false
+	      listVisible: false,
+	      anySelected: false
 	    };
 	  },
 	
-	  _onClick: function () {
+	  _onBoxClick: function () {
 	    this.setState({ listVisible: !this.state.listVisible });
 	  },
 	
+	  // Add a click event to the li with className="menu" to toggle listVisible
+	
 	  render: function () {
-	    return React.createElement('li', null);
+	    return React.createElement(
+	      "li",
+	      { className: "menu" },
+	      React.createElement(
+	        "ul",
+	        { className: this.state.anySelected ? "dropdown" : "hidden" },
+	        this.state.listVisible ? [React.createElement(
+	          "li",
+	          null,
+	          "Mark as read"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Mark as not important"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Add to tasks"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Add star"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Filter messages like these"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Mute"
+	        )] : [React.createElement(
+	          "li",
+	          null,
+	          "Mark all as read"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Select messages to see more actions"
+	        )]
+	      )
+	    );
 	  }
 	
 	});

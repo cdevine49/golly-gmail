@@ -12,10 +12,11 @@ var SelectorDropdown = React.createClass({
     this.setState({listVisible: !this.state.listVisible});
   },
 
+// Add a click event to the li with className="menu" to toggle listVisible
   render: function() {
     return (
-      <li>
-        <ul class= { this.state.listVisible ? "dropdown" : "hidden" }>
+      <li className="menu">
+        <ul className={ this.state.listVisible ? "dropdown" : "hidden" }>
           <li>All</li>
           <li>None</li>
           <li>Read</li>
