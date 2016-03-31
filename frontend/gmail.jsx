@@ -9,7 +9,7 @@ var IndexRoute = ReactRouter.IndexRoute;
 
 var Auth = require('./utils/auth');
 
-var Home = require('./components/home');
+var Mailbox = require('./components/mailbox');
 var Identifier = require('./components/identifier');
 
 var App = React.createClass({
@@ -36,7 +36,7 @@ var App = React.createClass({
 
 var routes = (
   <Route path='/' component={App}>
-    <IndexRoute component={Home} />
+    <IndexRoute component={Mailbox} />
   </Route>
 );
 // <Route path='identifier' component={Identifier}></Route>

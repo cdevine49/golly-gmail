@@ -39,7 +39,8 @@ Email.create(
   subject: "Where do we go?",
   body: "where do we go now?",
   to: 1,
-  from: 2
+  from: 2,
+  mailbox_id: 2
 )
 
 Mailbox.create(name: "Inbox")

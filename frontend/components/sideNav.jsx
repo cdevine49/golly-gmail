@@ -18,14 +18,18 @@ var SideNav = React.createClass({
   },
 
   render: function() {
+    var mailbox_list = this.props.mailboxes.map(function(mailbox){
+      return <li key={mailbox.id}
+        onClick={this.props.onMailboxClick.bind(null, mailbox.id)}>
+        {mailbox.name}
+      </li>;
+    }.bind(this));
+
     return (
       <nav className='sidenav'>
         <button className='compose-button' onClick={this._openComposeForm}>Compose</button>
         <ul className='sidenav-links'>
-          <li><a href="#" onClick={this.handleClick}>Inbox</a><span class='unread-count'>{this.unreadCount}</span></li>
-          <li><a href="#" onClick={this.handleClick}>Starred</a></li>
-          <li><a href="#" onClick={this.handleClick}>Important</a></li>
-          <li><a href="#" onClick={this.handleClick}>Drafts</a></li>
+          { mailbox_list }
         </ul>
 
         <ComposeForm />

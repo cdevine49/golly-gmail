@@ -17,6 +17,20 @@ ApiUtil = {
   //   });
   // },
 
+  fetchAllMailboxes: function() {
+    $.ajax({
+      type: 'GET',
+      url: 'api/mailboxes',
+      datatype: 'json',
+      success: function (mailboxes) {
+        ApiActions.receiveAllMailboxes(mailboxes);
+      },
+      error: function () {
+        console.log('ApiUtil#fetchMailboxes error');
+      }
+    });
+  },
+
 
   fetchAllEmails: function () {
     $.ajax({
