@@ -66,11 +66,6 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      React.createElement(
-	        'h1',
-	        null,
-	        'Welcome'
-	      ),
 	      this.props.children
 	    );
 	  }
@@ -24789,7 +24784,7 @@
 
 	var React = __webpack_require__(1);
 	var TopNav = __webpack_require__(218);
-	// var SideNav = require('./sideNav.jsx');
+	var SideNav = __webpack_require__(256);
 	// var Labels = require('./labels.jsx');
 	var Inbox = __webpack_require__(222);
 	
@@ -24802,7 +24797,12 @@
 	      'div',
 	      null,
 	      React.createElement(TopNav, null),
-	      React.createElement(Inbox, null)
+	      React.createElement(
+	        'main',
+	        { className: 'content group' },
+	        React.createElement(SideNav, null),
+	        React.createElement(Inbox, null)
+	      )
 	    );
 	  }
 	
@@ -24840,15 +24840,24 @@
 	  render: function () {
 	    return React.createElement(
 	      'header',
-	      null,
+	      { className: 'header group' },
 	      React.createElement(
 	        'nav',
-	        null,
-	        React.createElement(Search, null),
+	        { className: 'topnav-above group' },
+	        React.createElement(
+	          'h1',
+	          { className: 'topnav-logo' },
+	          'GollyGmail'
+	        ),
+	        React.createElement(Search, null)
+	      ),
+	      React.createElement(
+	        'nav',
+	        { className: 'topnav-below group' },
 	        React.createElement(
 	          'ul',
-	          null,
-	          this.state.anySelected ? [React.createElement(SelectorDropDown, null), React.createElement(Refresh, null), React.createElement(MoreOptions, null)] : [React.createElement(SelectorDropDown, null), React.createElement(MoreOptions, null), React.createElement(Archive, null), React.createElement(ReportSpam, null), React.createElement(Trash, null), React.createElement(MoveTo, null), React.createElement(Labels, null)]
+	          { className: 'topnav-buttons' },
+	          !this.state.anySelected ? [React.createElement(SelectorDropDown, null), React.createElement(Refresh, null), React.createElement(MoreOptions, null)] : [React.createElement(SelectorDropDown, null), React.createElement(MoreOptions, null), React.createElement(Archive, null), React.createElement(ReportSpam, null), React.createElement(Trash, null), React.createElement(MoveTo, null), React.createElement(Labels, null)]
 	        )
 	      )
 	    );
@@ -24865,7 +24874,7 @@
 	var React = __webpack_require__(1);
 	
 	var SelectorDropdown = React.createClass({
-	  displayName: "SelectorDropdown",
+	  displayName: 'SelectorDropdown',
 	
 	
 	  getInitialState: function () {
@@ -24874,47 +24883,52 @@
 	    };
 	  },
 	
-	  _onBoxClick: function () {
+	  _onBoxClick: function (e) {
 	    this.setState({ listVisible: !this.state.listVisible });
 	  },
 	
 	  // Add a click event to the li with className="menu" to toggle listVisible
 	  render: function () {
 	    return React.createElement(
-	      "li",
-	      { className: "menu" },
+	      'li',
+	      null,
 	      React.createElement(
-	        "ul",
+	        'button',
+	        { className: 'selector', onClick: this.onBoxClick },
+	        'SD'
+	      ),
+	      React.createElement(
+	        'ul',
 	        { className: this.state.listVisible ? "dropdown" : "hidden" },
 	        React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "All"
+	          'All'
 	        ),
 	        React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "None"
+	          'None'
 	        ),
 	        React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Read"
+	          'Read'
 	        ),
 	        React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Unread"
+	          'Unread'
 	        ),
 	        React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Starred"
+	          'Starred'
 	        ),
 	        React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Unstarred"
+	          'Unstarred'
 	        )
 	      )
 	    );
@@ -24935,7 +24949,15 @@
 	
 	
 	  render: function () {
-	    return React.createElement('li', null);
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'button',
+	        { className: 'refresh' },
+	        'Refresh'
+	      )
+	    );
 	  }
 	
 	});
@@ -24947,10 +24969,9 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var PropTypes = React.PropTypes;
 	
 	var MoreOptions = React.createClass({
-	  displayName: "MoreOptions",
+	  displayName: 'MoreOptions',
 	
 	  getInitialState: function () {
 	    return {
@@ -24967,43 +24988,48 @@
 	
 	  render: function () {
 	    return React.createElement(
-	      "li",
-	      { className: "menu" },
+	      'li',
+	      null,
 	      React.createElement(
-	        "ul",
+	        'button',
+	        { className: 'more-options' },
+	        'More'
+	      ),
+	      React.createElement(
+	        'ul',
 	        { className: this.state.anySelected ? "dropdown" : "hidden" },
 	        this.state.listVisible ? [React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Mark as read"
+	          'Mark as read'
 	        ), React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Mark as not important"
+	          'Mark as not important'
 	        ), React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Add to tasks"
+	          'Add to tasks'
 	        ), React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Add star"
+	          'Add star'
 	        ), React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Filter messages like these"
+	          'Filter messages like these'
 	        ), React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Mute"
+	          'Mute'
 	        )] : [React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Mark all as read"
+	          'Mark all as read'
 	        ), React.createElement(
-	          "li",
+	          'li',
 	          null,
-	          "Select messages to see more actions"
+	          'Select messages to see more actions'
 	        )]
 	      )
 	    );
@@ -32062,7 +32088,11 @@
 	
 	
 	  render: function () {
-	    return React.createElement('div', null);
+	    return React.createElement(
+	      'button',
+	      { className: 'archive' },
+	      'A'
+	    );
 	  }
 	
 	});
@@ -32081,7 +32111,15 @@
 	
 	
 	  render: function () {
-	    return React.createElement('div', null);
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'button',
+	        { className: 'report-spam' },
+	        'RS'
+	      )
+	    );
 	  }
 	
 	});
@@ -32100,7 +32138,15 @@
 	
 	
 	  render: function () {
-	    return React.createElement('div', null);
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'button',
+	        { className: 'trash' },
+	        'TR'
+	      )
+	    );
 	  }
 	
 	});
@@ -32119,7 +32165,15 @@
 	
 	
 	  render: function () {
-	    return React.createElement('div', null);
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'button',
+	        { className: 'move-to' },
+	        'MT'
+	      )
+	    );
 	  }
 	
 	});
@@ -32138,7 +32192,15 @@
 	
 	
 	  render: function () {
-	    return React.createElement('div', null);
+	    return React.createElement(
+	      'li',
+	      null,
+	      React.createElement(
+	        'button',
+	        { className: 'labels' },
+	        'L'
+	      )
+	    );
 	  }
 	
 	});
@@ -32167,12 +32229,13 @@
 	
 	  render: function () {
 	    return React.createElement(
-	      'nav',
-	      null,
+	      'form',
+	      { className: 'searchbar group' },
+	      React.createElement('input', { type: 'text', onChange: this.handleInput, value: this.state.inputVal }),
 	      React.createElement(
-	        'form',
-	        { className: 'searchbar' },
-	        React.createElement('input', { type: 'text', onChange: this.handleInput, value: this.state.inputVal })
+	        'button',
+	        { className: 'search-button' },
+	        'B'
 	      )
 	    );
 	  }
@@ -32180,6 +32243,76 @@
 	});
 	
 	module.exports = Search;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var SideNav = React.createClass({
+	  displayName: 'SideNav',
+	
+	
+	  openComposeForm: function () {},
+	
+	  handleClick: function () {},
+	
+	  render: function () {
+	    return React.createElement(
+	      'nav',
+	      { className: 'sidenav' },
+	      React.createElement(
+	        'button',
+	        { className: 'compose-button' },
+	        'Compose'
+	      ),
+	      React.createElement(
+	        'ul',
+	        { className: 'sidenav-links' },
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#', onClick: this.handleClick },
+	            'Inbox'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#', onClick: this.handleClick },
+	            'Starred'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#', onClick: this.handleClick },
+	            'Important'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#', onClick: this.handleClick },
+	            'Drafts'
+	          )
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = SideNav;
 
 /***/ }
 /******/ ]);

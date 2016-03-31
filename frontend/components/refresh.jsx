@@ -4,7 +4,9 @@ var Refresh = React.createClass({
 
   render: function() {
     return (
-      <li />
+      <li>
+        <button className='refresh'>Refresh</button>
+      </li>
     );
   }
 
