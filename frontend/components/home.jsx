@@ -1,5 +1,4 @@
 var React = require('react');
-// var Search = require('./search.jsx');
 var TopNav = require('./topNav.jsx');
 // var SideNav = require('./sideNav.jsx');
 // var Labels = require('./labels.jsx');
@@ -16,7 +15,6 @@ var Home = React.createClass({
     );
   }
 
-  // <Search />
   // <SideNav />
   // <Labels />
 });

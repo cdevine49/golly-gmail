@@ -56,7 +56,7 @@
 	var Auth = __webpack_require__(216);
 	
 	var Home = __webpack_require__(217);
-	var Identifier = __webpack_require__(246);
+	var Identifier = __webpack_require__(249);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24788,11 +24788,10 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	// var Search = require('./search.jsx');
-	var TopNav = __webpack_require__(247);
+	var TopNav = __webpack_require__(218);
 	// var SideNav = require('./sideNav.jsx');
 	// var Labels = require('./labels.jsx');
-	var Inbox = __webpack_require__(218);
+	var Inbox = __webpack_require__(222);
 	
 	var Home = React.createClass({
 	  displayName: 'Home',
@@ -24807,7 +24806,6 @@
 	    );
 	  }
 	
-	  // <Search />
 	  // <SideNav />
 	  // <Labels />
 	});
@@ -24819,9 +24817,210 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(219);
-	var EmailStore = __webpack_require__(226);
-	var EmailPreview = __webpack_require__(245);
+	var Search = __webpack_require__(255);
+	var SelectorDropDown = __webpack_require__(219);
+	var Refresh = __webpack_require__(220);
+	var MoreOptions = __webpack_require__(221);
+	var Archive = __webpack_require__(250);
+	var ReportSpam = __webpack_require__(251);
+	var Trash = __webpack_require__(252);
+	var MoveTo = __webpack_require__(253);
+	var Labels = __webpack_require__(254);
+	
+	var TopNav = React.createClass({
+	  displayName: 'TopNav',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      anySelected: false
+	    };
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'header',
+	      null,
+	      React.createElement(
+	        'nav',
+	        null,
+	        React.createElement(Search, null),
+	        React.createElement(
+	          'ul',
+	          null,
+	          this.state.anySelected ? [React.createElement(SelectorDropDown, null), React.createElement(Refresh, null), React.createElement(MoreOptions, null)] : [React.createElement(SelectorDropDown, null), React.createElement(MoreOptions, null), React.createElement(Archive, null), React.createElement(ReportSpam, null), React.createElement(Trash, null), React.createElement(MoveTo, null), React.createElement(Labels, null)]
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = TopNav;
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var SelectorDropdown = React.createClass({
+	  displayName: "SelectorDropdown",
+	
+	
+	  getInitialState: function () {
+	    return {
+	      listVisible: false
+	    };
+	  },
+	
+	  _onBoxClick: function () {
+	    this.setState({ listVisible: !this.state.listVisible });
+	  },
+	
+	  // Add a click event to the li with className="menu" to toggle listVisible
+	  render: function () {
+	    return React.createElement(
+	      "li",
+	      { className: "menu" },
+	      React.createElement(
+	        "ul",
+	        { className: this.state.listVisible ? "dropdown" : "hidden" },
+	        React.createElement(
+	          "li",
+	          null,
+	          "All"
+	        ),
+	        React.createElement(
+	          "li",
+	          null,
+	          "None"
+	        ),
+	        React.createElement(
+	          "li",
+	          null,
+	          "Read"
+	        ),
+	        React.createElement(
+	          "li",
+	          null,
+	          "Unread"
+	        ),
+	        React.createElement(
+	          "li",
+	          null,
+	          "Starred"
+	        ),
+	        React.createElement(
+	          "li",
+	          null,
+	          "Unstarred"
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = SelectorDropdown;
+
+/***/ },
+/* 220 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Refresh = React.createClass({
+	  displayName: 'Refresh',
+	
+	
+	  render: function () {
+	    return React.createElement('li', null);
+	  }
+	
+	});
+	
+	module.exports = Refresh;
+
+/***/ },
+/* 221 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var PropTypes = React.PropTypes;
+	
+	var MoreOptions = React.createClass({
+	  displayName: "MoreOptions",
+	
+	  getInitialState: function () {
+	    return {
+	      listVisible: false,
+	      anySelected: false
+	    };
+	  },
+	
+	  _onBoxClick: function () {
+	    this.setState({ listVisible: !this.state.listVisible });
+	  },
+	
+	  // Add a click event to the li with className="menu" to toggle listVisible
+	
+	  render: function () {
+	    return React.createElement(
+	      "li",
+	      { className: "menu" },
+	      React.createElement(
+	        "ul",
+	        { className: this.state.anySelected ? "dropdown" : "hidden" },
+	        this.state.listVisible ? [React.createElement(
+	          "li",
+	          null,
+	          "Mark as read"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Mark as not important"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Add to tasks"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Add star"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Filter messages like these"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Mute"
+	        )] : [React.createElement(
+	          "li",
+	          null,
+	          "Mark all as read"
+	        ), React.createElement(
+	          "li",
+	          null,
+	          "Select messages to see more actions"
+	        )]
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = MoreOptions;
+
+/***/ },
+/* 222 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(223);
+	var EmailStore = __webpack_require__(230);
+	var EmailPreview = __webpack_require__(248);
 	
 	var Inbox = React.createClass({
 	  displayName: 'Inbox',
@@ -24879,10 +25078,10 @@
 	module.exports = Inbox;
 
 /***/ },
-/* 219 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ApiActions = __webpack_require__(220);
+	var ApiActions = __webpack_require__(224);
 	
 	ApiUtil = {
 	
@@ -24922,11 +25121,11 @@
 	module.exports = ApiUtil;
 
 /***/ },
-/* 220 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var AppDispatcher = __webpack_require__(221);
-	var EmailConstants = __webpack_require__(225);
+	var AppDispatcher = __webpack_require__(225);
+	var EmailConstants = __webpack_require__(229);
 	
 	ApiActions = {
 	  receiveAllEmails: function (emails) {
@@ -24941,14 +25140,14 @@
 	module.exports = ApiActions;
 
 /***/ },
-/* 221 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Dispatcher = __webpack_require__(222).Dispatcher;
+	var Dispatcher = __webpack_require__(226).Dispatcher;
 	module.exports = new Dispatcher();
 
 /***/ },
-/* 222 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24960,11 +25159,11 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Dispatcher = __webpack_require__(223);
+	module.exports.Dispatcher = __webpack_require__(227);
 
 
 /***/ },
-/* 223 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -24986,7 +25185,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(224);
+	var invariant = __webpack_require__(228);
 	
 	var _prefix = 'ID_';
 	
@@ -25201,7 +25400,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 224 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25256,7 +25455,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 225 */
+/* 229 */
 /***/ function(module, exports) {
 
 	EmailConstants = {
@@ -25266,12 +25465,12 @@
 	module.exports = EmailConstants;
 
 /***/ },
-/* 226 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(227).Store;
-	var AppDispatcher = __webpack_require__(221);
-	var EmailConstants = __webpack_require__(225);
+	var Store = __webpack_require__(231).Store;
+	var AppDispatcher = __webpack_require__(225);
+	var EmailConstants = __webpack_require__(229);
 	
 	var _emails = [];
 	
@@ -25299,7 +25498,7 @@
 	module.exports = EmailStore;
 
 /***/ },
-/* 227 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25311,15 +25510,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(228);
-	module.exports.MapStore = __webpack_require__(231);
-	module.exports.Mixin = __webpack_require__(243);
-	module.exports.ReduceStore = __webpack_require__(232);
-	module.exports.Store = __webpack_require__(233);
+	module.exports.Container = __webpack_require__(232);
+	module.exports.MapStore = __webpack_require__(235);
+	module.exports.Mixin = __webpack_require__(247);
+	module.exports.ReduceStore = __webpack_require__(236);
+	module.exports.Store = __webpack_require__(237);
 
 
 /***/ },
-/* 228 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25341,10 +25540,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(229);
+	var FluxStoreGroup = __webpack_require__(233);
 	
-	var invariant = __webpack_require__(224);
-	var shallowEqual = __webpack_require__(230);
+	var invariant = __webpack_require__(228);
+	var shallowEqual = __webpack_require__(234);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -25502,7 +25701,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 229 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25521,7 +25720,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(224);
+	var invariant = __webpack_require__(228);
 	
 	/**
 	 * FluxStoreGroup allows you to execute a callback on every dispatch after
@@ -25583,7 +25782,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 230 */
+/* 234 */
 /***/ function(module, exports) {
 
 	/**
@@ -25638,7 +25837,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 231 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25659,10 +25858,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(232);
-	var Immutable = __webpack_require__(242);
+	var FluxReduceStore = __webpack_require__(236);
+	var Immutable = __webpack_require__(246);
 	
-	var invariant = __webpack_require__(224);
+	var invariant = __webpack_require__(228);
 	
 	/**
 	 * This is a simple store. It allows caching key value pairs. An implementation
@@ -25788,7 +25987,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 232 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25809,10 +26008,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(233);
+	var FluxStore = __webpack_require__(237);
 	
-	var abstractMethod = __webpack_require__(241);
-	var invariant = __webpack_require__(224);
+	var abstractMethod = __webpack_require__(245);
+	var invariant = __webpack_require__(228);
 	
 	var FluxReduceStore = (function (_FluxStore) {
 	  _inherits(FluxReduceStore, _FluxStore);
@@ -25895,7 +26094,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 233 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25914,11 +26113,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(234);
+	var _require = __webpack_require__(238);
 	
 	var EventEmitter = _require.EventEmitter;
 	
-	var invariant = __webpack_require__(224);
+	var invariant = __webpack_require__(228);
 	
 	/**
 	 * This class should be extended by the stores in your application, like so:
@@ -26078,7 +26277,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 234 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26091,14 +26290,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(235)
+	  EventEmitter: __webpack_require__(239)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 235 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26117,11 +26316,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(236);
-	var EventSubscriptionVendor = __webpack_require__(238);
+	var EmitterSubscription = __webpack_require__(240);
+	var EventSubscriptionVendor = __webpack_require__(242);
 	
-	var emptyFunction = __webpack_require__(240);
-	var invariant = __webpack_require__(239);
+	var emptyFunction = __webpack_require__(244);
+	var invariant = __webpack_require__(243);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -26295,7 +26494,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 236 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26316,7 +26515,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(237);
+	var EventSubscription = __webpack_require__(241);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -26348,7 +26547,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 237 */
+/* 241 */
 /***/ function(module, exports) {
 
 	/**
@@ -26402,7 +26601,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 238 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26421,7 +26620,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(239);
+	var invariant = __webpack_require__(243);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -26511,7 +26710,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 239 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26566,7 +26765,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 240 */
+/* 244 */
 /***/ function(module, exports) {
 
 	/**
@@ -26608,7 +26807,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 241 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26625,7 +26824,7 @@
 	
 	'use strict';
 	
-	var invariant = __webpack_require__(224);
+	var invariant = __webpack_require__(228);
 	
 	function abstractMethod(className, methodName) {
 	   true ? process.env.NODE_ENV !== 'production' ? invariant(false, 'Subclasses of %s must override %s() with their own implementation.', className, methodName) : invariant(false) : undefined;
@@ -26635,7 +26834,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 242 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31622,7 +31821,7 @@
 	}));
 
 /***/ },
-/* 243 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31639,9 +31838,9 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(229);
+	var FluxStoreGroup = __webpack_require__(233);
 	
-	var invariant = __webpack_require__(224);
+	var invariant = __webpack_require__(228);
 	
 	/**
 	 * `FluxContainer` should be preferred over this mixin, but it requires using
@@ -31745,32 +31944,68 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 244 */,
-/* 245 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var PropTypes = React.PropTypes;
 	
 	var EmailPreviews = React.createClass({
-	  displayName: 'EmailPreviews',
+	  displayName: "EmailPreviews",
 	
+	
+	  // getInitialState: function() {
+	  //   return {
+	  //     selected: false,
+	  //   };
+	  // },
+	
+	  // componentDidMount: function() {
+	  //   this.singleEmailListener = EmailStore.addListener(this._onChange);
+	  // },
+	  //
+	  // componentWillUnmount: function () {
+	  //   this.singleEmailListener.remove();
+	  // },
+	
+	  // starred: this.props.email.starred,
+	  // important: this.props.email.important,
 	
 	  render: function () {
 	    return React.createElement(
-	      'ul',
+	      "main",
 	      null,
 	      React.createElement(
-	        'li',
-	        null,
-	        'Subject: ',
-	        this.props.email.subject
+	        "form",
+	        { className: "email-attribute-form" },
+	        React.createElement("input", { type: "checkbox",
+	          id: "attributes",
+	          name: "email[checked]",
+	          defaultChecked: this.props.email.checked }),
+	        React.createElement("input", { type: "checkbox",
+	          id: "attributes",
+	          name: "email[starred]",
+	          defaultChecked: this.props.email.checked }),
+	        React.createElement("input", { type: "checkbox",
+	          id: "attributes",
+	          name: "email[important]",
+	          defaultChecked: this.props.email.checked })
 	      ),
 	      React.createElement(
-	        'li',
+	        "ul",
 	        null,
-	        'Body: ',
-	        this.props.email.body
+	        React.createElement(
+	          "li",
+	          null,
+	          "Subject: ",
+	          this.props.email.subject
+	        ),
+	        React.createElement(
+	          "li",
+	          null,
+	          "Body: ",
+	          this.props.email.body
+	        )
 	      )
 	    );
 	  }
@@ -31780,7 +32015,7 @@
 	module.exports = EmailPreviews;
 
 /***/ },
-/* 246 */
+/* 249 */
 /***/ function(module, exports) {
 
 	// var React = require('react');
@@ -31817,190 +32052,134 @@
 	// module.exports = Identifier;
 
 /***/ },
-/* 247 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var SelectorDropDown = __webpack_require__(248);
-	var Refresh = __webpack_require__(249);
-	var MoreOptions = __webpack_require__(250);
-	
-	var TopNav = React.createClass({
-	  displayName: 'TopNav',
-	
-	
-	  getInitialState: function () {
-	    return {
-	      anySelected: false
-	    };
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'ul',
-	      null,
-	      this.state.anySelected ? [React.createElement(SelectorDropDown, null), React.createElement(Refresh, null), React.createElement(MoreOptions, null)] : [React.createElement(SelectorDropDown, null), React.createElement(MoreOptions, null), React.createElement(Archive, null), React.createElement(ReportSpam, null), React.createElement(Trash, null), React.createElement(MoveTo, null), React.createElement(Labels, null)]
-	    );
-	  }
-	
-	});
-	
-	module.exports = TopNav;
-
-/***/ },
-/* 248 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var SelectorDropdown = React.createClass({
-	  displayName: "SelectorDropdown",
-	
-	
-	  getInitialState: function () {
-	    return {
-	      listVisible: false
-	    };
-	  },
-	
-	  _onBoxClick: function () {
-	    this.setState({ listVisible: !this.state.listVisible });
-	  },
-	
-	  // Add a click event to the li with className="menu" to toggle listVisible
-	  render: function () {
-	    return React.createElement(
-	      "li",
-	      { className: "menu" },
-	      React.createElement(
-	        "ul",
-	        { className: this.state.listVisible ? "dropdown" : "hidden" },
-	        React.createElement(
-	          "li",
-	          null,
-	          "All"
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          "None"
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          "Read"
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          "Unread"
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          "Starred"
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          "Unstarred"
-	        )
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = SelectorDropdown;
-
-/***/ },
-/* 249 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var Refresh = React.createClass({
-	  displayName: 'Refresh',
-	
-	
-	  render: function () {
-	    return React.createElement('li', null);
-	  }
-	
-	});
-	
-	module.exports = Refresh;
-
-/***/ },
 /* 250 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Archive = React.createClass({
+	  displayName: 'Archive',
+	
+	
+	  render: function () {
+	    return React.createElement('div', null);
+	  }
+	
+	});
+	
+	module.exports = Archive;
+
+/***/ },
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var PropTypes = React.PropTypes;
 	
-	var MoreOptions = React.createClass({
-	  displayName: "MoreOptions",
+	var ReportSpam = React.createClass({
+	  displayName: 'ReportSpam',
+	
+	
+	  render: function () {
+	    return React.createElement('div', null);
+	  }
+	
+	});
+	
+	module.exports = ReportSpam;
+
+/***/ },
+/* 252 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var PropTypes = React.PropTypes;
+	
+	var Trash = React.createClass({
+	  displayName: 'Trash',
+	
+	
+	  render: function () {
+	    return React.createElement('div', null);
+	  }
+	
+	});
+	
+	module.exports = Trash;
+
+/***/ },
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var PropTypes = React.PropTypes;
+	
+	var MoveTo = React.createClass({
+	  displayName: 'MoveTo',
+	
+	
+	  render: function () {
+	    return React.createElement('div', null);
+	  }
+	
+	});
+	
+	module.exports = MoveTo;
+
+/***/ },
+/* 254 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var PropTypes = React.PropTypes;
+	
+	var ReportSpam = React.createClass({
+	  displayName: 'ReportSpam',
+	
+	
+	  render: function () {
+	    return React.createElement('div', null);
+	  }
+	
+	});
+	
+	module.exports = ReportSpam;
+
+/***/ },
+/* 255 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Search = React.createClass({
+	  displayName: 'Search',
+	
 	
 	  getInitialState: function () {
 	    return {
-	      listVisible: false,
-	      anySelected: false
+	      inputVal: ""
 	    };
 	  },
 	
-	  _onBoxClick: function () {
-	    this.setState({ listVisible: !this.state.listVisible });
+	  handleInput: function (event) {
+	    this.setState({ inputVal: event.currentTarget.value });
 	  },
-	
-	  // Add a click event to the li with className="menu" to toggle listVisible
 	
 	  render: function () {
 	    return React.createElement(
-	      "li",
-	      { className: "menu" },
+	      'nav',
+	      null,
 	      React.createElement(
-	        "ul",
-	        { className: this.state.anySelected ? "dropdown" : "hidden" },
-	        this.state.listVisible ? [React.createElement(
-	          "li",
-	          null,
-	          "Mark as read"
-	        ), React.createElement(
-	          "li",
-	          null,
-	          "Mark as not important"
-	        ), React.createElement(
-	          "li",
-	          null,
-	          "Add to tasks"
-	        ), React.createElement(
-	          "li",
-	          null,
-	          "Add star"
-	        ), React.createElement(
-	          "li",
-	          null,
-	          "Filter messages like these"
-	        ), React.createElement(
-	          "li",
-	          null,
-	          "Mute"
-	        )] : [React.createElement(
-	          "li",
-	          null,
-	          "Mark all as read"
-	        ), React.createElement(
-	          "li",
-	          null,
-	          "Select messages to see more actions"
-	        )]
+	        'form',
+	        { className: 'searchbar' },
+	        React.createElement('input', { type: 'text', onChange: this.handleInput, value: this.state.inputVal })
 	      )
 	    );
 	  }
 	
 	});
 	
-	module.exports = MoreOptions;
+	module.exports = Search;
 
 /***/ }
 /******/ ]);
