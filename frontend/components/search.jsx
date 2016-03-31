@@ -14,11 +14,10 @@ var Search = React.createClass({
 
   render: function() {
     return (
-      <nav>
-        <form className='searchbar'>
-          <input type='text' onChange={this.handleInput} value={this.state.inputVal}></input>
-        </form>
-      </nav>
+      <form className='searchbar group'>
+        <input type='text' onChange={this.handleInput} value={this.state.inputVal}></input>
+        <button className='search-button'>B</button>
+      </form>
     );
   }
 

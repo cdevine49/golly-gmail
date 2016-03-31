@@ -5,7 +5,9 @@ var ReportSpam = React.createClass({
 
   render: function() {
     return (
-      <div />
+      <li>
+        <button className='labels'>L</button>
+      </li>
     );
   }
 

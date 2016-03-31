@@ -38,6 +38,104 @@ button, article, footer, small {
    font-family: sans-serif;
  }
 
+ .group:after {
+   content: '';
+   display: block;
+   clear: both;
+ }
+
+ ul {
+   list-style: none;
+ }
+
+ /* Header */
+ /* Above */
+
+ .topnav-above {
+   background: lightgray;
+   display: block;
+   /*position: fixed;*/
+   width: 100%;
+   border-bottom: 1px solid #ccc;
+ }
+
+ .searchbar {
+   float: left;
+   display: block;
+   margin: 15px;
+   margin-right: 0;
+ }
+
+ .searchbar > input {
+   float: left;
+   background: white;
+   width: 588px;
+   height: 28px;
+   border: 1px solid lightblue;
+ }
+
+ .search-button {
+   float: left;
+   background: #8CD9F3;
+   text-align: center;
+   width: 60px;
+   height: 30px;
+ }
+
+ .topnav-logo {
+   float: left;
+   display: block;
+   font-size: 24px;
+   text-align: center;
+   padding: 20px 0;
+   width: 200px;
+   height: 20px;
+   margin: 0 auto;
+ }
+
+ /* Below */
+
+.topnav-below {
+  margin-left: 215px;
+}
+
+.topnav-buttons > li > button {
+  float: left;
+  width: 70px;
+  height: 30px;
+  margin: 10px;
+  text-align: center;
+  background: lightgray;
+  /*display: block;*/
+}
+
+.topnav-buttons > li > button:first-child {
+  margin-left: 0;
+}
+
+/* Side Navigation Bar */
+
+ .sidenav {
+   float: left;
+   display: block;
+ }
+
+ .compose-button {
+   background: #d14836;
+   color: white;
+   width: 115px;
+   height: 30px;
+   text-align: center;
+   border-radius: 2px;
+ }
+
+
+
+
+
+
+
+
  .sign-in {
    display: block;
    text-align: center;

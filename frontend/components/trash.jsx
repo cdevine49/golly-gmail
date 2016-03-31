@@ -5,7 +5,9 @@ var Trash = React.createClass({
 
   render: function() {
     return (
-      <div />
+      <li>
+        <button className='trash'>TR</button>
+      </li>
     );
   }
 

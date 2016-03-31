@@ -5,7 +5,9 @@ var MoveTo = React.createClass({
 
   render: function() {
     return (
-      <div />
+      <li>
+        <button className='move-to'>MT</button>
+      </li>
     );
   }
 

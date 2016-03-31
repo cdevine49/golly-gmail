@@ -19,11 +19,14 @@ var TopNav = React.createClass({
 
   render: function() {
     return (
-      <header>
-        <nav>
+      <header className='header group'>
+        <nav className='topnav-above group'>
+          <h1 className='topnav-logo'>GollyGmail</h1>
           <Search />
-          <ul>
-            { this.state.anySelected ?
+        </nav>
+        <nav className='topnav-below group'>
+          <ul className='topnav-buttons'>
+            { !this.state.anySelected ?
               [<SelectorDropDown />,
               <Refresh />,
               <MoreOptions />] :
@@ -38,7 +41,7 @@ var TopNav = React.createClass({
               ]
             }
             </ul>
-        </nav>
+          </nav>
       </header>
     );
   }

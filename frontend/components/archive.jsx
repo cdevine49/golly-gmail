@@ -4,7 +4,7 @@ var Archive = React.createClass({
 
   render: function() {
     return (
-      <div />
+      <button className='archive'>A</button>
     );
   }
 

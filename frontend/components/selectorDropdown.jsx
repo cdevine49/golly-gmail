@@ -8,14 +8,15 @@ var SelectorDropdown = React.createClass({
     };
   },
 
-  _onBoxClick: function () {
+  _onBoxClick: function (e) {
     this.setState({listVisible: !this.state.listVisible});
   },
 
 // Add a click event to the li with className="menu" to toggle listVisible
   render: function() {
     return (
-      <li className="menu">
+      <li>
+        <button className='selector' onClick={this.onBoxClick}>SD</button>
         <ul className={ this.state.listVisible ? "dropdown" : "hidden" }>
           <li>All</li>
           <li>None</li>

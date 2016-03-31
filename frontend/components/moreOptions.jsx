@@ -1,5 +1,4 @@
 var React = require('react');
-var PropTypes = React.PropTypes;
 
 var MoreOptions = React.createClass({
   getInitialState: function() {
@@ -18,7 +17,8 @@ var MoreOptions = React.createClass({
 
 render: function() {
     return (
-      <li className="menu">
+      <li>
+        <button className='more-options'>More</button>
         <ul className={ this.state.anySelected ? "dropdown" : "hidden" }>
           {this.state.listVisible ?
 
