@@ -26,18 +26,18 @@ var TopNav = React.createClass({
         </nav>
         <nav className='topnav-below group'>
           <ul className='topnav-buttons'>
-            { !this.state.anySelected ?
+            { this.state.anySelected ?
               [<SelectorDropDown />,
               <Refresh />,
               <MoreOptions />] :
               [
                 <SelectorDropDown />,
-                <MoreOptions />,
                 <Archive />,
                 <ReportSpam />,
                 <Trash />,
                 <MoveTo />,
                 <Labels />,
+                <MoreOptions />
               ]
             }
             </ul>

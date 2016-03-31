@@ -1,8 +1,8 @@
 var React = require('react');
 var TopNav = require('./topNav.jsx');
-var SideNav = require('./sideNav.jsx');
+
 // var Labels = require('./labels.jsx');
-var Inbox = require('./inbox.jsx');
+var Mailbox = require('./mailbox.jsx');
 
 var Home = React.createClass({
 
@@ -10,15 +10,14 @@ var Home = React.createClass({
     return (
       <div>
         <TopNav />
+        <SideNav mailboxes={mailboxes}/>
         <main className='content group'>
-          <SideNav />
-          <Inbox />
+          <Mailbox mailboxes={mailboxes}/>
         </main>
       </div>
     );
   }
 
-  // <SideNav />
   // <Labels />
 });
 

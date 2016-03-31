@@ -1,3 +1,8 @@
 class Email < ActiveRecord::Base
-  # Should eventually send alert for sending email with neither subject nor body
+  belongs_to(
+    :mailbox,
+    class_name: 'Mailbox',
+    primary_key: :id,
+    foreign_key: :mailbox_id
+  )
 end

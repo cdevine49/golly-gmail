@@ -41,8 +41,9 @@ var EmailPreviews = React.createClass({
           </input>
         </form>
         <ul>
-          <li>Subject: {this.props.email.subject}</li>
-          <li>Body: {this.props.email.body}</li>
+          <li>From: {this.props.from}</li>
+          <li>Subject: {this.props.subject}</li>
+          <li>Body: {this.props.body}</li>
         </ul>
       </main>
     );
