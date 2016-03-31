@@ -49,6 +49,10 @@ button, article, footer, small {
  }
 
  /* Header */
+ .header {
+   width: 100%;
+   /*position: fixed;*/
+ }
  /* Above */
 
  .topnav-above {
@@ -99,19 +103,36 @@ button, article, footer, small {
   margin-left: 215px;
 }
 
-.topnav-buttons > li > button {
+.selector,
+.refresh,
+.more-options,
+.archive,
+.report-spam,
+.trash,
+.move-to,
+.labels {
   float: left;
   width: 70px;
   height: 30px;
-  margin: 10px;
+  margin: 10px 0;
   text-align: center;
   background: lightgray;
-  /*display: block;*/
+  border: 1px solid gray;
 }
 
-.topnav-buttons > li > button:first-child {
-  margin-left: 0;
+.archive,
+.report-spam,
+.move-to {
+  border-right: 0;
 }
+
+.selector,
+.refresh,
+.trash,
+.labels {
+  margin-right: 15px;
+}
+
 
 /* Side Navigation Bar */
 

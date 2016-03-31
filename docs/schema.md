@@ -8,10 +8,17 @@ subject     | string    |
 body        | text      | not null
 to          | string    | not null
 from        | string    | not null
+mailbox     | integer   | default: 1
 archived    | boolean   | not null, default: false
 starred     | boolean   | not null, default: false
 important   | boolean   | not null, default: false
 trashed     | boolean   | not null, default: false
+
+## inbox
+column name | data type | details
+------------|-----------|-----------------------
+id          | integer   | not null, primary key
+name        | string    |
 
 ## label
 column name | data type | details

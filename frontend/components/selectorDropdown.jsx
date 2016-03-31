@@ -16,7 +16,7 @@ var SelectorDropdown = React.createClass({
   render: function() {
     return (
       <li>
-        <button className='selector' onClick={this.onBoxClick}>SD</button>
+        <button className='selector' onClick={this._onBoxClick}>SD</button>
         <ul className={ this.state.listVisible ? "dropdown" : "hidden" }>
           <li>All</li>
           <li>None</li>
