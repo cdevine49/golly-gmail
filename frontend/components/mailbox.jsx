@@ -1,84 +1,54 @@
 var React = require('react');
 var ApiUtil = require('../utils/apiUtil');
 var SideNav = require('./sideNav.jsx');
-var EmailStore = require('../stores/emailStore');
-var EmailPreview = require('./emailPreview');
+var MailboxStore = require('../stores/mailboxStore');
+var EmailPreviewTable = require('./emailPreviewTable');
 
 
 var Mailbox = React.createClass({
 
   getInitialState: function() {
     return {
-      mailbox_id: 1
+      mailboxes: MailboxStore.all(),
+      current_mailbox_id: null
     };
   },
 
-  handleChangeMailbox: function (id) {
-    this.setState({mailbox_id: id});
+  componentDidMount: function() {
+    this.MailboxListener = MailboxStore.addListener(this._onChange);
+    ApiUtil.fetchAllMailboxes();
+  },
+
+  componentWillUnmount: function() {
+    this.MailboxListener.remove();
+  },
+
+  _onChange: function () {
+    this.setState(
+      { mailboxes: MailboxStore.all(), current_mailbox_id: MailboxStore.all()[0].id });
+  },
+
+  handleChangeMailbox: function (mailbox_id) {
+    this.setState({current_mailbox_id: mailbox_id});
+  },
+
+  _emailsInMailbox: function (mailbox_id) {
+    ApiUtil.fetchEmailsInMailbox(mailbox_id);
   },
 
   render: function () {
-    var mailbox = this.props.mailboxes.filter(function(mailbox){
-      return mailbox.id === id;
-    })[0];
 
     return (
       <div>
         <SideNav
-          mailboxes={this.props.mailboxes}
-          onClick={this.handleChangeMailbox}/>
-        <Mailbox
-          key={mailbox.id}
-          emails={mailbox.emails} />
+          mailboxes={this.state.mailboxes}
+          onMailboxClick={this.handleChangeMailbox}/>
+        <EmailPreviewTable
+          key={this.state.current_mailbox_id}
+          emails={this._emailsInMailbox} />
       </div>
     );
   }
-
-  // getInitialState: function() {
-  //   return {
-  //     emailPreviews: EmailStore.all()
-  //   };
-  // },
-  //
-  // componentDidMount: function() {
-  //   this.newEmailListener = EmailStore.addListener(this._onChange);
-  //   ApiUtil.fetchAllEmails();
-  // },
-  //
-  // componentWillUnmount: function () {
-  //   this.newEmailListener.remove();
-  // },
-  //
-  // _onChange: function () {
-  //   this.setState({emailPreviews: EmailStore.all()});
-  // },
-  //
-  // render: function() {
-  //
-  //   return (
-  //
-  //     <div>
-  //       {(this.state.emailPreviews.length > 0 ?
-  //         <ul>
-  //           {this.state.emailPreviews.map(function (email) {
-  //             return <EmailPreview
-  //               key={email.id}
-  //               from={email.from}
-  //               to={email.to}
-  //               subject={email.subject}
-  //               body={email.from} />;
-  //           })}
-  //         </ul> :
-  //         <article>
-  //           <p>Your Primary tab is empty.</p>
-  //           <p>Personal messages and messages that don’t appear in other tabs will be shown here.</p>
-  //         </article>
-  //       )}
-  //
-  //     </div>
-  //   );
-  // }
-
 });
 
 module.exports = Mailbox;

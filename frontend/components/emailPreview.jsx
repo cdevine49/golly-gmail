@@ -27,17 +27,17 @@ var EmailPreviews = React.createClass({
           <input type="checkbox"
             id="attributes"
             name='email[checked]'
-            defaultChecked={this.props.email.checked} >
+            defaultChecked={this.props.checked} >
           </input>
           <input type="checkbox"
             id="attributes"
             name='email[starred]'
-            defaultChecked={this.props.email.checked} >
+            defaultChecked={this.props.starred} >
           </input>
           <input type="checkbox"
             id="attributes"
             name='email[important]'
-            defaultChecked={this.props.email.checked} >
+            defaultChecked={this.props.important} >
           </input>
         </form>
         <ul>
