@@ -31881,7 +31881,7 @@
 	        'Compose'
 	      ),
 	      React.createElement('ul', { className: 'sidenav-links' }),
-	      this.state.formOpen ? React.createElement(ComposeForm, null) : ''
+	      this.state.formOpen ? React.createElement(ComposeForm, { onSubmit: this._composeForm }) : ''
 	    );
 	  }
 	
@@ -31926,6 +31926,7 @@
 	    formData.append("email[to]", this.state.to);
 	    ApiUtil.createEmail(formData);
 	    this.setState({ subject: '', body: '' });
+	    this.props.onSubmit();
 	  },
 	
 	  render: function () {

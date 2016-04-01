@@ -5,7 +5,7 @@ class Api::EmailsController < ApplicationController
 
   def create
     email = Email.new(email_params)
-    email.from = 1 #change to currentuser.id when that is set up
+    email.from = current_user.id
     email.save
     render json: email
   end
