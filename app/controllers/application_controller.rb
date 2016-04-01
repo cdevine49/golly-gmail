@@ -43,10 +43,10 @@ class ApplicationController < ActionController::Base
   end
 
 	def require_logged_in!
-		redirect_to new_session_url unless logged_in?
+		render json: { message: "You are not logged in"} unless logged_in?
 	end
 
   def require_logged_out!
-    redirect_to root if logged_in?
+    render json: { message: "You are logged in" } if logged_in?
   end
 end

@@ -52,15 +52,15 @@
 	var EmailPreviewTable = __webpack_require__(251);
 	var EmailDetails = __webpack_require__(260);
 	var LoginForm = __webpack_require__(266);
+	var SigninForm = __webpack_require__(267);
 	
 	var SessionStore = __webpack_require__(264);
-	var ApiUtil = __webpack_require__(218);
+	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var hashHistory = ReactRouter.hashHistory;
 	var IndexRoute = ReactRouter.IndexRoute;
-	// <Route path='/signin' component={SigninForm}/>
 	
 	document.addEventListener('DOMContentLoaded', function () {
 	  ReactDOM.render(React.createElement(
@@ -68,11 +68,13 @@
 	    { history: hashHistory },
 	    React.createElement(
 	      Route,
-	      { path: '/', component: App },
-	      React.createElement(IndexRoute, { component: EmailPreviewTable, onEnter: _ensureLoggedIn }),
+	      { path: '/', component: App, onEnter: _ensureLoggedIn },
+	      React.createElement(IndexRoute, { component: EmailPreviewTable }),
+	      React.createElement(Route, { path: 'inbox', component: EmailPreviewTable }),
 	      React.createElement(Route, { path: 'inbox/:id', component: EmailDetails })
 	    ),
-	    React.createElement(Route, { path: '/login', component: LoginForm })
+	    React.createElement(Route, { path: '/login', component: LoginForm }),
+	    React.createElement(Route, { path: '/signin', component: SigninForm })
 	  ), document.getElementById('root'));
 	});
 	
@@ -24760,100 +24762,8 @@
 /***/ },
 /* 216 */,
 /* 217 */,
-/* 218 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var ApiActions = __webpack_require__(219);
-	
-	ApiUtil = {
-	
-	  fetchEmails: function () {
-	    $.ajax({
-	      type: 'GET',
-	      url: 'api/emails',
-	      datatype: 'json',
-	      success: function (emails) {
-	        ApiActions.receiveEmails(emails);
-	      },
-	      error: function () {
-	        console.log('ApiUtil#fetchEmails error');
-	      }
-	    });
-	  },
-	
-	  login: function (credentials, callback) {
-	    debugger;
-	    $.ajax({
-	      type: "POST",
-	      url: "/api/session",
-	      dataType: "json",
-	      data: credentials,
-	      success: function (currentUser) {
-	        SessionActions.currentUserReceived(currentUser);
-	        callback && callback();
-	      },
-	      error: function () {
-	        console.log('ApiUtil#login error');
-	      }
-	    });
-	  },
-	
-	  logout: function () {
-	    $.ajax({
-	      type: "DELETE",
-	      url: "/api/session",
-	      dataType: "json",
-	      success: function () {
-	        SessionActions.logout();
-	      },
-	      error: function () {
-	        console.log('ApiUtil#logout error');
-	      }
-	    });
-	  },
-	
-	  fetchCurrentUser: function (completion) {
-	    $.ajax({
-	      type: "GET",
-	      url: "/api/session",
-	      dataType: "json",
-	      success: function (currentUser) {
-	        debugger;
-	        SessionActions.currentUserReceived(currentUser);
-	      },
-	      complete: function () {
-	        completion && completion();
-	      }
-	    });
-	  }
-	
-	};
-	
-	window.ApiUtil = ApiUtil;
-	
-	module.exports = ApiUtil;
-
-/***/ },
-/* 219 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(220);
-	var EmailConstants = __webpack_require__(224);
-	
-	ApiActions = {
-	  receiveEmails: function (emails) {
-	    var action = {
-	      actionType: EmailConstants.EMAILS_RECEIVED,
-	      emails: emails
-	    };
-	    AppDispatcher.dispatch(action);
-	  }
-	
-	};
-	
-	module.exports = ApiActions;
-
-/***/ },
+/* 218 */,
+/* 219 */,
 /* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -25226,7 +25136,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(218);
+	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	var LinkedStateMixin = __webpack_require__(228);
 	
 	var ComposeForm = React.createClass({
@@ -25249,13 +25159,13 @@
 	  handleBodyChange: function (e) {
 	    this.setState({ body: e.currentTarget.value });
 	  },
-	  //
-	  // createEmail: function (e) {
-	  //   e.preventDefault();
-	  //
-	  //   ApiUtil.createEmail();
-	  // },
-	  //
+	
+	  createEmail: function (e) {
+	    e.preventDefault();
+	
+	    ApiUtil.createEmail();
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'form',
@@ -31977,7 +31887,7 @@
 
 	var React = __webpack_require__(1);
 	var EmailStore = __webpack_require__(252);
-	var ApiUtil = __webpack_require__(218);
+	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	var Link = __webpack_require__(159).Link;
 	
 	var EmailPreviewTable = React.createClass({
@@ -32131,7 +32041,7 @@
 
 	var React = __webpack_require__(1);
 	var EmailStore = __webpack_require__(252);
-	var ApiUtil = __webpack_require__(218);
+	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
 	var History = __webpack_require__(159).History;
 	
 	var EmailDetails = React.createClass({
@@ -32200,16 +32110,31 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var SessionStore = __webpack_require__(264);
 	var Search = __webpack_require__(263);
 	
 	var TopNav = React.createClass({
 	  displayName: 'TopNav',
 	
 	
-	  getInitialState: function () {
-	    return {
-	      anySelected: false
-	    };
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  componentDidMount: function () {
+	    this.sessionStoreToken = SessionStore.addListener(this._onChange);
+	    this._onChange();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.sessionStoreToken.remove();
+	  },
+	
+	  _onChange: function () {
+	    if (!SessionStore.isLoggedIn()) {
+	      this.context.router.push('/login');
+	    }
 	  },
 	
 	  render: function () {
@@ -32219,7 +32144,11 @@
 	      React.createElement(
 	        'nav',
 	        { className: 'topnav-above group' },
-	        React.createElement('div', null)
+	        React.createElement(
+	          'button',
+	          { onClick: ApiUtil.logout },
+	          'Logout'
+	        )
 	      )
 	    );
 	  }
@@ -32299,6 +32228,7 @@
 	      break;
 	    case SessionConstants.LOGOUT:
 	      _currentUser = null;
+	      _currentUserFetched = false;
 	      SessionStore.__emitChange();
 	      break;
 	  }
@@ -32310,18 +32240,21 @@
 /* 265 */
 /***/ function(module, exports) {
 
-	EmailConstants = {
-	  CURRENT_USER_RECEIVED: 'CURRENT_USER_RECEIVED'
+	SessionConstants = {
+	  CURRENT_USER_RECEIVED: 'CURRENT_USER_RECEIVED',
+	  LOGOUT: 'LOGOUT'
 	};
 	
-	module.exports = EmailConstants;
+	module.exports = SessionConstants;
 
 /***/ },
 /* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(218);
+	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var SessionStore = __webpack_require__(264);
+	var Link = __webpack_require__(159).Link;
 	
 	var LoginForm = React.createClass({
 	  displayName: 'LoginForm',
@@ -32341,36 +32274,125 @@
 	  _handleSubmit: function (e) {
 	    e.preventDefault();
 	    var router = this.context.router;
-	    ApiUtil.login(this.state, _sendtoInbox());
-	  },
-	
-	  _sendtoInbox: function () {
-	    router.push('/inbox');
+	    ApiUtil.login(this.state, function () {
+	      router.push('/inbox');
+	    });
 	  },
 	
 	  _updateUsername: function (e) {
 	    this.setState({ username: e.currentTarget.value });
 	  },
 	
-	  _updatePassword: function () {
+	  _updatePassword: function (e) {
 	    this.setState({ password: e.currentTarget.value });
 	  },
 	
 	  render: function () {
 	    return React.createElement(
-	      'form',
-	      { onSubmit: this._handleSubmit },
+	      'section',
+	      null,
 	      React.createElement(
-	        'label',
-	        null,
-	        'Username',
-	        React.createElement('input', { type: 'text', onChange: this._updateUsername, value: this.state.username })
+	        'form',
+	        { onSubmit: this._handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          'Username',
+	          React.createElement('input', { type: 'text', onChange: this._updateUsername, value: this.state.username })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Password',
+	          React.createElement('input', { type: 'password', onChange: this._updatePassword, value: this.state.password })
+	        ),
+	        React.createElement(
+	          'button',
+	          null,
+	          'Log In'
+	        )
 	      ),
 	      React.createElement(
-	        'label',
-	        null,
-	        'Password',
-	        React.createElement('input', { type: 'password', onChange: this._updatePassword, value: this.state.password })
+	        Link,
+	        { to: '/signin/' },
+	        'Create an Account'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = LoginForm;
+
+/***/ },
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var SessionStore = __webpack_require__(264);
+	var Link = __webpack_require__(159).Link;
+	
+	var LoginForm = React.createClass({
+	  displayName: 'LoginForm',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      username: '',
+	      password: ''
+	    };
+	  },
+	
+	  _handleSubmit: function (e) {
+	    e.preventDefault();
+	    var router = this.context.router;
+	    ApiUtil.signin(this.state, function () {
+	      router.push('/inbox');
+	    });
+	  },
+	
+	  _updateUsername: function (e) {
+	    this.setState({ username: e.currentTarget.value });
+	  },
+	
+	  _updatePassword: function (e) {
+	    this.setState({ password: e.currentTarget.value });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'section',
+	      null,
+	      React.createElement(
+	        'form',
+	        { onSubmit: this._handleSubmit },
+	        React.createElement(
+	          'label',
+	          null,
+	          'Username',
+	          React.createElement('input', { type: 'text', onChange: this._updateUsername, value: this.state.username })
+	        ),
+	        React.createElement(
+	          'label',
+	          null,
+	          'Password',
+	          React.createElement('input', { type: 'password', onChange: this._updatePassword, value: this.state.password })
+	        ),
+	        React.createElement(
+	          'button',
+	          null,
+	          'Create Account'
+	        )
+	      ),
+	      React.createElement(
+	        Link,
+	        { to: '/login/' },
+	        'Log In'
 	      )
 	    );
 	  }

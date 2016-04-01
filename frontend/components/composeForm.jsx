@@ -20,13 +20,13 @@ var ComposeForm = React.createClass({
   handleBodyChange: function (e) {
     this.setState({body: e.currentTarget.value});
   },
-  //
-  // createEmail: function (e) {
-  //   e.preventDefault();
-  //
-  //   ApiUtil.createEmail();
-  // },
-  //
+  
+  createEmail: function (e) {
+    e.preventDefault();
+
+    ApiUtil.createEmail();
+  },
+
   render: function() {
     return (
       <form onSubmit={this.createEmail}>

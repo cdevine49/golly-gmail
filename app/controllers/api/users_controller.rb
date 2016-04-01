@@ -6,12 +6,12 @@ class Api::UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
-    if @user.save
-      login!(@user)
-      render :root
+    user = User.new(user_params)
+    if user.save
+      login!(user)
+      render json: user
     else
-
+      render json: { message: "shouldn't be here" }
     end
   end
 
