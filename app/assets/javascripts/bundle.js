@@ -51,15 +51,15 @@
 	var App = __webpack_require__(259);
 	var EmailPreviewTable = __webpack_require__(251);
 	var EmailDetails = __webpack_require__(260);
+	var LoginForm = __webpack_require__(266);
+	
+	var SessionStore = __webpack_require__(264);
+	var ApiUtil = __webpack_require__(218);
 	
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var hashHistory = ReactRouter.hashHistory;
 	var IndexRoute = ReactRouter.IndexRoute;
-	
-	var SessionStore = __webpack_require__(218);
-	
-	// <Route path='/login' component={LoginForm}/>
 	// <Route path='/signin' component={SigninForm}/>
 	
 	document.addEventListener('DOMContentLoaded', function () {
@@ -69,11 +69,27 @@
 	    React.createElement(
 	      Route,
 	      { path: '/', component: App },
-	      React.createElement(IndexRoute, { component: EmailPreviewTable }),
+	      React.createElement(IndexRoute, { component: EmailPreviewTable, onEnter: _ensureLoggedIn }),
 	      React.createElement(Route, { path: 'inbox/:id', component: EmailDetails })
-	    )
+	    ),
+	    React.createElement(Route, { path: '/login', component: LoginForm })
 	  ), document.getElementById('root'));
 	});
+	
+	function _ensureLoggedIn(nextState, replace, callback) {
+	  if (!SessionStore.currentUserFetched()) {
+	    ApiUtil.fetchCurrentUser(_redirectUnlessLoggedIn);
+	  } else {
+	    _redirectUnlessLoggedIn();
+	  }
+	
+	  function _redirectUnlessLoggedIn() {
+	    if (!SessionStore.isLoggedIn()) {
+	      replace('/login');
+	    }
+	    callback();
+	  }
+	}
 	
 	module.exports = App;
 
@@ -24763,24 +24779,55 @@
 	        console.log('ApiUtil#fetchEmails error');
 	      }
 	    });
+	  },
+	
+	  login: function (credentials, callback) {
+	    debugger;
+	    $.ajax({
+	      type: "POST",
+	      url: "/api/session",
+	      dataType: "json",
+	      data: credentials,
+	      success: function (currentUser) {
+	        SessionActions.currentUserReceived(currentUser);
+	        callback && callback();
+	      },
+	      error: function () {
+	        console.log('ApiUtil#login error');
+	      }
+	    });
+	  },
+	
+	  logout: function () {
+	    $.ajax({
+	      type: "DELETE",
+	      url: "/api/session",
+	      dataType: "json",
+	      success: function () {
+	        SessionActions.logout();
+	      },
+	      error: function () {
+	        console.log('ApiUtil#logout error');
+	      }
+	    });
+	  },
+	
+	  fetchCurrentUser: function (completion) {
+	    $.ajax({
+	      type: "GET",
+	      url: "/api/session",
+	      dataType: "json",
+	      success: function (currentUser) {
+	        debugger;
+	        SessionActions.currentUserReceived(currentUser);
+	      },
+	      complete: function () {
+	        completion && completion();
+	      }
+	    });
 	  }
 	
 	};
-	
-	// fetchEmailChain: function(id) {
-	//   $.ajax({
-	//     type: 'GET',
-	//     url: 'api/email_chains',
-	//     datatype: 'json',
-	//     data: {mailbox_id: id},
-	//     success: function (emails) {
-	//       ApiActions.receiveEmailChain(chain);
-	//     },
-	//     error: function () {
-	//       console.log('ApiUtil#fetchEmailChains error');
-	//     }
-	//   });
-	// },
 	
 	window.ApiUtil = ApiUtil;
 	
@@ -25149,8 +25196,8 @@
 	    };
 	  },
 	
-	  openComposeForm: function () {
-	    this.setState({ formOpen: true });
+	  _composeForm: function () {
+	    this.setState({ formOpen: !this.state.formOpen });
 	  },
 	
 	  handleClick: function () {},
@@ -25162,11 +25209,11 @@
 	      { className: 'sidenav' },
 	      React.createElement(
 	        'button',
-	        { className: 'compose-button', onClick: this._openComposeForm },
+	        { className: 'compose-button', onClick: this._composeForm },
 	        'Compose'
 	      ),
 	      React.createElement('ul', { className: 'sidenav-links' }),
-	      React.createElement(ComposeForm, null)
+	      this.state.formOpen ? React.createElement(ComposeForm, null) : ''
 	    );
 	  }
 	
@@ -32090,7 +32137,6 @@
 	var EmailDetails = React.createClass({
 	  displayName: 'EmailDetails',
 	
-	  // mixin: [History],
 	
 	  contextTypes: {
 	    router: React.PropTypes.object.isRequired
@@ -32218,6 +32264,120 @@
 	});
 	
 	module.exports = Search;
+
+/***/ },
+/* 264 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(233).Store;
+	var SessionConstants = __webpack_require__(265);
+	var AppDispatcher = __webpack_require__(220);
+	
+	var SessionStore = new Store(AppDispatcher);
+	
+	var _currentUser;
+	var _currentUserFetched = false;
+	
+	SessionStore.currentUser = function () {
+	  return _currentUser;
+	};
+	
+	SessionStore.isLoggedIn = function () {
+	  return !!_currentUser;
+	};
+	
+	SessionStore.currentUserFetched = function () {
+	  return _currentUserFetched;
+	};
+	
+	SessionStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case SessionConstants.CURRENT_USER_RECEIVED:
+	      _currentUser = payload.currentUser;
+	      _currentUserFetched = true;
+	      SessionStore.__emitChange();
+	      break;
+	    case SessionConstants.LOGOUT:
+	      _currentUser = null;
+	      SessionStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = SessionStore;
+
+/***/ },
+/* 265 */
+/***/ function(module, exports) {
+
+	EmailConstants = {
+	  CURRENT_USER_RECEIVED: 'CURRENT_USER_RECEIVED'
+	};
+	
+	module.exports = EmailConstants;
+
+/***/ },
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(218);
+	
+	var LoginForm = React.createClass({
+	  displayName: 'LoginForm',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      username: '',
+	      password: ''
+	    };
+	  },
+	
+	  _handleSubmit: function (e) {
+	    e.preventDefault();
+	    var router = this.context.router;
+	    ApiUtil.login(this.state, _sendtoInbox());
+	  },
+	
+	  _sendtoInbox: function () {
+	    router.push('/inbox');
+	  },
+	
+	  _updateUsername: function (e) {
+	    this.setState({ username: e.currentTarget.value });
+	  },
+	
+	  _updatePassword: function () {
+	    this.setState({ password: e.currentTarget.value });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'form',
+	      { onSubmit: this._handleSubmit },
+	      React.createElement(
+	        'label',
+	        null,
+	        'Username',
+	        React.createElement('input', { type: 'text', onChange: this._updateUsername, value: this.state.username })
+	      ),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Password',
+	        React.createElement('input', { type: 'password', onChange: this._updatePassword, value: this.state.password })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = LoginForm;
 
 /***/ }
 /******/ ]);

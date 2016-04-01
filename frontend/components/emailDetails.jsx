@@ -4,7 +4,6 @@ var ApiUtil = require('../utils/apiUtil');
 var History = require('react-router').History;
 
 var EmailDetails = React.createClass({
-  // mixin: [History],
 
   contextTypes: {
     router: React.PropTypes.object.isRequired
