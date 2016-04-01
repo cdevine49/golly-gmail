@@ -11,32 +11,32 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160331172836) do
+ActiveRecord::Schema.define(version: 20160401111546) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "emails", force: :cascade do |t|
-    t.string   "subject",                    null: false
-    t.text     "body",                       null: false
-    t.integer  "to",                         null: false
-    t.integer  "from",                       null: false
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.boolean  "checked",    default: false
-    t.boolean  "starred",    default: false
-    t.boolean  "important",  default: false
-    t.integer  "mailbox_id", default: 1
+    t.text     "body",       null: false
+    t.integer  "to",         null: false
+    t.integer  "from",       null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text     "subject"
   end
 
   add_index "emails", ["from"], name: "sender_index", using: :btree
   add_index "emails", ["to"], name: "recipient_index", using: :btree
 
-  create_table "mailboxes", force: :cascade do |t|
-    t.string   "name",       null: false
+  create_table "emails_to_chains", force: :cascade do |t|
+    t.integer  "email_id",   null: false
+    t.integer  "chain_id",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_index "emails_to_chains", ["chain_id"], name: "index_emails_to_chains_on_chain_id", using: :btree
+  add_index "emails_to_chains", ["email_id"], name: "index_emails_to_chains_on_email_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username",        null: false

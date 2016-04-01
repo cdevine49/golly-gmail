@@ -1,56 +1,58 @@
 var React = require('react');
 var EmailStore = require('../stores/emailStore');
 var ApiUtil = require('../utils/apiUtil');
-var EmailPreview = require('./emailPreview');
-
+var Link = require('react-router').Link;
 
 var EmailPreviewTable = React.createClass({
 
-  getInitialState: function() {
-    return {
-      emailPreviews: EmailStore.all()
-    };
+  getInitialState: function () {
+    return { emails: [] };
   },
 
-  componentDidMount: function() {
-    this.newEmailListener = EmailStore.addListener(this._onChange);
-    ApiUtil.fetchAllEmails();
+  componentDidMount: function () {
+
+    this.emailStoreToken = EmailStore.addListener(this._onChange);
+    ApiUtil.fetchEmails();
   },
+
 
   componentWillUnmount: function () {
-    this.newEmailListener.remove();
+    this.emailStoreToken.remove();
   },
 
   _onChange: function () {
-    this.setState({emailPreviews: EmailStore.all()});
+    // HERE is where we want to setState to all the new posts
+    // this.setState({ posts: PostStore.all(), postsLength: PostStore.all().length });
+    // postsLength should NOT be in state. Because you can compute it on the fly
+    this.setState({ emails: EmailStore.all()} );
+
   },
 
-  render: function() {
+  render: function () {
 
+    var emailPreviews = this.state.emails.map(function (email, i) {
+      return (
+        <li key={ i }>
+          <Link to={"/inbox/" + email.id}>
+            <h4>{ email.from }</h4>
+            <h4>{ email.subject }</h4>
+            <p>{ email.body }</p>
+          </Link>
+        </li>
+      );
+    });
+
+    if (emailPreviews.length === 0) {
+      emailPreviews = <p>Loading emails...</p>;
+    }
     return (
+      <section className="emails">
+        {this.props.children}
+        <ul>
+          { emailPreviews }
+        </ul>
 
-      <div>
-        {(this.state.emailPreviews.length > 0 ?
-          <ul>
-            {this.state.emailPreviews.map(function (email) {
-              return <EmailPreview
-                key={email.id}
-                from={email.from}
-                to={email.to}
-                subject={email.subject}
-                body={email.body}
-                checked={email.checked}
-                starred={email.starred}
-                important={email.important} />;
-            })}
-          </ul> :
-          <article>
-            <p>Your Primary tab is empty.</p>
-            <p>Personal messages and messages that don’t appear in other tabs will be shown here.</p>
-          </article>
-        )}
-
-      </div>
+      </section>
     );
   }
 

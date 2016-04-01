@@ -3,22 +3,20 @@ var PropTypes = React.PropTypes;
 
 var EmailPreviews = React.createClass({
 
-  // getInitialState: function() {
-  //   return {
-  //     selected: false,
-  //   };
-  // },
+  getInitialState: function() {
+    return {
+      selected: false,
+    };
+  },
 
-  // componentDidMount: function() {
-  //   this.singleEmailListener = EmailStore.addListener(this._onChange);
-  // },
-  //
-  // componentWillUnmount: function () {
-  //   this.singleEmailListener.remove();
-  // },
+  componentDidMount: function() {
+    this.singleEmailListener = EmailStore.addListener(this._onChange);
+  },
 
-  // starred: this.props.email.starred,
-  // important: this.props.email.important,
+  componentWillUnmount: function () {
+    this.singleEmailListener.remove();
+  },
+
 
   render: function() {
     return (

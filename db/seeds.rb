@@ -6,7 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 Email.destroy_all
-Mailbox.destroy_all
+
 Email.create(
   subject: "The first email seed",
   body: "what subject says",
@@ -40,10 +40,4 @@ Email.create(
   body: "where do we go now?",
   to: 1,
   from: 2,
-  mailbox_id: 2
 )
-
-Mailbox.create(name: "Inbox")
-Mailbox.create(name: "Starred")
-Mailbox.create(name: "Important")
-Mailbox.create(name: "Sent Mail")

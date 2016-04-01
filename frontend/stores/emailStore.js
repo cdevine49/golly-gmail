@@ -10,6 +10,10 @@ EmailStore.all = function () {
   return _emails.slice();
 };
 
+EmailStore.find = function (id) {
+  return _emails[id];
+};
+
 EmailStore.__onDispatch = function (payload) {
   switch (payload.actionType) {
     case EmailConstants.EMAILS_RECEIVED:

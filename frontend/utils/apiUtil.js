@@ -2,49 +2,34 @@ var ApiActions = require('../actions/apiActions');
 
 ApiUtil = {
 
-  // fetchUsername: function (username) {
-  //   $.ajax({
-  //     type: 'GET',
-  //     url: 'api/users',
-  //     datatype: 'json',
-  //     data: { username: username },
-  //     success: function (username) {
-  //       SignInActions.receiveUserName(username);
-  //     },
-  //     error: function () {
-  //       console.log('ApiUtil#fetchUsername error');
-  //     }
-  //   });
-  // },
-
-  fetchAllMailboxes: function() {
-    $.ajax({
-      type: 'GET',
-      url: 'api/mailboxes',
-      datatype: 'json',
-      success: function (mailboxes) {
-        ApiActions.receiveAllMailboxes(mailboxes);
-      },
-      error: function () {
-        console.log('ApiUtil#fetchMailboxes error');
-      }
-    });
-  },
-
-
-  fetchAllEmails: function () {
+  fetchEmails: function() {
     $.ajax({
       type: 'GET',
       url: 'api/emails',
       datatype: 'json',
       success: function (emails) {
-        ApiActions.receiveAllEmails(emails);
+        ApiActions.receiveEmails(emails);
       },
       error: function () {
         console.log('ApiUtil#fetchEmails error');
       }
     });
-  }
+  },
+
+  // fetchEmailChain: function(id) {
+  //   $.ajax({
+  //     type: 'GET',
+  //     url: 'api/email_chains',
+  //     datatype: 'json',
+  //     data: {mailbox_id: id},
+  //     success: function (emails) {
+  //       ApiActions.receiveEmailChain(chain);
+  //     },
+  //     error: function () {
+  //       console.log('ApiUtil#fetchEmailChains error');
+  //     }
+  //   });
+  // },
 
 };
 
