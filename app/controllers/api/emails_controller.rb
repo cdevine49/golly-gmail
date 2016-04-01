@@ -1,6 +1,6 @@
 class Api::EmailsController < ApplicationController
   def index
-    @emails = Email.all
+    @emails = params[:mailbox] = 1 ? Email.all : Email.where(mailbox_id: params[:mailbox_id])
   end
 
   def create
@@ -12,7 +12,7 @@ class Api::EmailsController < ApplicationController
 
   private
   def email_params
-    params.require(:email).permit(:subject, :body, :to)
+    params.require(:email).permit(:subject, :body, :to, :mailbox_id)
   end
 
 end

@@ -2,49 +2,28 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 var ReactRouter = require('react-router');
 
+var App = require('./components/app');
+var EmailPreviewTable = require('./components/emailPreviewTable');
+var EmailDetails = require('./components/emailDetails');
+
 var Router = require('react-router').Router;
 var Route = require('react-router').Route;
 var hashHistory = ReactRouter.hashHistory;
 var IndexRoute = ReactRouter.IndexRoute;
 
-var Auth = require('./utils/auth');
+var SessionStore = require('./utils/apiUtil');
 
-var Mailbox = require('./components/mailbox');
-var Identifier = require('./components/identifier');
-
-var App = React.createClass({
-
-  render: function() {
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    );
-  }
-
-});
-
-// var requireAuth = function(nextState, replace) {
-//   if (!Auth.loggedIn()) {
-//     replace({
-//       pathname: '/identifier',
-//       state: { nextPathname: nextState.location.pathname }
-//     });
-//   }
-// };
-// onEnter={requireAuth}
-
-var routes = (
-  <Route path='/' component={App}>
-    <IndexRoute component={Mailbox} />
-  </Route>
-);
-// <Route path='identifier' component={Identifier}></Route>
-// <Route path='password' component={password}></Route>
+// <Route path='/login' component={LoginForm}/>
+// <Route path='/signin' component={SigninForm}/>
 
 document.addEventListener('DOMContentLoaded', function () {
   ReactDOM.render(
-    <Router history={hashHistory}>{routes}</Router>,
+    <Router history={hashHistory}>
+      <Route path='/' component={App}>
+        <IndexRoute component={EmailPreviewTable} />
+        <Route path='inbox/:id' component={EmailDetails} />
+      </Route>
+    </Router>,
     document.getElementById('root')
   );
 });

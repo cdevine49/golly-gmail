@@ -48,53 +48,30 @@
 	var ReactDOM = __webpack_require__(158);
 	var ReactRouter = __webpack_require__(159);
 	
+	var App = __webpack_require__(259);
+	var EmailPreviewTable = __webpack_require__(251);
+	var EmailDetails = __webpack_require__(260);
+	
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
 	var hashHistory = ReactRouter.hashHistory;
 	var IndexRoute = ReactRouter.IndexRoute;
 	
-	var Auth = __webpack_require__(216);
+	var SessionStore = __webpack_require__(218);
 	
-	var Mailbox = __webpack_require__(217);
-	var Identifier = __webpack_require__(254);
-	
-	var App = React.createClass({
-	  displayName: 'App',
-	
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      this.props.children
-	    );
-	  }
-	
-	});
-	
-	// var requireAuth = function(nextState, replace) {
-	//   if (!Auth.loggedIn()) {
-	//     replace({
-	//       pathname: '/identifier',
-	//       state: { nextPathname: nextState.location.pathname }
-	//     });
-	//   }
-	// };
-	// onEnter={requireAuth}
-	
-	var routes = React.createElement(
-	  Route,
-	  { path: '/', component: App },
-	  React.createElement(IndexRoute, { component: Mailbox })
-	);
-	// <Route path='identifier' component={Identifier}></Route>
-	// <Route path='password' component={password}></Route>
+	// <Route path='/login' component={LoginForm}/>
+	// <Route path='/signin' component={SigninForm}/>
 	
 	document.addEventListener('DOMContentLoaded', function () {
 	  ReactDOM.render(React.createElement(
 	    Router,
 	    { history: hashHistory },
-	    routes
+	    React.createElement(
+	      Route,
+	      { path: '/', component: App },
+	      React.createElement(IndexRoute, { component: EmailPreviewTable }),
+	      React.createElement(Route, { path: 'inbox/:id', component: EmailDetails })
+	    )
 	  ), document.getElementById('root'));
 	});
 	
@@ -24765,79 +24742,8 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 216 */
-/***/ function(module, exports) {
-
-	// Auth = {
-	//
-	// loggedIn: function () {
-	//    return !!localStorage.token;
-	//  }
-	//
-	// };
-	//
-	// module.exports = Auth;
-
-/***/ },
-/* 217 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(218);
-	var SideNav = __webpack_require__(226);
-	var MailboxStore = __webpack_require__(232);
-	var EmailPreviewTable = __webpack_require__(251);
-	
-	var Mailbox = React.createClass({
-	  displayName: 'Mailbox',
-	
-	
-	  getInitialState: function () {
-	    return {
-	      mailboxes: MailboxStore.all(),
-	      current_mailbox_id: null
-	    };
-	  },
-	
-	  componentDidMount: function () {
-	    this.MailboxListener = MailboxStore.addListener(this._onChange);
-	    ApiUtil.fetchAllMailboxes();
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.MailboxListener.remove();
-	  },
-	
-	  _onChange: function () {
-	    this.setState({ mailboxes: MailboxStore.all(), current_mailbox_id: MailboxStore.all()[0].id });
-	  },
-	
-	  handleChangeMailbox: function (mailbox_id) {
-	    this.setState({ current_mailbox_id: mailbox_id });
-	  },
-	
-	  _emailsInMailbox: function (mailbox_id) {
-	    ApiUtil.fetchEmailsInMailbox(mailbox_id);
-	  },
-	
-	  render: function () {
-	
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(SideNav, {
-	        mailboxes: this.state.mailboxes,
-	        onMailboxClick: this.handleChangeMailbox }),
-	      React.createElement(EmailPreviewTable, {
-	        key: this.state.current_mailbox_id,
-	        emails: this._emailsInMailbox })
-	    );
-	  }
-	});
-	
-	module.exports = Mailbox;
-
-/***/ },
+/* 216 */,
+/* 217 */,
 /* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -24845,42 +24751,13 @@
 	
 	ApiUtil = {
 	
-	  // fetchUsername: function (username) {
-	  //   $.ajax({
-	  //     type: 'GET',
-	  //     url: 'api/users',
-	  //     datatype: 'json',
-	  //     data: { username: username },
-	  //     success: function (username) {
-	  //       SignInActions.receiveUserName(username);
-	  //     },
-	  //     error: function () {
-	  //       console.log('ApiUtil#fetchUsername error');
-	  //     }
-	  //   });
-	  // },
-	
-	  fetchAllMailboxes: function () {
-	    $.ajax({
-	      type: 'GET',
-	      url: 'api/mailboxes',
-	      datatype: 'json',
-	      success: function (mailboxes) {
-	        ApiActions.receiveAllMailboxes(mailboxes);
-	      },
-	      error: function () {
-	        console.log('ApiUtil#fetchMailboxes error');
-	      }
-	    });
-	  },
-	
-	  fetchAllEmails: function () {
+	  fetchEmails: function () {
 	    $.ajax({
 	      type: 'GET',
 	      url: 'api/emails',
 	      datatype: 'json',
 	      success: function (emails) {
-	        ApiActions.receiveAllEmails(emails);
+	        ApiActions.receiveEmails(emails);
 	      },
 	      error: function () {
 	        console.log('ApiUtil#fetchEmails error');
@@ -24889,6 +24766,21 @@
 	  }
 	
 	};
+	
+	// fetchEmailChain: function(id) {
+	//   $.ajax({
+	//     type: 'GET',
+	//     url: 'api/email_chains',
+	//     datatype: 'json',
+	//     data: {mailbox_id: id},
+	//     success: function (emails) {
+	//       ApiActions.receiveEmailChain(chain);
+	//     },
+	//     error: function () {
+	//       console.log('ApiUtil#fetchEmailChains error');
+	//     }
+	//   });
+	// },
 	
 	window.ApiUtil = ApiUtil;
 	
@@ -24900,25 +24792,16 @@
 
 	var AppDispatcher = __webpack_require__(220);
 	var EmailConstants = __webpack_require__(224);
-	var MailboxConstants = __webpack_require__(225);
 	
 	ApiActions = {
-	  receiveAllEmails: function (emails) {
+	  receiveEmails: function (emails) {
 	    var action = {
 	      actionType: EmailConstants.EMAILS_RECEIVED,
 	      emails: emails
 	    };
 	    AppDispatcher.dispatch(action);
-	  },
-	
-	  receiveAllMailboxes: function (mailboxes) {
-	    var action = {
-	      actionType: MailboxConstants.MAILBOXES_RECEIVED,
-	      mailboxes: mailboxes
-	    };
-	
-	    AppDispatcher.dispatch(action);
 	  }
+	
 	};
 	
 	module.exports = ApiActions;
@@ -25249,16 +25132,7 @@
 	module.exports = EmailConstants;
 
 /***/ },
-/* 225 */
-/***/ function(module, exports) {
-
-	MailboxConstants = {
-	  MAILBOXES_RECEIVED: 'MAILBOXES_RECEIVED'
-	};
-	
-	module.exports = MailboxConstants;
-
-/***/ },
+/* 225 */,
 /* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -25282,14 +25156,6 @@
 	  handleClick: function () {},
 	
 	  render: function () {
-	    var mailbox_list = this.props.mailboxes.map(function (mailbox) {
-	      return React.createElement(
-	        'li',
-	        { key: mailbox.id,
-	          onClick: this.props.onMailboxClick.bind(null, mailbox.id) },
-	        mailbox.name
-	      );
-	    }.bind(this));
 	
 	    return React.createElement(
 	      'nav',
@@ -25299,11 +25165,7 @@
 	        { className: 'compose-button', onClick: this._openComposeForm },
 	        'Compose'
 	      ),
-	      React.createElement(
-	        'ul',
-	        { className: 'sidenav-links' },
-	        mailbox_list
-	      ),
+	      React.createElement('ul', { className: 'sidenav-links' }),
 	      React.createElement(ComposeForm, null)
 	    );
 	  }
@@ -25615,39 +25477,7 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 232 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(233).Store;
-	var AppDispatcher = __webpack_require__(220);
-	var MailboxConstants = __webpack_require__(250);
-	
-	var _mailboxes = [];
-	
-	var MailboxStore = new Store(AppDispatcher);
-	
-	MailboxStore.all = function () {
-	  return _mailboxes.slice();
-	};
-	
-	MailboxStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case MailboxConstants.MAILBOXES_RECEIVED:
-	      resetMailboxes(payload.mailboxes);
-	      MailboxStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	var resetMailboxes = function (mailboxes) {
-	  _mailboxes = mailboxes;
-	};
-	
-	window.MailboxStore = MailboxStore;
-	
-	module.exports = MailboxStore;
-
-/***/ },
+/* 232 */,
 /* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -32094,79 +31924,83 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 250 */
-/***/ function(module, exports) {
-
-	MailboxConstants = {
-	  MAILBOXES_RECEIVED: 'MAILBOXES_RECEIVED'
-	};
-	
-	module.exports = MailboxConstants;
-
-/***/ },
+/* 250 */,
 /* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var EmailStore = __webpack_require__(252);
 	var ApiUtil = __webpack_require__(218);
-	var EmailPreview = __webpack_require__(253);
+	var Link = __webpack_require__(159).Link;
 	
 	var EmailPreviewTable = React.createClass({
 	  displayName: 'EmailPreviewTable',
 	
 	
 	  getInitialState: function () {
-	    return {
-	      emailPreviews: EmailStore.all()
-	    };
+	    return { emails: [] };
 	  },
 	
 	  componentDidMount: function () {
-	    this.newEmailListener = EmailStore.addListener(this._onChange);
-	    ApiUtil.fetchAllEmails();
+	
+	    this.emailStoreToken = EmailStore.addListener(this._onChange);
+	    ApiUtil.fetchEmails();
 	  },
 	
 	  componentWillUnmount: function () {
-	    this.newEmailListener.remove();
+	    this.emailStoreToken.remove();
 	  },
 	
 	  _onChange: function () {
-	    this.setState({ emailPreviews: EmailStore.all() });
+	    // HERE is where we want to setState to all the new posts
+	    // this.setState({ posts: PostStore.all(), postsLength: PostStore.all().length });
+	    // postsLength should NOT be in state. Because you can compute it on the fly
+	    this.setState({ emails: EmailStore.all() });
 	  },
 	
 	  render: function () {
 	
+	    var emailPreviews = this.state.emails.map(function (email, i) {
+	      return React.createElement(
+	        'li',
+	        { key: i },
+	        React.createElement(
+	          Link,
+	          { to: "/inbox/" + email.id },
+	          React.createElement(
+	            'h4',
+	            null,
+	            email.from
+	          ),
+	          React.createElement(
+	            'h4',
+	            null,
+	            email.subject
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            email.body
+	          )
+	        )
+	      );
+	    });
+	
+	    if (emailPreviews.length === 0) {
+	      emailPreviews = React.createElement(
+	        'p',
+	        null,
+	        'Loading emails...'
+	      );
+	    }
 	    return React.createElement(
-	      'div',
-	      null,
-	      this.state.emailPreviews.length > 0 ? React.createElement(
+	      'section',
+	      { className: 'emails' },
+	      this.props.children,
+	      React.createElement(
 	        'ul',
 	        null,
-	        this.state.emailPreviews.map(function (email) {
-	          return React.createElement(EmailPreview, {
-	            key: email.id,
-	            from: email.from,
-	            to: email.to,
-	            subject: email.subject,
-	            body: email.body,
-	            checked: email.checked,
-	            starred: email.starred,
-	            important: email.important });
-	        })
-	      ) : React.createElement(
-	        'article',
-	        null,
-	        React.createElement(
-	          'p',
-	          null,
-	          'Your Primary tab is empty.'
-	        ),
-	        React.createElement(
-	          'p',
-	          null,
-	          'Personal messages and messages that don’t appear in other tabs will be shown here.'
-	        )
+	        emailPreviews
 	      )
 	    );
 	  }
@@ -32191,6 +32025,10 @@
 	  return _emails.slice();
 	};
 	
+	EmailStore.find = function (id) {
+	  return _emails[id];
+	};
+	
 	EmailStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case EmailConstants.EMAILS_RECEIVED:
@@ -32209,118 +32047,177 @@
 	module.exports = EmailStore;
 
 /***/ },
-/* 253 */
+/* 253 */,
+/* 254 */,
+/* 255 */,
+/* 256 */,
+/* 257 */,
+/* 258 */,
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var PropTypes = React.PropTypes;
+	var TopNav = __webpack_require__(262);
+	var SideNav = __webpack_require__(226);
 	
-	var EmailPreviews = React.createClass({
-	  displayName: "EmailPreviews",
+	var App = React.createClass({
+	  displayName: 'App',
 	
-	
-	  // getInitialState: function() {
-	  //   return {
-	  //     selected: false,
-	  //   };
-	  // },
-	
-	  // componentDidMount: function() {
-	  //   this.singleEmailListener = EmailStore.addListener(this._onChange);
-	  // },
-	  //
-	  // componentWillUnmount: function () {
-	  //   this.singleEmailListener.remove();
-	  // },
-	
-	  // starred: this.props.email.starred,
-	  // important: this.props.email.important,
 	
 	  render: function () {
 	    return React.createElement(
-	      "main",
+	      'main',
+	      null,
+	      React.createElement(TopNav, null),
+	      React.createElement(SideNav, null),
+	      this.props.children
+	    );
+	  }
+	
+	});
+	
+	module.exports = App;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var EmailStore = __webpack_require__(252);
+	var ApiUtil = __webpack_require__(218);
+	var History = __webpack_require__(159).History;
+	
+	var EmailDetails = React.createClass({
+	  displayName: 'EmailDetails',
+	
+	  // mixin: [History],
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return {
+	      email: null
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.emailStoreToken = EmailStore.addListener(this._onChange);
+	    ApiUtil.fetchEmails();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.emailStoreToken.remove();
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ email: EmailStore.find(this.props.params.id) });
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    this.setState({ email: EmailStore.find(newProps.params.id) });
+	  },
+	
+	  render: function () {
+	    if (!this.state.email) {
+	      return React.createElement(
+	        'p',
+	        null,
+	        'Loading the email...'
+	      );
+	    }
+	
+	    return React.createElement(
+	      'article',
 	      null,
 	      React.createElement(
-	        "form",
-	        { className: "email-attribute-form" },
-	        React.createElement("input", { type: "checkbox",
-	          id: "attributes",
-	          name: "email[checked]",
-	          defaultChecked: this.props.checked }),
-	        React.createElement("input", { type: "checkbox",
-	          id: "attributes",
-	          name: "email[starred]",
-	          defaultChecked: this.props.starred }),
-	        React.createElement("input", { type: "checkbox",
-	          id: "attributes",
-	          name: "email[important]",
-	          defaultChecked: this.props.important })
+	        'h2',
+	        null,
+	        this.state.email.subject
 	      ),
 	      React.createElement(
-	        "ul",
+	        'p',
 	        null,
-	        React.createElement(
-	          "li",
-	          null,
-	          "From: ",
-	          this.props.from
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          "Subject: ",
-	          this.props.subject
-	        ),
-	        React.createElement(
-	          "li",
-	          null,
-	          "Body: ",
-	          this.props.body
-	        )
+	        this.state.email.body
 	      )
 	    );
 	  }
 	
 	});
 	
-	module.exports = EmailPreviews;
+	module.exports = EmailDetails;
 
 /***/ },
-/* 254 */
-/***/ function(module, exports) {
+/* 261 */,
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
 
-	// var React = require('react');
-	// var PropTypes = React.PropTypes;
-	// var ApiUtil = require('../utils/apiUtil');
-	// var LinkedStateMixin = require('react-addons-linked-state-mixin');
-	//
-	//
-	// var Identifier = React.createClass({
-	//   mixins: [LinkedStateMixin],
-	//
-	//   getInitialState: function() {
-	//     return {
-	//       username: null
-	//     };
-	//   },
-	//
-	//   enterUsername: function (e) {
-	//     e.preventDefault();
-	//     ApiUtil.fetchUsername(this.state.username);
-	//   },
-	//
-	//   render: function() {
-	//     return (
-	//       <form role="form">
-	//         <input type='text' valueLink={this.linkState('username')} placeholder="Enter your Email"/>
-	//         <button type='submit' onClick={this.enterUsername}>Next</button>
-	//       </form>
-	//     );
-	//   }
-	//
-	// });
-	//
-	// module.exports = Identifier;
+	var React = __webpack_require__(1);
+	var Search = __webpack_require__(263);
+	
+	var TopNav = React.createClass({
+	  displayName: 'TopNav',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      anySelected: false
+	    };
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'header',
+	      { className: 'header group' },
+	      React.createElement(
+	        'nav',
+	        { className: 'topnav-above group' },
+	        React.createElement('div', null)
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = TopNav;
+
+/***/ },
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Search = React.createClass({
+	  displayName: 'Search',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      inputVal: ""
+	    };
+	  },
+	
+	  handleInput: function (event) {
+	    this.setState({ inputVal: event.currentTarget.value });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'form',
+	      { className: 'searchbar group' },
+	      React.createElement('input', { type: 'text', onChange: this.handleInput, value: this.state.inputVal }),
+	      React.createElement(
+	        'button',
+	        { className: 'search-button' },
+	        'B'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Search;
 
 /***/ }
 /******/ ]);
