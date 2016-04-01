@@ -16,14 +16,16 @@ ApiUtil = {
     });
   },
 
-  createEmails: function() {
+  createEmail: function(formData) {
     $.ajax({
       type: 'POST',
       url: 'api/emails',
+      processData: false,
+      contentType: false,
       datatype: 'json',
-      data: 
-      success: function (emails) {
-        ApiActions.receiveEmails(emails);
+      data: formData,
+      success: function (email) {
+        ApiActions.receiveEmail(email);
       },
       error: function () {
         console.log('ApiUtil#fetchEmails error');

@@ -45,7 +45,7 @@ var LoginForm = React.createClass({
           </label>
           <button>Log In</button>
         </form>
-        <Link to={'/signin/'}>Create an Account</Link>
+        <Link to={'/signup/'}>Create an Account</Link>
       </section>
     );
   }

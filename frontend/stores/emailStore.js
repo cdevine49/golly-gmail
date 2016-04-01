@@ -20,6 +20,10 @@ EmailStore.__onDispatch = function (payload) {
       resetEmails(payload.emails);
       EmailStore.__emitChange();
       break;
+    case EmailConstants.EMAIL_RECEIVED:
+      _emails[payload.email.id] = payload.email;
+      EmailStore.__emitChange();
+      break;
   }
 };
 

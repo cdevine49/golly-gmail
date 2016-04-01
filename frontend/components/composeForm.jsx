@@ -1,5 +1,6 @@
 var React = require('react');
 var ApiUtil = require('../utils/apiUtil');
+var SessionStore = require('../stores/sessionStore');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 var ComposeForm = React.createClass({
@@ -8,8 +9,7 @@ var ComposeForm = React.createClass({
     return {
       subject: "",
       body: "",
-      // to: null,
-      // from: SessionStore.current_user.id
+      to: 3, //THIS NEEDS TO BE CHANGED WHEN ALLOWING 'REAL' EMAILING
     };
   },
 
@@ -20,11 +20,15 @@ var ComposeForm = React.createClass({
   handleBodyChange: function (e) {
     this.setState({body: e.currentTarget.value});
   },
-  
+
   createEmail: function (e) {
     e.preventDefault();
-
-    ApiUtil.createEmail();
+    var formData = new FormData();
+    formData.append("email[subject]", this.state.subject);
+    formData.append("email[body]", this.state.body);
+    formData.append("email[to]", this.state.to);
+    ApiUtil.createEmail(formData);
+    this.setState({ subject: '', body: '' });
   },
 
   render: function() {
@@ -35,6 +39,7 @@ var ComposeForm = React.createClass({
               type="text"
               placeholder="Subject"
               onChange={this.handleSubjectChange}
+              value={this.state.subject}
               />
           </label>
           <br/>
@@ -42,8 +47,10 @@ var ComposeForm = React.createClass({
             <input
               type="textarea"
               onChange={this.handleBodyChange}
+              value={this.state.body}
               />
           </label>
+          <button>Submit</button>
       </form>
     );
   }
