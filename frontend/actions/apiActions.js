@@ -11,6 +11,14 @@ ApiActions = {
     AppDispatcher.dispatch(action);
   },
 
+  receiveEmail: function(email) {
+    var action = {
+      actionType: EmailConstants.EMAIL_RECEIVED,
+      email: email
+    };
+    AppDispatcher.dispatch(action);
+  },
+
   currentUserReceived: function(currentUser) {
       var action = {
         actionType: SessionConstants.CURRENT_USER_RECEIVED,

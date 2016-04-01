@@ -6,7 +6,7 @@ var App = require('./components/app');
 var EmailPreviewTable = require('./components/emailPreviewTable');
 var EmailDetails = require('./components/emailDetails');
 var LoginForm = require('./components/loginForm');
-var SigninForm = require('./components/signinForm');
+var SignupForm = require('./components/signupForm');
 
 var SessionStore = require('./stores/sessionStore');
 var ApiUtil = require('./utils/apiUtil');
@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
       </Route>
 
       <Route path='/login' component={LoginForm}/>
-      <Route path='/signin' component={SigninForm}/>
+      <Route path='/signup' component={SignupForm}/>
 
     </Router>,
     document.getElementById('root')

@@ -48,14 +48,14 @@
 	var ReactDOM = __webpack_require__(158);
 	var ReactRouter = __webpack_require__(159);
 	
-	var App = __webpack_require__(259);
+	var App = __webpack_require__(216);
 	var EmailPreviewTable = __webpack_require__(251);
-	var EmailDetails = __webpack_require__(260);
-	var LoginForm = __webpack_require__(266);
-	var SigninForm = __webpack_require__(267);
+	var EmailDetails = __webpack_require__(253);
+	var LoginForm = __webpack_require__(254);
+	var SignupForm = __webpack_require__(256);
 	
-	var SessionStore = __webpack_require__(264);
-	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var SessionStore = __webpack_require__(226);
+	var ApiUtil = __webpack_require__(218);
 	
 	var Router = __webpack_require__(159).Router;
 	var Route = __webpack_require__(159).Route;
@@ -74,7 +74,7 @@
 	      React.createElement(Route, { path: 'inbox/:id', component: EmailDetails })
 	    ),
 	    React.createElement(Route, { path: '/login', component: LoginForm }),
-	    React.createElement(Route, { path: '/signin', component: SigninForm })
+	    React.createElement(Route, { path: '/signup', component: SignupForm })
 	  ), document.getElementById('root'));
 	});
 	
@@ -24760,10 +24760,232 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 216 */,
-/* 217 */,
-/* 218 */,
-/* 219 */,
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var TopNav = __webpack_require__(217);
+	var SideNav = __webpack_require__(245);
+	
+	var App = React.createClass({
+	  displayName: 'App',
+	
+	
+	  render: function () {
+	    return React.createElement(
+	      'main',
+	      null,
+	      React.createElement(TopNav, null),
+	      React.createElement(SideNav, null),
+	      this.props.children
+	    );
+	  }
+	
+	});
+	
+	module.exports = App;
+
+/***/ },
+/* 217 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(218);
+	var SessionStore = __webpack_require__(226);
+	var Search = __webpack_require__(244);
+	
+	var TopNav = React.createClass({
+	  displayName: 'TopNav',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  componentDidMount: function () {
+	    this.sessionStoreToken = SessionStore.addListener(this._onChange);
+	    this._onChange();
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.sessionStoreToken.remove();
+	  },
+	
+	  _onChange: function () {
+	    if (!SessionStore.isLoggedIn()) {
+	      this.context.router.push('/login');
+	    }
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'header',
+	      { className: 'header group' },
+	      React.createElement(
+	        'nav',
+	        { className: 'topnav-above group' },
+	        React.createElement(
+	          'button',
+	          { onClick: ApiUtil.logout },
+	          'Logout'
+	        )
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = TopNav;
+
+/***/ },
+/* 218 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var ApiActions = __webpack_require__(219);
+	
+	ApiUtil = {
+	
+	  fetchEmails: function () {
+	    $.ajax({
+	      type: 'GET',
+	      url: 'api/emails',
+	      datatype: 'json',
+	      success: function (emails) {
+	        ApiActions.receiveEmails(emails);
+	      },
+	      error: function () {
+	        console.log('ApiUtil#fetchEmails error');
+	      }
+	    });
+	  },
+	
+	  createEmail: function (formData) {
+	    $.ajax({
+	      type: 'POST',
+	      url: 'api/emails',
+	      processData: false,
+	      contentType: false,
+	      datatype: 'json',
+	      data: formData,
+	      success: function (email) {
+	        ApiActions.receiveEmail(email);
+	      },
+	      error: function () {
+	        console.log('ApiUtil#fetchEmails error');
+	      }
+	    });
+	  },
+	
+	  login: function (credentials, callback) {
+	    $.ajax({
+	      type: "POST",
+	      url: "/api/session",
+	      dataType: "json",
+	      data: credentials,
+	      success: function (currentUser) {
+	        ApiActions.currentUserReceived(currentUser);
+	        callback && callback();
+	      },
+	      error: function () {
+	        console.log('ApiUtil#login error');
+	      }
+	    });
+	  },
+	
+	  signin: function (credentials, callback) {
+	    $.ajax({
+	      type: "POST",
+	      url: "/api/users",
+	      dataType: "json",
+	      data: { user: credentials },
+	      success: function (currentUser) {
+	        ApiActions.currentUserReceived(currentUser);
+	        callback && callback();
+	      },
+	      error: function () {
+	        console.log('ApiUtil#signin error');
+	      }
+	    });
+	  },
+	
+	  logout: function () {
+	    $.ajax({
+	      type: "DELETE",
+	      url: "/api/session",
+	      dataType: "json",
+	      success: function () {
+	        ApiActions.logout();
+	      },
+	      error: function () {
+	        console.log('ApiUtil#logout error');
+	      }
+	    });
+	  },
+	
+	  fetchCurrentUser: function (completion) {
+	    $.ajax({
+	      type: "GET",
+	      url: "/api/session",
+	      dataType: "json",
+	      success: function (currentUser) {
+	        ApiActions.currentUserReceived(currentUser);
+	      },
+	      complete: function () {
+	        completion && completion();
+	      }
+	    });
+	  }
+	
+	};
+	
+	window.ApiUtil = ApiUtil;
+	
+	module.exports = ApiUtil;
+
+/***/ },
+/* 219 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(220);
+	var EmailConstants = __webpack_require__(224);
+	var SessionConstants = __webpack_require__(225);
+	
+	ApiActions = {
+	  receiveEmails: function (emails) {
+	    var action = {
+	      actionType: EmailConstants.EMAILS_RECEIVED,
+	      emails: emails
+	    };
+	    AppDispatcher.dispatch(action);
+	  },
+	
+	  receiveEmail: function (email) {
+	    var action = {
+	      actionType: EmailConstants.EMAIL_RECEIVED,
+	      email: email
+	    };
+	    AppDispatcher.dispatch(action);
+	  },
+	
+	  currentUserReceived: function (currentUser) {
+	    var action = {
+	      actionType: SessionConstants.CURRENT_USER_RECEIVED,
+	      currentUser: currentUser
+	    };
+	    AppDispatcher.dispatch(action);
+	  },
+	
+	  logout: function () {
+	    AppDispatcher.dispatch({
+	      actionType: SessionConstants.LOGOUT
+	    });
+	  }
+	
+	};
+	
+	module.exports = ApiActions;
+
+/***/ },
 /* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -25083,359 +25305,67 @@
 /***/ function(module, exports) {
 
 	EmailConstants = {
-	  EMAILS_RECEIVED: 'EMAILS_RECEIVED'
+	  EMAILS_RECEIVED: 'EMAILS_RECEIVED',
+	  EMAIL_RECEIVED: 'EMAIL_RECEIVED'
 	};
 	
 	module.exports = EmailConstants;
 
 /***/ },
-/* 225 */,
+/* 225 */
+/***/ function(module, exports) {
+
+	SessionConstants = {
+	  CURRENT_USER_RECEIVED: 'CURRENT_USER_RECEIVED',
+	  LOGOUT: 'LOGOUT'
+	};
+	
+	module.exports = SessionConstants;
+
+/***/ },
 /* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	var ComposeForm = __webpack_require__(227);
+	var Store = __webpack_require__(227).Store;
+	var SessionConstants = __webpack_require__(225);
+	var AppDispatcher = __webpack_require__(220);
 	
-	var SideNav = React.createClass({
-	  displayName: 'SideNav',
+	var SessionStore = new Store(AppDispatcher);
 	
+	var _currentUser;
+	var _currentUserFetched = false;
 	
-	  getInitialState: function () {
-	    return {
-	      formOpen: false
-	    };
-	  },
+	SessionStore.currentUser = function () {
+	  return _currentUser;
+	};
 	
-	  _composeForm: function () {
-	    this.setState({ formOpen: !this.state.formOpen });
-	  },
+	SessionStore.isLoggedIn = function () {
+	  return !!_currentUser;
+	};
 	
-	  handleClick: function () {},
+	SessionStore.currentUserFetched = function () {
+	  return _currentUserFetched;
+	};
 	
-	  render: function () {
-	
-	    return React.createElement(
-	      'nav',
-	      { className: 'sidenav' },
-	      React.createElement(
-	        'button',
-	        { className: 'compose-button', onClick: this._composeForm },
-	        'Compose'
-	      ),
-	      React.createElement('ul', { className: 'sidenav-links' }),
-	      this.state.formOpen ? React.createElement(ComposeForm, null) : ''
-	    );
+	SessionStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case SessionConstants.CURRENT_USER_RECEIVED:
+	      _currentUser = payload.currentUser;
+	      _currentUserFetched = true;
+	      SessionStore.__emitChange();
+	      break;
+	    case SessionConstants.LOGOUT:
+	      _currentUser = null;
+	      _currentUserFetched = false;
+	      SessionStore.__emitChange();
+	      break;
 	  }
+	};
 	
-	});
-	// className='compose-form' formOpen={this.state.formOpen}
-	module.exports = SideNav;
+	module.exports = SessionStore;
 
 /***/ },
 /* 227 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-	var LinkedStateMixin = __webpack_require__(228);
-	
-	var ComposeForm = React.createClass({
-	  displayName: 'ComposeForm',
-	
-	
-	  getInitialState: function () {
-	    return {
-	      subject: "",
-	      body: ""
-	    };
-	  },
-	
-	  // to: null,
-	  // from: SessionStore.current_user.id
-	  handleSubjectChange: function (e) {
-	    this.setState({ subject: e.currentTarget.value });
-	  },
-	
-	  handleBodyChange: function (e) {
-	    this.setState({ body: e.currentTarget.value });
-	  },
-	
-	  createEmail: function (e) {
-	    e.preventDefault();
-	
-	    ApiUtil.createEmail();
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'form',
-	      { onSubmit: this.createEmail },
-	      React.createElement(
-	        'label',
-	        null,
-	        'Subject',
-	        React.createElement('input', {
-	          type: 'text',
-	          placeholder: 'Subject',
-	          onChange: this.handleSubjectChange
-	        })
-	      ),
-	      React.createElement('br', null),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Body',
-	        React.createElement('input', {
-	          type: 'textarea',
-	          onChange: this.handleBodyChange
-	        })
-	      )
-	    );
-	  }
-	
-	  // render: function () {
-	  //   return(
-	  //     <li></li>
-	  //   );
-	  // }
-	
-	});
-	
-	module.exports = ComposeForm;
-
-/***/ },
-/* 228 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(229);
-
-/***/ },
-/* 229 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule LinkedStateMixin
-	 * @typechecks static-only
-	 */
-	
-	'use strict';
-	
-	var ReactLink = __webpack_require__(230);
-	var ReactStateSetters = __webpack_require__(231);
-	
-	/**
-	 * A simple mixin around ReactLink.forState().
-	 */
-	var LinkedStateMixin = {
-	  /**
-	   * Create a ReactLink that's linked to part of this component's state. The
-	   * ReactLink will have the current value of this.state[key] and will call
-	   * setState() when a change is requested.
-	   *
-	   * @param {string} key state key to update. Note: you may want to use keyOf()
-	   * if you're using Google Closure Compiler advanced mode.
-	   * @return {ReactLink} ReactLink instance linking to the state.
-	   */
-	  linkState: function (key) {
-	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
-	  }
-	};
-	
-	module.exports = LinkedStateMixin;
-
-/***/ },
-/* 230 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactLink
-	 * @typechecks static-only
-	 */
-	
-	'use strict';
-	
-	/**
-	 * ReactLink encapsulates a common pattern in which a component wants to modify
-	 * a prop received from its parent. ReactLink allows the parent to pass down a
-	 * value coupled with a callback that, when invoked, expresses an intent to
-	 * modify that value. For example:
-	 *
-	 * React.createClass({
-	 *   getInitialState: function() {
-	 *     return {value: ''};
-	 *   },
-	 *   render: function() {
-	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
-	 *     return <input valueLink={valueLink} />;
-	 *   },
-	 *   _handleValueChange: function(newValue) {
-	 *     this.setState({value: newValue});
-	 *   }
-	 * });
-	 *
-	 * We have provided some sugary mixins to make the creation and
-	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
-	 */
-	
-	var React = __webpack_require__(2);
-	
-	/**
-	 * @param {*} value current value of the link
-	 * @param {function} requestChange callback to request a change
-	 */
-	function ReactLink(value, requestChange) {
-	  this.value = value;
-	  this.requestChange = requestChange;
-	}
-	
-	/**
-	 * Creates a PropType that enforces the ReactLink API and optionally checks the
-	 * type of the value being passed inside the link. Example:
-	 *
-	 * MyComponent.propTypes = {
-	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
-	 * }
-	 */
-	function createLinkTypeChecker(linkType) {
-	  var shapes = {
-	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
-	    requestChange: React.PropTypes.func.isRequired
-	  };
-	  return React.PropTypes.shape(shapes);
-	}
-	
-	ReactLink.PropTypes = {
-	  link: createLinkTypeChecker
-	};
-	
-	module.exports = ReactLink;
-
-/***/ },
-/* 231 */
-/***/ function(module, exports) {
-
-	/**
-	 * Copyright 2013-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule ReactStateSetters
-	 */
-	
-	'use strict';
-	
-	var ReactStateSetters = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (component, funcReturningState) {
-	    return function (a, b, c, d, e, f) {
-	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
-	      if (partialState) {
-	        component.setState(partialState);
-	      }
-	    };
-	  },
-	
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {ReactCompositeComponent} component
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (component, key) {
-	    // Memoize the setters.
-	    var cache = component.__keySetters || (component.__keySetters = {});
-	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
-	  }
-	};
-	
-	function createStateKeySetter(component, key) {
-	  // Partial state is allocated outside of the function closure so it can be
-	  // reused with every call, avoiding memory allocation when this function
-	  // is called.
-	  var partialState = {};
-	  return function stateKeySetter(value) {
-	    partialState[key] = value;
-	    component.setState(partialState);
-	  };
-	}
-	
-	ReactStateSetters.Mixin = {
-	  /**
-	   * Returns a function that calls the provided function, and uses the result
-	   * of that to set the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateSetter(function(xValue) {
-	   *     return {x: xValue};
-	   *   })(1);
-	   *
-	   * @param {function} funcReturningState Returned callback uses this to
-	   *                                      determine how to update state.
-	   * @return {function} callback that when invoked uses funcReturningState to
-	   *                    determined the object literal to setState.
-	   */
-	  createStateSetter: function (funcReturningState) {
-	    return ReactStateSetters.createStateSetter(this, funcReturningState);
-	  },
-	
-	  /**
-	   * Returns a single-argument callback that can be used to update a single
-	   * key in the component's state.
-	   *
-	   * For example, these statements are equivalent:
-	   *
-	   *   this.setState({x: 1});
-	   *   this.createStateKeySetter('x')(1);
-	   *
-	   * Note: this is memoized function, which makes it inexpensive to call.
-	   *
-	   * @param {string} key The key in the state that you should update.
-	   * @return {function} callback of 1 argument which calls setState() with
-	   *                    the provided keyName and callback argument.
-	   */
-	  createStateKeySetter: function (key) {
-	    return ReactStateSetters.createStateKeySetter(this, key);
-	  }
-	};
-	
-	module.exports = ReactStateSetters;
-
-/***/ },
-/* 232 */,
-/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25447,15 +25377,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(234);
-	module.exports.MapStore = __webpack_require__(237);
-	module.exports.Mixin = __webpack_require__(249);
-	module.exports.ReduceStore = __webpack_require__(238);
-	module.exports.Store = __webpack_require__(239);
+	module.exports.Container = __webpack_require__(228);
+	module.exports.MapStore = __webpack_require__(231);
+	module.exports.Mixin = __webpack_require__(243);
+	module.exports.ReduceStore = __webpack_require__(232);
+	module.exports.Store = __webpack_require__(233);
 
 
 /***/ },
-/* 234 */
+/* 228 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25477,10 +25407,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(235);
+	var FluxStoreGroup = __webpack_require__(229);
 	
 	var invariant = __webpack_require__(223);
-	var shallowEqual = __webpack_require__(236);
+	var shallowEqual = __webpack_require__(230);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -25638,7 +25568,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 235 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25719,7 +25649,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 236 */
+/* 230 */
 /***/ function(module, exports) {
 
 	/**
@@ -25774,7 +25704,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 237 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25795,8 +25725,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(238);
-	var Immutable = __webpack_require__(248);
+	var FluxReduceStore = __webpack_require__(232);
+	var Immutable = __webpack_require__(242);
 	
 	var invariant = __webpack_require__(223);
 	
@@ -25924,7 +25854,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 238 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25945,9 +25875,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(239);
+	var FluxStore = __webpack_require__(233);
 	
-	var abstractMethod = __webpack_require__(247);
+	var abstractMethod = __webpack_require__(241);
 	var invariant = __webpack_require__(223);
 	
 	var FluxReduceStore = (function (_FluxStore) {
@@ -26031,7 +25961,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 239 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26050,7 +25980,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(240);
+	var _require = __webpack_require__(234);
 	
 	var EventEmitter = _require.EventEmitter;
 	
@@ -26214,7 +26144,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 240 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26227,14 +26157,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(241)
+	  EventEmitter: __webpack_require__(235)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 241 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26253,11 +26183,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(242);
-	var EventSubscriptionVendor = __webpack_require__(244);
+	var EmitterSubscription = __webpack_require__(236);
+	var EventSubscriptionVendor = __webpack_require__(238);
 	
-	var emptyFunction = __webpack_require__(246);
-	var invariant = __webpack_require__(245);
+	var emptyFunction = __webpack_require__(240);
+	var invariant = __webpack_require__(239);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -26431,7 +26361,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 242 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26452,7 +26382,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(243);
+	var EventSubscription = __webpack_require__(237);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -26484,7 +26414,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 243 */
+/* 237 */
 /***/ function(module, exports) {
 
 	/**
@@ -26538,7 +26468,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 244 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26557,7 +26487,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(245);
+	var invariant = __webpack_require__(239);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -26647,7 +26577,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 245 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26702,7 +26632,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 246 */
+/* 240 */
 /***/ function(module, exports) {
 
 	/**
@@ -26744,7 +26674,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 247 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26771,7 +26701,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 248 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31758,7 +31688,7 @@
 	}));
 
 /***/ },
-/* 249 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31775,7 +31705,7 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(235);
+	var FluxStoreGroup = __webpack_require__(229);
 	
 	var invariant = __webpack_require__(223);
 	
@@ -31881,13 +31811,404 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 250 */,
+/* 244 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Search = React.createClass({
+	  displayName: 'Search',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      inputVal: ""
+	    };
+	  },
+	
+	  handleInput: function (event) {
+	    this.setState({ inputVal: event.currentTarget.value });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'form',
+	      { className: 'searchbar group' },
+	      React.createElement('input', { type: 'text', onChange: this.handleInput, value: this.state.inputVal }),
+	      React.createElement(
+	        'button',
+	        { className: 'search-button' },
+	        'B'
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Search;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ComposeForm = __webpack_require__(246);
+	
+	var SideNav = React.createClass({
+	  displayName: 'SideNav',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      formOpen: false
+	    };
+	  },
+	
+	  _composeForm: function () {
+	    this.setState({ formOpen: !this.state.formOpen });
+	  },
+	
+	  handleClick: function () {},
+	
+	  render: function () {
+	
+	    return React.createElement(
+	      'nav',
+	      { className: 'sidenav' },
+	      React.createElement(
+	        'button',
+	        { className: 'compose-button', onClick: this._composeForm },
+	        'Compose'
+	      ),
+	      React.createElement('ul', { className: 'sidenav-links' }),
+	      this.state.formOpen ? React.createElement(ComposeForm, null) : ''
+	    );
+	  }
+	
+	});
+	// className='compose-form' formOpen={this.state.formOpen}
+	module.exports = SideNav;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var ApiUtil = __webpack_require__(218);
+	var SessionStore = __webpack_require__(226);
+	var LinkedStateMixin = __webpack_require__(247);
+	
+	var ComposeForm = React.createClass({
+	  displayName: 'ComposeForm',
+	
+	
+	  getInitialState: function () {
+	    return {
+	      subject: "",
+	      body: "",
+	      to: 3 };
+	  },
+	
+	  //THIS NEEDS TO BE CHANGED WHEN ALLOWING 'REAL' EMAILING
+	  handleSubjectChange: function (e) {
+	    this.setState({ subject: e.currentTarget.value });
+	  },
+	
+	  handleBodyChange: function (e) {
+	    this.setState({ body: e.currentTarget.value });
+	  },
+	
+	  createEmail: function (e) {
+	    e.preventDefault();
+	    var formData = new FormData();
+	    formData.append("email[subject]", this.state.subject);
+	    formData.append("email[body]", this.state.body);
+	    formData.append("email[to]", this.state.to);
+	    ApiUtil.createEmail(formData);
+	    this.setState({ subject: '', body: '' });
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'form',
+	      { onSubmit: this.createEmail },
+	      React.createElement(
+	        'label',
+	        null,
+	        'Subject',
+	        React.createElement('input', {
+	          type: 'text',
+	          placeholder: 'Subject',
+	          onChange: this.handleSubjectChange,
+	          value: this.state.subject
+	        })
+	      ),
+	      React.createElement('br', null),
+	      React.createElement(
+	        'label',
+	        null,
+	        'Body',
+	        React.createElement('input', {
+	          type: 'textarea',
+	          onChange: this.handleBodyChange,
+	          value: this.state.body
+	        })
+	      ),
+	      React.createElement(
+	        'button',
+	        null,
+	        'Submit'
+	      )
+	    );
+	  }
+	
+	  // render: function () {
+	  //   return(
+	  //     <li></li>
+	  //   );
+	  // }
+	
+	});
+	
+	module.exports = ComposeForm;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(248);
+
+/***/ },
+/* 248 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
+	 */
+	
+	'use strict';
+	
+	var ReactLink = __webpack_require__(249);
+	var ReactStateSetters = __webpack_require__(250);
+	
+	/**
+	 * A simple mixin around ReactLink.forState().
+	 */
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  }
+	};
+	
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLink
+	 * @typechecks static-only
+	 */
+	
+	'use strict';
+	
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
+	
+	var React = __webpack_require__(2);
+	
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+	
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
+	  };
+	  return React.PropTypes.shape(shapes);
+	}
+	
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
+	
+	module.exports = ReactLink;
+
+/***/ },
+/* 250 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
+	
+	'use strict';
+	
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
+	      }
+	    };
+	  },
+	
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
+	  }
+	};
+	
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
+	
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
+	  },
+	
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
+	  }
+	};
+	
+	module.exports = ReactStateSetters;
+
+/***/ },
 /* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var EmailStore = __webpack_require__(252);
-	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var ApiUtil = __webpack_require__(218);
 	var Link = __webpack_require__(159).Link;
 	
 	var EmailPreviewTable = React.createClass({
@@ -31970,7 +32291,7 @@
 /* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(233).Store;
+	var Store = __webpack_require__(227).Store;
 	var AppDispatcher = __webpack_require__(220);
 	var EmailConstants = __webpack_require__(224);
 	
@@ -31992,6 +32313,10 @@
 	      resetEmails(payload.emails);
 	      EmailStore.__emitChange();
 	      break;
+	    case EmailConstants.EMAIL_RECEIVED:
+	      _emails[payload.email.id] = payload.email;
+	      EmailStore.__emitChange();
+	      break;
 	  }
 	};
 	
@@ -32004,44 +32329,12 @@
 	module.exports = EmailStore;
 
 /***/ },
-/* 253 */,
-/* 254 */,
-/* 255 */,
-/* 256 */,
-/* 257 */,
-/* 258 */,
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var TopNav = __webpack_require__(262);
-	var SideNav = __webpack_require__(226);
-	
-	var App = React.createClass({
-	  displayName: 'App',
-	
-	
-	  render: function () {
-	    return React.createElement(
-	      'main',
-	      null,
-	      React.createElement(TopNav, null),
-	      React.createElement(SideNav, null),
-	      this.props.children
-	    );
-	  }
-	
-	});
-	
-	module.exports = App;
-
-/***/ },
-/* 260 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var EmailStore = __webpack_require__(252);
-	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var ApiUtil = __webpack_require__(218);
 	var History = __webpack_require__(159).History;
 	
 	var EmailDetails = React.createClass({
@@ -32105,155 +32398,12 @@
 	module.exports = EmailDetails;
 
 /***/ },
-/* 261 */,
-/* 262 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-	var SessionStore = __webpack_require__(264);
-	var Search = __webpack_require__(263);
-	
-	var TopNav = React.createClass({
-	  displayName: 'TopNav',
-	
-	
-	  contextTypes: {
-	    router: React.PropTypes.object.isRequired
-	  },
-	
-	  componentDidMount: function () {
-	    this.sessionStoreToken = SessionStore.addListener(this._onChange);
-	    this._onChange();
-	  },
-	
-	  componentWillUnmount: function () {
-	    this.sessionStoreToken.remove();
-	  },
-	
-	  _onChange: function () {
-	    if (!SessionStore.isLoggedIn()) {
-	      this.context.router.push('/login');
-	    }
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'header',
-	      { className: 'header group' },
-	      React.createElement(
-	        'nav',
-	        { className: 'topnav-above group' },
-	        React.createElement(
-	          'button',
-	          { onClick: ApiUtil.logout },
-	          'Logout'
-	        )
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = TopNav;
-
-/***/ },
-/* 263 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var Search = React.createClass({
-	  displayName: 'Search',
-	
-	
-	  getInitialState: function () {
-	    return {
-	      inputVal: ""
-	    };
-	  },
-	
-	  handleInput: function (event) {
-	    this.setState({ inputVal: event.currentTarget.value });
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'form',
-	      { className: 'searchbar group' },
-	      React.createElement('input', { type: 'text', onChange: this.handleInput, value: this.state.inputVal }),
-	      React.createElement(
-	        'button',
-	        { className: 'search-button' },
-	        'B'
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Search;
-
-/***/ },
-/* 264 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(233).Store;
-	var SessionConstants = __webpack_require__(265);
-	var AppDispatcher = __webpack_require__(220);
-	
-	var SessionStore = new Store(AppDispatcher);
-	
-	var _currentUser;
-	var _currentUserFetched = false;
-	
-	SessionStore.currentUser = function () {
-	  return _currentUser;
-	};
-	
-	SessionStore.isLoggedIn = function () {
-	  return !!_currentUser;
-	};
-	
-	SessionStore.currentUserFetched = function () {
-	  return _currentUserFetched;
-	};
-	
-	SessionStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case SessionConstants.CURRENT_USER_RECEIVED:
-	      _currentUser = payload.currentUser;
-	      _currentUserFetched = true;
-	      SessionStore.__emitChange();
-	      break;
-	    case SessionConstants.LOGOUT:
-	      _currentUser = null;
-	      _currentUserFetched = false;
-	      SessionStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = SessionStore;
-
-/***/ },
-/* 265 */
-/***/ function(module, exports) {
-
-	SessionConstants = {
-	  CURRENT_USER_RECEIVED: 'CURRENT_USER_RECEIVED',
-	  LOGOUT: 'LOGOUT'
-	};
-	
-	module.exports = SessionConstants;
-
-/***/ },
-/* 266 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-	var SessionStore = __webpack_require__(264);
+	var ApiUtil = __webpack_require__(218);
+	var SessionStore = __webpack_require__(226);
 	var Link = __webpack_require__(159).Link;
 	
 	var LoginForm = React.createClass({
@@ -32314,7 +32464,7 @@
 	      ),
 	      React.createElement(
 	        Link,
-	        { to: '/signin/' },
+	        { to: '/signup/' },
 	        'Create an Account'
 	      )
 	    );
@@ -32325,12 +32475,13 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 267 */
+/* 255 */,
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ApiUtil = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../utils/apiUtil\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-	var SessionStore = __webpack_require__(264);
+	var ApiUtil = __webpack_require__(218);
+	var SessionStore = __webpack_require__(226);
 	var Link = __webpack_require__(159).Link;
 	
 	var LoginForm = React.createClass({
