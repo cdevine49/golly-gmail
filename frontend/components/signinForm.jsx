@@ -19,7 +19,7 @@ var LoginForm = React.createClass({
   _handleSubmit: function (e) {
     e.preventDefault();
     var router = this.context.router;
-    ApiUtil.login(this.state, function () {
+    ApiUtil.signin(this.state, function () {
       router.push('/inbox');
     });
   },
@@ -43,9 +43,9 @@ var LoginForm = React.createClass({
           <label>Password
             <input type='password' onChange={this._updatePassword} value={this.state.password} />
           </label>
-          <button>Log In</button>
+          <button>Create Account</button>
         </form>
-        <Link to={'/signin/'}>Create an Account</Link>
+        <Link to={'/login/'}>Log In</Link>
       </section>
     );
   }

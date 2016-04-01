@@ -16,19 +16,49 @@ ApiUtil = {
     });
   },
 
+  createEmails: function() {
+    $.ajax({
+      type: 'POST',
+      url: 'api/emails',
+      datatype: 'json',
+      data: 
+      success: function (emails) {
+        ApiActions.receiveEmails(emails);
+      },
+      error: function () {
+        console.log('ApiUtil#fetchEmails error');
+      }
+    });
+  },
+
   login: function(credentials, callback) {
-    debugger
     $.ajax({
       type: "POST",
       url: "/api/session",
       dataType: "json",
       data: credentials,
       success: function(currentUser) {
-        SessionActions.currentUserReceived(currentUser);
+        ApiActions.currentUserReceived(currentUser);
         callback && callback();
       },
       error: function() {
         console.log('ApiUtil#login error');
+      },
+    });
+  },
+
+  signin: function(credentials, callback) {
+    $.ajax({
+      type: "POST",
+      url: "/api/users",
+      dataType: "json",
+      data: {user: credentials},
+      success: function(currentUser) {
+        ApiActions.currentUserReceived(currentUser);
+        callback && callback();
+      },
+      error: function() {
+        console.log('ApiUtil#signin error');
       },
     });
   },
@@ -39,7 +69,7 @@ ApiUtil = {
       url: "/api/session",
       dataType: "json",
       success: function() {
-        SessionActions.logout();
+        ApiActions.logout();
       },
       error: function() {
         console.log('ApiUtil#logout error');
@@ -53,8 +83,7 @@ ApiUtil = {
       url: "/api/session",
       dataType: "json",
       success: function(currentUser) {
-        debugger
-        SessionActions.currentUserReceived(currentUser);
+        ApiActions.currentUserReceived(currentUser);
       },
       complete: function() {
         completion && completion();
