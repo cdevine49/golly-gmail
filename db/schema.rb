@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160401111546) do
+ActiveRecord::Schema.define(version: 20160401154541) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,16 +27,6 @@ ActiveRecord::Schema.define(version: 20160401111546) do
 
   add_index "emails", ["from"], name: "sender_index", using: :btree
   add_index "emails", ["to"], name: "recipient_index", using: :btree
-
-  create_table "emails_to_chains", force: :cascade do |t|
-    t.integer  "email_id",   null: false
-    t.integer  "chain_id",   null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "emails_to_chains", ["chain_id"], name: "index_emails_to_chains_on_chain_id", using: :btree
-  add_index "emails_to_chains", ["email_id"], name: "index_emails_to_chains_on_email_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "username",        null: false

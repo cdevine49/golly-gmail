@@ -9,8 +9,8 @@ var SideNav = React.createClass({
     };
   },
 
-  openComposeForm: function () {
-    this.setState({formOpen: true});
+  _composeForm: function () {
+    this.setState({formOpen: !this.state.formOpen});
   },
 
   handleClick: function () {
@@ -21,11 +21,10 @@ var SideNav = React.createClass({
 
     return (
       <nav className='sidenav'>
-        <button className='compose-button' onClick={this._openComposeForm}>Compose</button>
+        <button className='compose-button' onClick={this._composeForm}>Compose</button>
         <ul className='sidenav-links'>
         </ul>
-
-        <ComposeForm />
+        {this.state.formOpen ? <ComposeForm /> : ''}
       </nav>
     );
   }
