@@ -1,13 +1,12 @@
 class Api::EmailsController < ApplicationController
   def index
-    # debugger
-    @emails = Email.where(to: current_user.username).order(updated_at: :desc)
+    @emails = Email.where(to: current_user.username + "@gollygmail.com").order(created_at: :desc)
   end
 
   def create
     email = Email.new(email_params)
     email.from = current_user.username + '@gollygmail.com'
-    if User.find_by(username: email.to)
+    if User.find_by(username: email.to.split('@')[0])
       email.save
       render json: email
     else

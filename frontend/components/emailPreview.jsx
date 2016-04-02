@@ -21,23 +21,6 @@ var EmailPreviews = React.createClass({
   render: function() {
     return (
       <main>
-        <form className="email-attribute-form">
-          <input type="checkbox"
-            id="attributes"
-            name='email[checked]'
-            defaultChecked={this.props.checked} >
-          </input>
-          <input type="checkbox"
-            id="attributes"
-            name='email[starred]'
-            defaultChecked={this.props.starred} >
-          </input>
-          <input type="checkbox"
-            id="attributes"
-            name='email[important]'
-            defaultChecked={this.props.important} >
-          </input>
-        </form>
         <ul>
           <li>From: {this.props.from}</li>
           <li>Subject: {this.props.subject}</li>
@@ -50,3 +33,21 @@ var EmailPreviews = React.createClass({
 });
 
 module.exports = EmailPreviews;
+
+// <form className="email-attribute-form">
+//   <input type="checkbox"
+//     id="attributes"
+//     name='email[checked]'
+//     defaultChecked={this.props.checked} >
+//   </input>
+//   <input type="checkbox"
+//     id="attributes"
+//     name='email[starred]'
+//     defaultChecked={this.props.starred} >
+//   </input>
+//   <input type="checkbox"
+//     id="attributes"
+//     name='email[important]'
+//     defaultChecked={this.props.important} >
+//   </input>
+// </form>
