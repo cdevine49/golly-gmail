@@ -32570,8 +32570,8 @@
 	
 	  render: function () {
 	    return React.createElement(
-	      'section',
-	      null,
+	      'main',
+	      { className: 'sign-up-page' },
 	      React.createElement(
 	        'header',
 	        { className: 'sign-up-header' },
@@ -32586,161 +32586,206 @@
 	        )
 	      ),
 	      React.createElement(
-	        'form',
-	        { onSubmit: this._handleSubmit },
+	        'section',
+	        { className: 'sign-up-content' },
 	        React.createElement(
-	          'label',
-	          { htmlFor: 'first_name' },
-	          'Name'
-	        ),
-	        React.createElement('input', {
-	          type: 'text',
-	          id: 'first_name',
-	          onChange: this._updateFirstname,
-	          value: this.state.first_name }),
-	        React.createElement('label', { htmlFor: 'last_name' }),
-	        React.createElement('input', {
-	          type: 'text',
-	          id: 'last_name',
-	          onChange: this._updateLastname,
-	          value: this.state.last_name }),
-	        React.createElement(
-	          'label',
-	          { htmlFor: 'username' },
-	          'Choose your username'
-	        ),
-	        React.createElement('input', {
-	          type: 'text',
-	          id: 'username',
-	          onChange: this._updateUsername,
-	          value: this.state.username }),
-	        React.createElement(
-	          'label',
-	          { htmlFor: 'password' },
-	          'Create a password'
-	        ),
-	        React.createElement('input', {
-	          type: 'password',
-	          id: 'password',
-	          onChange: this._updatePassword,
-	          value: this.state.password }),
-	        React.createElement(
-	          'label',
-	          { htmlFor: 'confirm-password' },
-	          'Confirm your password'
-	        ),
-	        React.createElement('input', {
-	          type: 'password',
-	          id: 'confirm_password',
-	          onChange: this._updatePasswordConfirmation,
-	          value: this.state.password_confirmation }),
-	        React.createElement(
-	          'label',
-	          { htmlFor: 'birthday' },
-	          'Birthday'
+	          'h1',
+	          { className: 'sign-up-title' },
+	          'Create your GollyGmail Account'
 	        ),
 	        React.createElement(
-	          'select',
-	          { id: 'birthday', onChange: this._updateBirthdayMonth },
+	          'section',
+	          { className: 'group' },
 	          React.createElement(
-	            'option',
-	            { value: '01' },
-	            'January'
+	            'section',
+	            { className: 'sign-up-sidebar' },
+	            React.createElement(
+	              'h2',
+	              null,
+	              'One account is all you get'
+	            ),
+	            React.createElement(
+	              'h3',
+	              null,
+	              'One free account connects you to nothing'
+	            ),
+	            React.createElement(
+	              'h2',
+	              null,
+	              'Take it where your laptop goes'
+	            ),
+	            React.createElement(
+	              'h3',
+	              null,
+	              'One of these should work'
+	            )
 	          ),
 	          React.createElement(
-	            'option',
-	            { value: '02' },
-	            'February'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '03' },
-	            'March'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '04' },
-	            'April'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '05' },
-	            'May'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '06' },
-	            'June'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '07' },
-	            'July'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '08' },
-	            'August'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '09' },
-	            'September'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '10' },
-	            'October'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '11' },
-	            'November'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: '12' },
-	            'December'
+	            'form',
+	            { className: 'sign-up-form', onSubmit: this._handleSubmit },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'first_name', className: 'sign-up-name-box-label' },
+	              'Name'
+	            ),
+	            React.createElement('input', {
+	              type: 'text',
+	              id: 'first_name',
+	              placeholder: 'First',
+	              className: 'sign-up-first-name',
+	              onChange: this._updateFirstname,
+	              value: this.state.first_name }),
+	            React.createElement('input', {
+	              type: 'text',
+	              id: 'last_name',
+	              placeholder: 'Last',
+	              className: 'sign-up-last-name',
+	              onChange: this._updateLastname,
+	              value: this.state.last_name }),
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'username' },
+	              'Choose your username'
+	            ),
+	            React.createElement('input', {
+	              type: 'text',
+	              id: 'username',
+	              className: 'sign-up-username',
+	              onChange: this._updateUsername,
+	              value: this.state.username }),
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'password' },
+	              'Create a password'
+	            ),
+	            React.createElement('input', {
+	              type: 'password',
+	              id: 'password',
+	              className: 'sign-up-password',
+	              onChange: this._updatePassword,
+	              value: this.state.password }),
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'confirm-password' },
+	              'Confirm your password'
+	            ),
+	            React.createElement('input', {
+	              type: 'password',
+	              id: 'confirm_password',
+	              className: 'sign-up-password-confirm',
+	              onChange: this._updatePasswordConfirmation,
+	              value: this.state.password_confirmation }),
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'birthday' },
+	              'Birthday'
+	            ),
+	            React.createElement(
+	              'select',
+	              { id: 'birthday', className: 'sign-up-birthday-month-dropdown', onChange: this._updateBirthdayMonth },
+	              React.createElement(
+	                'option',
+	                { value: '01' },
+	                'January'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '02' },
+	                'February'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '03' },
+	                'March'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '04' },
+	                'April'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '05' },
+	                'May'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '06' },
+	                'June'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '07' },
+	                'July'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '08' },
+	                'August'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '09' },
+	                'September'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '10' },
+	                'October'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '11' },
+	                'November'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: '12' },
+	                'December'
+	              )
+	            ),
+	            React.createElement('input', {
+	              type: 'number',
+	              placeholder: 'Day',
+	              className: 'sign-up-birthday-day',
+	              onChange: this._updateBirthday_day,
+	              value: this.state.birthday_day }),
+	            React.createElement('input', {
+	              type: 'number',
+	              placeholder: 'Year',
+	              className: 'sign-up-birthday-year',
+	              onChange: this._updateBirthday_year,
+	              value: this.state.birthday_year }),
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'gender' },
+	              'Gender'
+	            ),
+	            React.createElement(
+	              'select',
+	              { id: 'gender', className: 'sign-up-gender', onChange: this._updateGender },
+	              React.createElement(
+	                'option',
+	                { value: 'Male' },
+	                'Male'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: 'Female' },
+	                'Female'
+	              ),
+	              React.createElement(
+	                'option',
+	                { value: 'Other' },
+	                'Other'
+	              )
+	            ),
+	            React.createElement(
+	              'button',
+	              { className: 'sign-up-submit' },
+	              'Sign Up'
+	            )
 	          )
-	        ),
-	        React.createElement('input', {
-	          type: 'number',
-	          placeholder: 'Day',
-	          onChange: this._updateBirthday_day,
-	          value: this.state.birthday_day }),
-	        React.createElement('input', {
-	          type: 'number',
-	          placeholder: 'Year',
-	          onChange: this._updateBirthday_year,
-	          value: this.state.birthday_year }),
-	        React.createElement(
-	          'label',
-	          { htmlFor: 'gender' },
-	          'Gender'
-	        ),
-	        React.createElement(
-	          'select',
-	          { id: 'gender', onChange: this._updateGender },
-	          React.createElement(
-	            'option',
-	            { value: 'Male' },
-	            'Male'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'Female' },
-	            'Female'
-	          ),
-	          React.createElement(
-	            'option',
-	            { value: 'Other' },
-	            'Other'
-	          )
-	        ),
-	        React.createElement(
-	          'button',
-	          null,
-	          'Create Account'
 	        )
 	      )
 	    );

@@ -70,77 +70,104 @@ var LoginForm = React.createClass({
 
   render: function() {
     return (
-      <section>
+      <main className='sign-up-page'>
         <header className='sign-up-header'>
           <nav className='sign-up-nav'>
             <Link className='sign-in-from-sign-up' to={'/login/'}>Sign in</Link>
           </nav>
         </header>
-        <form onSubmit={this._handleSubmit}>
-          <label htmlFor='first_name'>Name</label>
-            <input
-              type='text'
-              id='first_name'
-              onChange={this._updateFirstname}
-              value={this.state.first_name} />
-            <label htmlFor='last_name'></label>
-            <input
-              type='text'
-              id='last_name'
-              onChange={this._updateLastname}
-              value={this.state.last_name} />
-          <label htmlFor='username'>Choose your username</label>
-            <input
-              type='text'
-              id='username'
-              onChange={this._updateUsername}
-              value={this.state.username} />
-          <label htmlFor='password'>Create a password</label>
-            <input
-              type='password'
-              id='password'
-              onChange={this._updatePassword}
-              value={this.state.password} />
-          <label htmlFor='confirm-password'>Confirm your password</label>
-            <input
-              type='password'
-              id='confirm_password'
-              onChange={this._updatePasswordConfirmation}
-              value={this.state.password_confirmation} />
-          <label htmlFor='birthday'>Birthday</label>
-            <select id='birthday' onChange={this._updateBirthdayMonth}>
-              <option value='01'>January</option>
-              <option value='02'>February</option>
-              <option value='03'>March</option>
-              <option value='04'>April</option>
-              <option value='05'>May</option>
-              <option value='06'>June</option>
-              <option value='07'>July</option>
-              <option value='08'>August</option>
-              <option value='09'>September</option>
-              <option value='10'>October</option>
-              <option value='11'>November</option>
-              <option value='12'>December</option>
-            </select>
-            <input
-              type='number'
-              placeholder='Day'
-              onChange={this._updateBirthday_day}
-              value={this.state.birthday_day} />
-            <input
-              type='number'
-              placeholder='Year'
-              onChange={this._updateBirthday_year}
-              value={this.state.birthday_year} />
-          <label htmlFor='gender'>Gender</label>
-            <select id='gender' onChange={this._updateGender}>
-              <option value='Male'>Male</option>
-              <option value='Female'>Female</option>
-              <option value='Other'>Other</option>
-            </select>
-          <button>Create Account</button>
-        </form>
-      </section>
+        <section className='sign-up-content'>
+          <h1 className='sign-up-title'>Create your GollyGmail Account</h1>
+          <section className='group'>
+            <section className='sign-up-sidebar'>
+              <h2>One account is all you get</h2>
+              <h3>One free account connects you to nothing</h3>
+              <h2>Take it where your laptop goes</h2>
+              <h3>One of these should work</h3>
+            </section>
+            <form className='sign-up-form' onSubmit={this._handleSubmit}>
+
+              <label htmlFor='first_name' className='sign-up-name-box-label'>Name</label>
+              <input
+                type='text'
+                id='first_name'
+                placeholder='First'
+                className='sign-up-first-name'
+                onChange={this._updateFirstname}
+                value={this.state.first_name} />
+
+              <input
+                type='text'
+                id='last_name'
+                placeholder='Last'
+                className='sign-up-last-name'
+                onChange={this._updateLastname}
+                value={this.state.last_name} />
+
+              <label htmlFor='username'>Choose your username</label>
+              <input
+                type='text'
+                id='username'
+                className='sign-up-username'
+                onChange={this._updateUsername}
+                value={this.state.username} />
+
+              <label htmlFor='password'>Create a password</label>
+              <input
+                type='password'
+                id='password'
+                className='sign-up-password'
+                onChange={this._updatePassword}
+                value={this.state.password} />
+
+              <label htmlFor='confirm-password'>Confirm your password</label>
+              <input
+                type='password'
+                id='confirm_password'
+                className='sign-up-password-confirm'
+                onChange={this._updatePasswordConfirmation}
+                value={this.state.password_confirmation} />
+
+              <label htmlFor='birthday'>Birthday</label>
+              <select id='birthday' className='sign-up-birthday-month-dropdown' onChange={this._updateBirthdayMonth}>
+                <option value='01'>January</option>
+                <option value='02'>February</option>
+                <option value='03'>March</option>
+                <option value='04'>April</option>
+                <option value='05'>May</option>
+                <option value='06'>June</option>
+                <option value='07'>July</option>
+                <option value='08'>August</option>
+                <option value='09'>September</option>
+                <option value='10'>October</option>
+                <option value='11'>November</option>
+                <option value='12'>December</option>
+              </select>
+              <input
+                type='number'
+                placeholder='Day'
+                className='sign-up-birthday-day'
+                onChange={this._updateBirthday_day}
+                value={this.state.birthday_day} />
+              <input
+                type='number'
+                placeholder='Year'
+                className='sign-up-birthday-year'
+                onChange={this._updateBirthday_year}
+                value={this.state.birthday_year} />
+
+              <label htmlFor='gender'>Gender</label>
+              <select id='gender' className='sign-up-gender' onChange={this._updateGender}>
+                <option value='Male'>Male</option>
+                <option value='Female'>Female</option>
+                <option value='Other'>Other</option>
+              </select>
+
+              <button className='sign-up-submit'>Sign Up</button>
+            </form>
+          </section>
+        </section>
+      </main>
     );
   }
 
