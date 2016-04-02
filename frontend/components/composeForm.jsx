@@ -27,13 +27,18 @@ var ComposeForm = React.createClass({
 
   createEmail: function (e) {
     e.preventDefault();
-    var formData = new FormData();
-    formData.append("email[subject]", this.state.subject);
-    formData.append("email[body]", this.state.body);
-    formData.append("email[to]", this.state.to.split('@'));
-    ApiUtil.createEmail(formData);
-    this.setState({ subject: '', body: '' });
-    this.props.onSubmit();
+    if (this.state.to.split('@').length === 2 &&
+    this.state.to.split('@')[1] === "gollygmail.com") {
+      var formData = new FormData();
+      formData.append("email[subject]", this.state.subject);
+      formData.append("email[body]", this.state.body);
+      formData.append("email[to]", this.state.to);
+      ApiUtil.createEmail(formData);
+      this.setState({ subject: '', body: '', to: '' });
+      this.props.onSubmit();
+    } else {
+      console.log("Email wasn't created");
+    }
   },
 
   render: function() {

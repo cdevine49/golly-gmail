@@ -21,7 +21,7 @@ EmailStore.__onDispatch = function (payload) {
       EmailStore.__emitChange();
       break;
     case EmailConstants.EMAIL_RECEIVED:
-      _emails[payload.email.id] = payload.email;
+      _emails.unshift(payload.email);
       EmailStore.__emitChange();
       break;
   }

@@ -21,11 +21,7 @@ var EmailPreviewTable = React.createClass({
   },
 
   _onChange: function () {
-    // HERE is where we want to setState to all the new posts
-    // this.setState({ posts: PostStore.all(), postsLength: PostStore.all().length });
-    // postsLength should NOT be in state. Because you can compute it on the fly
     this.setState({ emails: EmailStore.all()} );
-
   },
 
   render: function () {

@@ -31924,13 +31924,17 @@
 	
 	  createEmail: function (e) {
 	    e.preventDefault();
-	    var formData = new FormData();
-	    formData.append("email[subject]", this.state.subject);
-	    formData.append("email[body]", this.state.body);
-	    formData.append("email[to]", this.state.to.split('@'));
-	    ApiUtil.createEmail(formData);
-	    this.setState({ subject: '', body: '' });
-	    this.props.onSubmit();
+	    if (this.state.to.split('@').length === 2 && this.state.to.split('@')[1] === "gollygmail.com") {
+	      var formData = new FormData();
+	      formData.append("email[subject]", this.state.subject);
+	      formData.append("email[body]", this.state.body);
+	      formData.append("email[to]", this.state.to);
+	      ApiUtil.createEmail(formData);
+	      this.setState({ subject: '', body: '', to: '' });
+	      this.props.onSubmit();
+	    } else {
+	      console.log("Email wasn't created");
+	    }
 	  },
 	
 	  render: function () {
@@ -32247,9 +32251,6 @@
 	  },
 	
 	  _onChange: function () {
-	    // HERE is where we want to setState to all the new posts
-	    // this.setState({ posts: PostStore.all(), postsLength: PostStore.all().length });
-	    // postsLength should NOT be in state. Because you can compute it on the fly
 	    this.setState({ emails: EmailStore.all() });
 	  },
 	
@@ -32331,7 +32332,7 @@
 	      EmailStore.__emitChange();
 	      break;
 	    case EmailConstants.EMAIL_RECEIVED:
-	      _emails[payload.email.id] = payload.email;
+	      _emails.unshift(payload.email);
 	      EmailStore.__emitChange();
 	      break;
 	  }
