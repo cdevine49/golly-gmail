@@ -8,43 +8,45 @@
 User.destroy_all
 Email.destroy_all
 
-User.create(username: "Conor", password: "password")
-User.create(username: "Fred", password: "password")
-User.create(username: "Tommy", password: "password")
-User.create(username: "Lily", password: "password")
-User.create(username: "Leen", password: "password")
+User.create(username: "conor", password: "password")
+User.create(username: "fred", password: "password")
+User.create(username: "tommy", password: "password")
+User.create(username: "lily", password: "password")
+User.create(username: "leen", password: "password")
 
 Email.create(
   subject: "The first email seed",
   body: "what subject says",
-  to: 2,
-  from: 1
+  to: "conor@gollygmail.com",
+  from: "lily@gollygmail.com"
 )
 
 Email.create(
   subject: "I hope this works",
   body: "it probably wont though",
-  to: 1,
-  from: 3
+  to: "tommy@gollygmail.com",
+  from: "conor@gollygmail.com"
 )
 
 Email.create(
   subject: "Another test email",
   body: "at this point, Im running out of ideas",
-  to: 4,
-  from: 2
+  to: "leen@gollygmail.com",
+  from: "tommy@gollygmail.com"
 )
 
 Email.create(
   subject: "Cant stop me now",
   body: "Im having such a good time",
-  to: 2,
-  from: 2
+  to: "lily@gollygmail.com",
+  from: "fred@gollygmail.com"
+
 )
 
 Email.create(
   subject: "Where do we go?",
   body: "where do we go now?",
-  to: 1,
-  from: 2,
+  to: "fred@gollygmail.com",
+  from: "lily@gollygmail.com"
+
 )

@@ -31906,7 +31906,7 @@
 	    return {
 	      subject: "",
 	      body: "",
-	      to: 3 };
+	      to: "" };
 	  },
 	
 	  //THIS NEEDS TO BE CHANGED WHEN ALLOWING 'REAL' EMAILING
@@ -31918,12 +31918,16 @@
 	    this.setState({ body: e.currentTarget.value });
 	  },
 	
+	  handleToChange: function (e) {
+	    this.setState({ to: e.currentTarget.value });
+	  },
+	
 	  createEmail: function (e) {
 	    e.preventDefault();
 	    var formData = new FormData();
 	    formData.append("email[subject]", this.state.subject);
 	    formData.append("email[body]", this.state.body);
-	    formData.append("email[to]", this.state.to);
+	    formData.append("email[to]", this.state.to.split('@'));
 	    ApiUtil.createEmail(formData);
 	    this.setState({ subject: '', body: '' });
 	    this.props.onSubmit();
@@ -31933,6 +31937,18 @@
 	    return React.createElement(
 	      'form',
 	      { onSubmit: this.createEmail },
+	      React.createElement(
+	        'label',
+	        null,
+	        'To:',
+	        React.createElement('input', {
+	          type: 'text',
+	          placeholder: '',
+	          onChange: this.handleToChange,
+	          value: this.state.to
+	        })
+	      ),
+	      React.createElement('br', null),
 	      React.createElement(
 	        'label',
 	        null,
