@@ -52,7 +52,7 @@
 	var EmailPreviewTable = __webpack_require__(251);
 	var EmailDetails = __webpack_require__(253);
 	var LoginForm = __webpack_require__(254);
-	var SignupForm = __webpack_require__(256);
+	var SignupForm = __webpack_require__(255);
 	
 	var SessionStore = __webpack_require__(226);
 	var ApiUtil = __webpack_require__(218);
@@ -32493,8 +32493,7 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 255 */,
-/* 256 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
