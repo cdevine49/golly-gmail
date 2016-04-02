@@ -38,7 +38,6 @@ User.create(
   gollygmail: "simon@gollygmail.com",
   birthday: Date.new(1990,1,1),
   gender: "male",
-  secondary_email: "simondenis@yahoo.com"
 )
 
 User.create(
@@ -60,7 +59,7 @@ User.create(
   gollygmail: "dane@gollygmail.com",
   birthday: Date.new(1995,1,1),
   gender: "other",
-  secondary_email: "danes@yahoo.com"
+  secondary_email: "danes@hotmail.com"
 )
 
 

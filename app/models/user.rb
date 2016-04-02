@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
 	validates :username, :password_digest, :session_token, presence: true
 	validates :password, length: { minimum: 6, allow_nil: true }
 	validates :session_token, :username, uniqueness: true
+	# validates :password_matches_confirmation
 
 	has_many(
 		:emails,
@@ -45,4 +46,8 @@ class User < ActiveRecord::Base
 	def ensure_session_token
 		self.session_token ||= self.class.generate_session_token
 	end
+
+	# def password_matches_confirmation
+	#
+	# end
 end
