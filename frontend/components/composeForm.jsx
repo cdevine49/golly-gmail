@@ -9,7 +9,7 @@ var ComposeForm = React.createClass({
     return {
       subject: "",
       body: "",
-      to: "", //THIS NEEDS TO BE CHANGED WHEN ALLOWING 'REAL' EMAILING
+      to: ""
     };
   },
 
@@ -27,8 +27,7 @@ var ComposeForm = React.createClass({
 
   createEmail: function (e) {
     e.preventDefault();
-    if (this.state.to.split('@').length === 2 &&
-    this.state.to.split('@')[1] === "gollygmail.com") {
+    if (this.state.to.slice(-15) === "@gollygmail.com") {
       var formData = new FormData();
       formData.append("email[subject]", this.state.subject);
       formData.append("email[body]", this.state.body);
@@ -37,7 +36,7 @@ var ComposeForm = React.createClass({
       this.setState({ subject: '', body: '', to: '' });
       this.props.onSubmit();
     } else {
-      console.log("Email wasn't created");
+      console.log("Not a valid email");
     }
   },
 

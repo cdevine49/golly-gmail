@@ -31906,10 +31906,10 @@
 	    return {
 	      subject: "",
 	      body: "",
-	      to: "" };
+	      to: ""
+	    };
 	  },
 	
-	  //THIS NEEDS TO BE CHANGED WHEN ALLOWING 'REAL' EMAILING
 	  handleSubjectChange: function (e) {
 	    this.setState({ subject: e.currentTarget.value });
 	  },
@@ -31924,7 +31924,7 @@
 	
 	  createEmail: function (e) {
 	    e.preventDefault();
-	    if (this.state.to.split('@').length === 2 && this.state.to.split('@')[1] === "gollygmail.com") {
+	    if (this.state.to.slice(-15) === "@gollygmail.com") {
 	      var formData = new FormData();
 	      formData.append("email[subject]", this.state.subject);
 	      formData.append("email[body]", this.state.body);
@@ -31933,7 +31933,7 @@
 	      this.setState({ subject: '', body: '', to: '' });
 	      this.props.onSubmit();
 	    } else {
-	      console.log("Email wasn't created");
+	      console.log("Not a valid email");
 	    }
 	  },
 	
@@ -32511,8 +32511,16 @@
 	
 	  getInitialState: function () {
 	    return {
+	      first_name: '',
+	      last_name: '',
 	      username: '',
-	      password: ''
+	      password: '',
+	      password_confirmation: '',
+	      birthday_month: '05',
+	      birthday_day: '30',
+	      birthday_year: '1991',
+	      gender: 'Male'
+	
 	    };
 	  },
 	
@@ -32524,6 +32532,14 @@
 	    });
 	  },
 	
+	  _updateFirstname: function (e) {
+	    this.setState({ first_name: e.currentTarget.value });
+	  },
+	
+	  _updateLastname: function (e) {
+	    this.setState({ last_name: e.currentTarget.value });
+	  },
+	
 	  _updateUsername: function (e) {
 	    this.setState({ username: e.currentTarget.value });
 	  },
@@ -32532,35 +32548,200 @@
 	    this.setState({ password: e.currentTarget.value });
 	  },
 	
+	  _updatePasswordConfirmation: function (e) {
+	    this.setState({ password_confirmation: e.currentTarget.value });
+	  },
+	
+	  _updateBirthdayMonth: function (e) {
+	    this.setState({ birthday_month: e.currentTarget.value });
+	  },
+	
+	  _updateBirthday_day: function (e) {
+	    this.setState({ birthday_day: e.currentTarget.value });
+	  },
+	
+	  _updateBirthday_year: function (e) {
+	    this.setState({ birthday_year: e.currentTarget.value });
+	  },
+	
+	  _updateGender: function (e) {
+	    this.setState({ gender: e.currentTarget.value });
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'section',
 	      null,
 	      React.createElement(
+	        'header',
+	        { className: 'sign-up-header' },
+	        React.createElement(
+	          'nav',
+	          { className: 'sign-up-nav' },
+	          React.createElement(
+	            Link,
+	            { className: 'sign-in-from-sign-up', to: '/login/' },
+	            'Sign in'
+	          )
+	        )
+	      ),
+	      React.createElement(
 	        'form',
 	        { onSubmit: this._handleSubmit },
 	        React.createElement(
 	          'label',
-	          null,
-	          'Username',
-	          React.createElement('input', { type: 'text', onChange: this._updateUsername, value: this.state.username })
+	          { htmlFor: 'first_name' },
+	          'Name'
 	        ),
+	        React.createElement('input', {
+	          type: 'text',
+	          id: 'first_name',
+	          onChange: this._updateFirstname,
+	          value: this.state.first_name }),
+	        React.createElement('label', { htmlFor: 'last_name' }),
+	        React.createElement('input', {
+	          type: 'text',
+	          id: 'last_name',
+	          onChange: this._updateLastname,
+	          value: this.state.last_name }),
 	        React.createElement(
 	          'label',
-	          null,
-	          'Password',
-	          React.createElement('input', { type: 'password', onChange: this._updatePassword, value: this.state.password })
+	          { htmlFor: 'username' },
+	          'Choose your username'
+	        ),
+	        React.createElement('input', {
+	          type: 'text',
+	          id: 'username',
+	          onChange: this._updateUsername,
+	          value: this.state.username }),
+	        React.createElement(
+	          'label',
+	          { htmlFor: 'password' },
+	          'Create a password'
+	        ),
+	        React.createElement('input', {
+	          type: 'password',
+	          id: 'password',
+	          onChange: this._updatePassword,
+	          value: this.state.password }),
+	        React.createElement(
+	          'label',
+	          { htmlFor: 'confirm-password' },
+	          'Confirm your password'
+	        ),
+	        React.createElement('input', {
+	          type: 'password',
+	          id: 'confirm_password',
+	          onChange: this._updatePasswordConfirmation,
+	          value: this.state.password_confirmation }),
+	        React.createElement(
+	          'label',
+	          { htmlFor: 'birthday' },
+	          'Birthday'
+	        ),
+	        React.createElement(
+	          'select',
+	          { id: 'birthday', onChange: this._updateBirthdayMonth },
+	          React.createElement(
+	            'option',
+	            { value: '01' },
+	            'January'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '02' },
+	            'February'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '03' },
+	            'March'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '04' },
+	            'April'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '05' },
+	            'May'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '06' },
+	            'June'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '07' },
+	            'July'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '08' },
+	            'August'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '09' },
+	            'September'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '10' },
+	            'October'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '11' },
+	            'November'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: '12' },
+	            'December'
+	          )
+	        ),
+	        React.createElement('input', {
+	          type: 'number',
+	          placeholder: 'Day',
+	          onChange: this._updateBirthday_day,
+	          value: this.state.birthday_day }),
+	        React.createElement('input', {
+	          type: 'number',
+	          placeholder: 'Year',
+	          onChange: this._updateBirthday_year,
+	          value: this.state.birthday_year }),
+	        React.createElement(
+	          'label',
+	          { htmlFor: 'gender' },
+	          'Gender'
+	        ),
+	        React.createElement(
+	          'select',
+	          { id: 'gender', onChange: this._updateGender },
+	          React.createElement(
+	            'option',
+	            { value: 'Male' },
+	            'Male'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'Female' },
+	            'Female'
+	          ),
+	          React.createElement(
+	            'option',
+	            { value: 'Other' },
+	            'Other'
+	          )
 	        ),
 	        React.createElement(
 	          'button',
 	          null,
 	          'Create Account'
 	        )
-	      ),
-	      React.createElement(
-	        Link,
-	        { to: '/login/' },
-	        'Log In'
 	      )
 	    );
 	  }

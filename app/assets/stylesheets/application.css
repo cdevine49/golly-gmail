@@ -48,6 +48,32 @@ button, article, footer, small {
    list-style: none;
  }
 
+ /* Sign Up Header */
+
+ .sign-up-header {
+   height: 71px;
+   background: #f1f1f1;
+   border-bottom: 1px solid #e5e5e5;
+   overflow: hidden;
+   font-size: 81.25%;
+   color: #333;
+   line-height: 1;
+ }
+
+ .sign-up-nav {
+   padding: 0 44px;
+ }
+
+ .sign-in-from-sign-up {
+   float: right;
+   margin-top: 22px;
+   line-height: 1;
+   color: #F8FFFF;
+   background: #488BF9;
+   padding: 8px 12px;
+   border-radius: 2px;
+ }
+
  /* Header */
  .header {
    width: 100%;
