@@ -106,8 +106,26 @@ button, article, footer, small {
    text-align: center;
  }
 
+ /* Sign Up Sidebar */
+
  .sign-up-sidebar {
    float: left;
+   width: 530px;
+   margin-right: 50px;
+   text-align: center;
+ }
+
+ .sign-up-sidebar-first-third {
+   font-size: 20px;
+   margin-bottom: 15px;
+   font-weight: 100;
+   color: #737373;
+ }
+
+ .sign-up-sidebar-second-fourth {
+   font-size: 12px;
+   margin-bottom: 40px;
+   color: #737373;
  }
 
  /* Sign Up Form */

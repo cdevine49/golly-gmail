@@ -80,10 +80,12 @@ var LoginForm = React.createClass({
           <h1 className='sign-up-title'>Create your GollyGmail Account</h1>
           <section className='group'>
             <section className='sign-up-sidebar'>
-              <h2>One account is all you get</h2>
-              <h3>One free account connects you to nothing</h3>
-              <h2>Take it where your laptop goes</h2>
-              <h3>One of these should work</h3>
+              <h2 className='sign-up-sidebar-first-third'>One account is all you get</h2>
+              <h3 className='sign-up-sidebar-second-fourth'>One free account connects you to nothing</h3>
+              <div className='sign-up-multiple-gmail-logo'></div>
+              <h2 className='sign-up-sidebar-first-third'>Take it where your laptop goes</h2>
+              <h3 className='sign-up-sidebar-second-fourth'>One of these should work</h3>
+              <div className='sign-up-computer-img'></div>
             </section>
             <form className='sign-up-form' onSubmit={this._handleSubmit}>
 
