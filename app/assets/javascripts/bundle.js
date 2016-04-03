@@ -32433,6 +32433,7 @@
 	  },
 	
 	  getInitialState: function () {
+	    // Add Footer to Login and Sign Up Pages
 	    return {
 	      username: '',
 	      password: ''
@@ -32458,32 +32459,65 @@
 	  render: function () {
 	    return React.createElement(
 	      'section',
-	      null,
+	      { className: 'login-page' },
 	      React.createElement(
-	        'form',
-	        { onSubmit: this._handleSubmit },
-	        React.createElement(
-	          'label',
-	          null,
-	          'Username',
-	          React.createElement('input', { type: 'text', onChange: this._updateUsername, value: this.state.username })
-	        ),
-	        React.createElement(
-	          'label',
-	          null,
-	          'Password',
-	          React.createElement('input', { type: 'password', onChange: this._updatePassword, value: this.state.password })
-	        ),
-	        React.createElement(
-	          'button',
-	          null,
-	          'Log In'
-	        )
+	        'h1',
+	        { id: 'test', className: 'GollyGmail-logo-login' },
+	        'GollyGmail'
 	      ),
 	      React.createElement(
-	        Link,
-	        { to: '/signup/' },
-	        'Create an Account'
+	        'h1',
+	        { className: 'login-page-main-header' },
+	        'One Account. Not much of Google.'
+	      ),
+	      React.createElement(
+	        'h2',
+	        { className: 'login-page-sub-header' },
+	        'Sign in to continue to GollyGmail'
+	      ),
+	      React.createElement(
+	        'section',
+	        { className: 'login-form-section' },
+	        React.createElement(
+	          'form',
+	          { onSubmit: this._handleSubmit, className: 'login-form' },
+	          React.createElement('label', { htmlFor: 'login-username-label', className: 'login-username-label' }),
+	          React.createElement('input', {
+	            id: 'login-username',
+	            className: 'login-username-input',
+	            placeholder: 'Enter your email',
+	            type: 'text',
+	            onChange: this._updateUsername,
+	            value: this.state.username }),
+	          React.createElement('label', { htmlFor: 'login-password-label', className: 'login-password-label' }),
+	          React.createElement('input', {
+	            id: 'login-password',
+	            className: 'login-password-input',
+	            placeholder: 'Password',
+	            type: 'password',
+	            onChange: this._updatePassword,
+	            value: this.state.password }),
+	          React.createElement(
+	            'button',
+	            { className: 'login-submit' },
+	            'Log In'
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'signin-link-and-logo' },
+	          React.createElement(
+	            Link,
+	            { className: 'signup-from-signin-link', to: '/signup/' },
+	            'Create account'
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'signin-bottom-text' },
+	            'One GollyGmail Account for nothing Google.'
+	          ),
+	          React.createElement('div', { className: 'signup-multiple-gmail-logo' })
+	        )
 	      )
 	    );
 	  }
@@ -32516,7 +32550,7 @@
 	      username: '',
 	      password: '',
 	      password_confirmation: '',
-	      birthday_month: '05',
+	      birthday_month: '01', //Make sure this works with no number hard coded
 	      birthday_day: '30',
 	      birthday_year: '1991',
 	      gender: 'Male'
@@ -32747,13 +32781,13 @@
 	              )
 	            ),
 	            React.createElement('input', {
-	              type: 'number',
+	              type: 'text',
 	              placeholder: 'Day',
 	              className: 'sign-up-birthday-day',
 	              onChange: this._updateBirthday_day,
 	              value: this.state.birthday_day }),
 	            React.createElement('input', {
-	              type: 'number',
+	              type: 'text',
 	              placeholder: 'Year',
 	              className: 'sign-up-birthday-year',
 	              onChange: this._updateBirthday_year,

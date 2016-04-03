@@ -16,7 +16,7 @@ var LoginForm = React.createClass({
       username: '',
       password: '',
       password_confirmation: '',
-      birthday_month: '05',
+      birthday_month: '01', //Make sure this works with no number hard coded
       birthday_day: '30',
       birthday_year: '1991',
       gender: 'Male'
@@ -146,13 +146,13 @@ var LoginForm = React.createClass({
                 <option value='12'>December</option>
               </select>
               <input
-                type='number'
+                type='text'
                 placeholder='Day'
                 className='sign-up-birthday-day'
                 onChange={this._updateBirthday_day}
                 value={this.state.birthday_day} />
               <input
-                type='number'
+                type='text'
                 placeholder='Year'
                 className='sign-up-birthday-year'
                 onChange={this._updateBirthday_year}
