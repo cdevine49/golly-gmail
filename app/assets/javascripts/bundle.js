@@ -32601,24 +32601,26 @@
 	            { className: 'sign-up-sidebar' },
 	            React.createElement(
 	              'h2',
-	              null,
+	              { className: 'sign-up-sidebar-first-third' },
 	              'One account is all you get'
 	            ),
 	            React.createElement(
 	              'h3',
-	              null,
+	              { className: 'sign-up-sidebar-second-fourth' },
 	              'One free account connects you to nothing'
 	            ),
+	            React.createElement('div', { className: 'sign-up-multiple-gmail-logo' }),
 	            React.createElement(
 	              'h2',
-	              null,
+	              { className: 'sign-up-sidebar-first-third' },
 	              'Take it where your laptop goes'
 	            ),
 	            React.createElement(
 	              'h3',
-	              null,
+	              { className: 'sign-up-sidebar-second-fourth' },
 	              'One of these should work'
-	            )
+	            ),
+	            React.createElement('div', { className: 'sign-up-computer-img' })
 	          ),
 	          React.createElement(
 	            'form',
