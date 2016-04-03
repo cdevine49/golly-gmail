@@ -24793,6 +24793,7 @@
 	var ApiUtil = __webpack_require__(218);
 	var SessionStore = __webpack_require__(226);
 	var Search = __webpack_require__(244);
+	var Link = __webpack_require__(159).Link;
 	
 	var TopNav = React.createClass({
 	  displayName: 'TopNav',
@@ -24820,21 +24821,98 @@
 	  render: function () {
 	    return React.createElement(
 	      'header',
-	      { className: 'header group' },
+	      { className: 'main-header' },
 	      React.createElement(
-	        'nav',
-	        { className: 'topnav-above group' },
+	        'section',
+	        { className: 'header-top group' },
 	        React.createElement(
-	          'button',
-	          { onClick: ApiUtil.logout },
-	          'Logout'
+	          'div',
+	          { className: 'GollyGmail-logo-header' },
+	          'GollyGmail'
+	        ),
+	        React.createElement(Search, null),
+	        React.createElement(
+	          'div',
+	          { className: 'header-right group' },
+	          React.createElement(
+	            'span',
+	            { className: 'header-name' },
+	            SessionStore.currentUser().first_name
+	          ),
+	          React.createElement(
+	            'span',
+	            { className: 'header-badge' },
+	            SessionStore.currentUser().first_name[0].toUpperCase()
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'account-box hidden' },
+	          React.createElement(
+	            'div',
+	            { className: 'account-info group' },
+	            React.createElement('div', { className: 'profile-pic' }),
+	            React.createElement(
+	              'div',
+	              { className: 'user-info' },
+	              React.createElement(
+	                'span',
+	                { className: 'name' },
+	                SessionStore.currentUser().first_name + ' ' + SessionStore.currentUser().last_name
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'email' },
+	                SessionStore.currentUser().gollygmail
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'signin-signup-links group' },
+	            React.createElement(
+	              Link,
+	              { className: 'new-account-link', to: '/signup/' },
+	              'Add account'
+	            ),
+	            React.createElement(
+	              'button',
+	              { className: 'account-box-logout-button', onClick: ApiUtil.logout },
+	              'Logout'
+	            )
+	          )
 	        )
-	      )
+	      ),
+	      React.createElement('nav', { className: 'header-navbar' })
 	    );
 	  }
 	
 	});
 	
+	// $(document).ready(function(){
+	//       $('.account-box').on('click', function(event){
+	//         debugger
+	//         console.log('click - form');
+	//         event.stopPropagation();
+	//       });
+	//
+	//
+	//       $('.header-badge').click(function(event){
+	//         debugger
+	//         $('.account-box').toggle();
+	//         event.stopPropagation();
+	//       });
+	//
+	// $('html').click(function(event){
+	//   debugger
+	//   console.log('click - body');
+	//   //hide the form if the body is clicked
+	//   $('.account-box').css('display','none');
+	// });
+	//
+	// });
+	
+	// <Link className='my-account-link' to={'/account/'}>My   account</Link>
 	module.exports = TopNav;
 
 /***/ },
