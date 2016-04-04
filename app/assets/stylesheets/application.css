@@ -41,6 +41,7 @@ button, article, footer, small {
    color: #000;
    font-size: 16px;
    font-family: sans-serif;
+   overflow: hidden;
  }
 
  .group:after {
@@ -308,6 +309,7 @@ button, article, footer, small {
 .main-header {
   height: 112px;
   position: fixed;
+  top: 0;
   width: 100%;
 }
 
@@ -332,7 +334,7 @@ button, article, footer, small {
 .searchbar {
   float: left;
   background: #FFFFFF;
-  margin: 15px;
+  margin: 15px  ;
   margin-right: 0;
 }
 
@@ -435,7 +437,7 @@ button, article, footer, small {
 /* Header Navbar */
 
 .header-navbar {
-  height: 50px;
+  height: 45px;
   border-bottom: 1px solid #e5e5e5;
 }
 
@@ -443,9 +445,10 @@ button, article, footer, small {
 
  .sidenav {
    position: fixed;
-   margin-top: 112px;
+   top: 120px;
+   left: 10px;
    width: 160px;
-   padding: 20px;
+   padding: 0 0 0 20px;
  }
 
  .compose-button {
@@ -453,38 +456,95 @@ button, article, footer, small {
    color: white;
    width: 115px;
    height: 30px;
+   font-size: 14px;
    text-align: center;
    border-radius: 2px;
  }
 
-
-
-
-
-
-
-
- .sign-in {
-   display: block;
-   text-align: center;
+ .sidenav-links {
+   margin-top: 10px;
+   font-size: 14px;
  }
 
- .sign-in-message {
-   font-size: 16px;
+ .sidenav-links > li {
+   padding: 2px 0;
  }
 
-.logo {
-  font-size: 30px;
-  margin: 25px auto 20px;
-  font-weight: normal;
+/* Email Previews Table */
+
+.email-previews-table {
+  margin-top: 125px;
+  margin-left: 208px;
+  /*width: 1048px;*/
+  width: auto;
+  height: 200px;
+  overflow: scroll;
 }
 
-.logo-sub-heading {
-  font-size: 42px;
-  display: block;
-  text-align: center;
+.email-preview-list {
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 14px;
+  height: 25px;
 
 }
+
+.marked-box,
+.starred-box,
+.important-box {
+  float: left;
+  padding: 3px;
+  margin-top: 2px;
+}
+
+.email-preview-link {
+  float: left;
+  margin-top: 5px;
+
+}
+
+.email-preview-sender {
+  margin-left: 15px;
+  font-weight: bold;
+  width: 184px;
+}
+
+.email-preview-subject {
+  font-weight: bold;
+}
+
+.subject-dash-body {
+  float: left;
+  margin: 5px 2px 0;
+}
+
+.email-preview-body {
+
+}
+
+
+
+
+   /*.sign-in {
+     display: block;
+     text-align: center;
+   }
+
+   .sign-in-message {
+     font-size: 16px;
+   }
+
+  .logo {
+    font-size: 30px;
+    margin: 25px auto 20px;
+    font-weight: normal;
+  }
+
+  .logo-sub-heading {
+    font-size: 42px;
+    display: block;
+    text-align: center;
+
+  }*/
 
 .blue {
   color: blue;

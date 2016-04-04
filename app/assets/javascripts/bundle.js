@@ -31958,7 +31958,55 @@
 	        { className: 'compose-button', onClick: this._composeForm },
 	        'Compose'
 	      ),
-	      React.createElement('ul', { className: 'sidenav-links' }),
+	      React.createElement(
+	        'ul',
+	        { className: 'sidenav-links' },
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#' },
+	            'Inbox'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#' },
+	            'Starred'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#' },
+	            'Important'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#' },
+	            'Sent Mail'
+	          )
+	        ),
+	        React.createElement(
+	          'li',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#' },
+	            'Drafts'
+	          )
+	        )
+	      ),
 	      this.state.formOpen ? React.createElement(ComposeForm, { onSubmit: this._composeForm }) : ''
 	    );
 	  }
@@ -32319,7 +32367,6 @@
 	  },
 	
 	  componentDidMount: function () {
-	
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
 	    ApiUtil.fetchEmails();
 	  },
@@ -32332,30 +32379,51 @@
 	    this.setState({ emails: EmailStore.all() });
 	  },
 	
+	  // + (email.marked ? ' marked' : '' )
+	  // + (email.marked ? ' starred' : '' )
+	  // + (email.marked ? ' important' : '' )
 	  render: function () {
 	
 	    var emailPreviews = this.state.emails.map(function (email, i) {
 	      return React.createElement(
-	        'li',
-	        { key: i },
+	        'div',
+	        { key: i, className: 'email-preview-list group' },
+	        React.createElement(
+	          'span',
+	          { className: 'marked-box' },
+	          React.createElement('input', { type: 'checkbox', onClick: ApiUtil.editEmail })
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'starred-box' },
+	          React.createElement('input', { type: 'checkbox' })
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: 'important-box' },
+	          React.createElement('input', { type: 'checkbox' })
+	        ),
 	        React.createElement(
 	          Link,
-	          { to: "/inbox/" + email.id },
-	          React.createElement(
-	            'h4',
-	            null,
-	            email.from
-	          ),
-	          React.createElement(
-	            'h4',
-	            null,
-	            email.subject
-	          ),
-	          React.createElement(
-	            'p',
-	            null,
-	            email.body
-	          )
+	          { className: 'email-preview-sender email-preview-link', to: "/inbox/" + email.id },
+	          email.from_name
+	        ),
+	        React.createElement(
+	          Link,
+	          {
+	            className: 'email-preview-subject email-preview-link',
+	            to: "/inbox/" + email.id },
+	          email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: email.subject && email.body ? 'subject-dash-body' : 'hidden' },
+	          '-'
+	        ),
+	        React.createElement(
+	          Link,
+	          { className: 'email-preview-body email-preview-link', to: "/inbox/" + email.id },
+	          email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, 100 - email.subject.length)
 	        )
 	      );
 	    });
@@ -32369,11 +32437,11 @@
 	    }
 	    return React.createElement(
 	      'section',
-	      { className: 'emails' },
+	      { className: 'emails-previews-table' },
 	      this.props.children,
 	      React.createElement(
-	        'ul',
-	        null,
+	        'div',
+	        { className: 'email-previews-table' },
 	        emailPreviews
 	      )
 	    );

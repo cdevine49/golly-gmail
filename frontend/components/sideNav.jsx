@@ -23,6 +23,11 @@ var SideNav = React.createClass({
       <nav className='sidenav'>
         <button className='compose-button' onClick={this._composeForm}>Compose</button>
         <ul className='sidenav-links'>
+          <li><a href='#'>Inbox</a></li>
+          <li><a href='#'>Starred</a></li>
+          <li><a href='#'>Important</a></li>
+          <li><a href='#'>Sent Mail</a></li>
+          <li><a href='#'>Drafts</a></li>
         </ul>
         {this.state.formOpen ? <ComposeForm onSubmit={this._composeForm}/> : ''}
       </nav>
