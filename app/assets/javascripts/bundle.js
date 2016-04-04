@@ -24766,15 +24766,20 @@
 	var React = __webpack_require__(1);
 	var TopNav = __webpack_require__(217);
 	var SideNav = __webpack_require__(245);
+	var ClickActions = __webpack_require__(257);
 	
 	var App = React.createClass({
 	  displayName: 'App',
 	
 	
+	  _click: function (e) {
+	    ClickActions.receiveClick();
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'main',
-	      null,
+	      { onClick: this._click },
 	      React.createElement(TopNav, null),
 	      React.createElement(SideNav, null),
 	      this.props.children
@@ -24792,6 +24797,7 @@
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
 	var SessionStore = __webpack_require__(226);
+	var ClickStore = __webpack_require__(259);
 	var Search = __webpack_require__(244);
 	var Link = __webpack_require__(159).Link;
 	
@@ -24799,12 +24805,19 @@
 	  displayName: 'TopNav',
 	
 	
+	  getInitialState: function () {
+	    return {
+	      account_dropdown: false
+	    };
+	  },
+	
 	  contextTypes: {
 	    router: React.PropTypes.object.isRequired
 	  },
 	
 	  componentDidMount: function () {
 	    this.sessionStoreToken = SessionStore.addListener(this._onChange);
+	    this.clickStoreToken = ClickStore.addListener(this._handleAppClick);
 	    this._onChange();
 	  },
 	
@@ -24816,6 +24829,20 @@
 	    if (!SessionStore.isLoggedIn()) {
 	      this.context.router.push('/login');
 	    }
+	  },
+	
+	  _handleAppClick: function () {
+	    this.setState({ account_dropdown: false });
+	  },
+	
+	  _handleAccountBoxClick: function (e) {
+	    e.stopPropagation();
+	  },
+	
+	  _handleBadgeClick: function (e) {
+	    e.stopPropagation();
+	    console.log('badge-click');
+	    this.setState({ account_dropdown: !this.state.account_dropdown });
 	  },
 	
 	  render: function () {
@@ -24841,13 +24868,13 @@
 	          ),
 	          React.createElement(
 	            'span',
-	            { className: 'header-badge' },
+	            { className: 'header-badge', onClick: this._handleBadgeClick },
 	            SessionStore.currentUser().first_name[0].toUpperCase()
 	          )
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'account-box hidden' },
+	          { className: this.state.account_dropdown ? 'account-box' : 'account-box hidden', onClick: this._handleAccountBoxClick },
 	          React.createElement(
 	            'div',
 	            { className: 'account-info group' },
@@ -24890,27 +24917,26 @@
 	});
 	
 	// $(document).ready(function(){
-	//       $('.account-box').on('click', function(event){
-	//         debugger
-	//         console.log('click - form');
-	//         event.stopPropagation();
+	//       // $('.account-box').on('click', function(event){
+	//       //   debugger
+	//       //   console.log('click - form');
+	//       //   event.stopPropagation();
+	//       // });
+	//       //
+	//       //
+	//       // $('.header-badge').click(function(event){
+	//       //   debugger
+	//       //   $('.account-box').toggle();
+	//       //   event.stopPropagation();
+	//       // });
+	//
+	//       $('body').click(function(event){
+	//         console.log('click - body');
+	//         //hide the form if the body is clicked
+	//         $('.account-box').css('display','none');
 	//       });
 	//
-	//
-	//       $('.header-badge').click(function(event){
-	//         debugger
-	//         $('.account-box').toggle();
-	//         event.stopPropagation();
-	//       });
-	//
-	// $('html').click(function(event){
-	//   debugger
-	//   console.log('click - body');
-	//   //hide the form if the body is clicked
-	//   $('.account-box').css('display','none');
-	// });
-	//
-	// });
+	//     });
 	
 	// <Link className='my-account-link' to={'/account/'}>My   account</Link>
 	module.exports = TopNav;
@@ -24937,7 +24963,7 @@
 	    });
 	  },
 	
-	  createEmail: function (formData) {
+	  createEmail: function (formData, callback) {
 	    $.ajax({
 	      type: 'POST',
 	      url: 'api/emails',
@@ -24945,6 +24971,52 @@
 	      contentType: false,
 	      datatype: 'json',
 	      data: formData,
+	      success: function (email) {
+	        ApiActions.receiveEmail(email);
+	        callback && callback();
+	      },
+	      error: function () {
+	        console.log('ApiUtil#fetchEmails error');
+	      }
+	    });
+	  },
+	
+	  toggleMarked: function (email) {
+	    $.ajax({
+	      type: 'PATCH',
+	      url: 'api/emails/' + email.id,
+	      datatype: 'json',
+	      data: { email: { marked: !email.marked } },
+	      success: function (email) {
+	        ApiActions.receiveEmail(email);
+	      },
+	      error: function () {
+	        console.log('ApiUtil#fetchEmails error');
+	      }
+	    });
+	  },
+	
+	  toggleStarred: function (email) {
+	    $.ajax({
+	      type: 'PATCH',
+	      url: 'api/emails/' + email.id,
+	      datatype: 'json',
+	      data: { email: { starred: !email.starred } },
+	      success: function (email) {
+	        ApiActions.receiveEmail(email);
+	      },
+	      error: function () {
+	        console.log('ApiUtil#fetchEmails error');
+	      }
+	    });
+	  },
+	
+	  toggleImportant: function (email) {
+	    $.ajax({
+	      type: 'PATCH',
+	      url: 'api/emails/' + email.id,
+	      datatype: 'json',
+	      data: { email: { important: !email.important } },
 	      success: function (email) {
 	        ApiActions.receiveEmail(email);
 	      },
@@ -25013,7 +25085,6 @@
 	      }
 	    });
 	  }
-	
 	};
 	
 	window.ApiUtil = ApiUtil;
@@ -25044,6 +25115,14 @@
 	    };
 	    AppDispatcher.dispatch(action);
 	  },
+	
+	  // updateEmail: function (email) {
+	  //   var action = {
+	  //     actionType: EmailConstants.EMAIL_UPDATED,
+	  //     email: email
+	  //   };
+	  //   AppDispatcher.dispatch(action);
+	  // },
 	
 	  currentUserReceived: function (currentUser) {
 	    var action = {
@@ -25387,6 +25466,7 @@
 	  EMAIL_RECEIVED: 'EMAIL_RECEIVED'
 	};
 	
+	// EMAIL_UPDATED: 'EMAIL_UPDATED'
 	module.exports = EmailConstants;
 
 /***/ },
@@ -32007,7 +32087,7 @@
 	          )
 	        )
 	      ),
-	      this.state.formOpen ? React.createElement(ComposeForm, { onSubmit: this._composeForm }) : ''
+	      this.state.formOpen ? React.createElement(ComposeForm, { onClose: this._composeForm }) : ''
 	    );
 	  }
 	
@@ -32030,9 +32110,12 @@
 	
 	  getInitialState: function () {
 	    return {
+	      minimized: false,
 	      subject: "",
 	      body: "",
-	      to: ""
+	      to: "",
+	      imageUrl: null,
+	      imageFile: null
 	    };
 	  },
 	
@@ -32048,6 +32131,35 @@
 	    this.setState({ to: e.currentTarget.value });
 	  },
 	
+	  _handleMinimize: function () {
+	    this.setState({ minimized: !this.state.minimized });
+	  },
+	
+	  handleFileChange: function (e) {
+	    var file = e.currentTarget.files[0];
+	    var reader = new FileReader();
+	
+	    reader.onloadend = function () {
+	      this.setState({ imageUrl: reader.result, imageFile: file });
+	    }.bind(this);
+	
+	    if (file) {
+	      reader.readAsDataURL(file);
+	    } else {
+	      this.resetFile();
+	    }
+	  },
+	
+	  resetForm: function () {
+	    this.setState({
+	      subject: "",
+	      body: "",
+	      to: "",
+	      imageUrl: null,
+	      imageFile: null
+	    });
+	  },
+	
 	  createEmail: function (e) {
 	    e.preventDefault();
 	    if (this.state.to.slice(-15) === "@gollygmail.com") {
@@ -32055,9 +32167,9 @@
 	      formData.append("email[subject]", this.state.subject);
 	      formData.append("email[body]", this.state.body);
 	      formData.append("email[to]", this.state.to);
-	      ApiUtil.createEmail(formData);
-	      this.setState({ subject: '', body: '', to: '' });
-	      this.props.onSubmit();
+	      formData.append("email[image]", this.state.imageFile);
+	      ApiUtil.createEmail(formData, this.resetForm.bind(this));
+	      this.props.onClose();
 	    } else {
 	      console.log("Not a valid email");
 	    }
@@ -32065,46 +32177,62 @@
 	
 	  render: function () {
 	    return React.createElement(
-	      'form',
-	      { onSubmit: this.createEmail },
+	      'section',
+	      { className: 'compose-form-container' },
 	      React.createElement(
-	        'label',
-	        null,
-	        'To:',
+	        'div',
+	        { className: 'compose-form-header group' },
+	        React.createElement(
+	          'button',
+	          { className: 'compose-form-header-minimize', onClick: this._handleMinimize },
+	          'New Message'
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'compose-form-header-close', onClick: this.props.onClose },
+	          'X'
+	        )
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.createEmail, className: !this.state.minimized ? 'compose-form' : 'hidden' },
 	        React.createElement('input', {
-	          type: 'text',
-	          placeholder: '',
+	          type: 'textarea',
+	          placeholder: 'Recipient',
+	          className: 'compose-form-recipient',
 	          onChange: this.handleToChange,
 	          value: this.state.to
-	        })
-	      ),
-	      React.createElement('br', null),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Subject',
+	        }),
+	        React.createElement('br', null),
 	        React.createElement('input', {
 	          type: 'text',
 	          placeholder: 'Subject',
+	          className: 'compose-form-subject',
 	          onChange: this.handleSubjectChange,
 	          value: this.state.subject
-	        })
-	      ),
-	      React.createElement('br', null),
-	      React.createElement(
-	        'label',
-	        null,
-	        'Body',
-	        React.createElement('input', {
-	          type: 'textarea',
-	          onChange: this.handleBodyChange,
-	          value: this.state.body
-	        })
-	      ),
-	      React.createElement(
-	        'button',
-	        null,
-	        'Submit'
+	        }),
+	        React.createElement('br', null),
+	        React.createElement(
+	          'label',
+	          null,
+	          React.createElement('textarea', {
+	            className: 'compose-form-body',
+	            onChange: this.handleBodyChange,
+	            value: this.state.body })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'compose-form-footer' },
+	          React.createElement(
+	            'button',
+	            { className: 'compose-form-button' },
+	            'Send'
+	          ),
+	          React.createElement('input', {
+	            type: 'file',
+	            className: 'compose-form-image-file',
+	            onChange: this.handleFileChange })
+	        )
 	      )
 	    );
 	  }
@@ -32356,6 +32484,7 @@
 	var React = __webpack_require__(1);
 	var EmailStore = __webpack_require__(252);
 	var ApiUtil = __webpack_require__(218);
+	var Checkboxes = __webpack_require__(256);
 	var Link = __webpack_require__(159).Link;
 	
 	var EmailPreviewTable = React.createClass({
@@ -32376,7 +32505,10 @@
 	  },
 	
 	  _onChange: function () {
-	    this.setState({ emails: EmailStore.all() });
+	    this.setState({ emails: EmailStore.all().sort(function (x, y) {
+	        return Date.parse(y.created_at) - Date.parse(x.created_at);
+	      })
+	    });
 	  },
 	
 	  // + (email.marked ? ' marked' : '' )
@@ -32388,21 +32520,7 @@
 	      return React.createElement(
 	        'div',
 	        { key: i, className: 'email-preview-list group' },
-	        React.createElement(
-	          'span',
-	          { className: 'marked-box' },
-	          React.createElement('input', { type: 'checkbox', onClick: ApiUtil.editEmail })
-	        ),
-	        React.createElement(
-	          'span',
-	          { className: 'starred-box' },
-	          React.createElement('input', { type: 'checkbox' })
-	        ),
-	        React.createElement(
-	          'span',
-	          { className: 'important-box' },
-	          React.createElement('input', { type: 'checkbox' })
-	        ),
+	        React.createElement(Checkboxes, { email: email }),
 	        React.createElement(
 	          Link,
 	          { className: 'email-preview-sender email-preview-link', to: "/inbox/" + email.id },
@@ -32413,11 +32531,11 @@
 	          {
 	            className: 'email-preview-subject email-preview-link',
 	            to: "/inbox/" + email.id },
-	          email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject
+	          email.subject ? email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject : '(no subject)'
 	        ),
 	        React.createElement(
 	          'span',
-	          { className: email.subject && email.body ? 'subject-dash-body' : 'hidden' },
+	          { className: email.body ? 'subject-dash-body' : 'hidden' },
 	          '-'
 	        ),
 	        React.createElement(
@@ -32437,7 +32555,7 @@
 	    }
 	    return React.createElement(
 	      'section',
-	      { className: 'emails-previews-table' },
+	      { className: 'email-previews-table-container' },
 	      this.props.children,
 	      React.createElement(
 	        'div',
@@ -32459,12 +32577,16 @@
 	var AppDispatcher = __webpack_require__(220);
 	var EmailConstants = __webpack_require__(224);
 	
-	var _emails = [];
+	var _emails = {};
 	
 	var EmailStore = new Store(AppDispatcher);
 	
 	EmailStore.all = function () {
-	  return _emails.slice();
+	  var emails = [];
+	  for (var id in _emails) {
+	    emails.push(_emails[id]);
+	  }
+	  return emails;
 	};
 	
 	EmailStore.find = function (id) {
@@ -32478,14 +32600,24 @@
 	      EmailStore.__emitChange();
 	      break;
 	    case EmailConstants.EMAIL_RECEIVED:
-	      _emails.unshift(payload.email);
+	      resetEmail(payload.email);
 	      EmailStore.__emitChange();
 	      break;
+	    // case EmailConstants.EMAIL_UPDATED:
+	    //   _emails[payload.email.id] = payload.email;
+	    //   EmailStore.__emitChange();
 	  }
 	};
 	
 	var resetEmails = function (emails) {
-	  _emails = emails;
+	  _emails = {};
+	  emails.forEach(function (email) {
+	    _emails[email.id] = email;
+	  });
+	};
+	
+	var resetEmail = function (email) {
+	  _emails[email.id] = email;
 	};
 	
 	window.EmailStore = EmailStore;
@@ -32542,17 +32674,22 @@
 	    }
 	
 	    return React.createElement(
-	      'article',
-	      null,
+	      'section',
+	      { className: 'email-detail-view' },
 	      React.createElement(
 	        'h2',
 	        null,
 	        this.state.email.subject
 	      ),
 	      React.createElement(
-	        'p',
+	        'h2',
 	        null,
 	        this.state.email.body
+	      ),
+	      React.createElement(
+	        'a',
+	        { href: this.state.email.image_url },
+	        'attachment'
 	      )
 	    );
 	  }
@@ -32976,6 +33113,118 @@
 	});
 	
 	module.exports = LoginForm;
+
+/***/ },
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var Checkboxes = React.createClass({
+	  displayName: 'Checkboxes',
+	
+	
+	  // componentWillReceiveProps: function (newProps) {
+	  //
+	  // },
+	
+	  _marked: function (e) {
+	    e.preventDefault();
+	    ApiUtil.toggleMarked(this.props.email);
+	  },
+	
+	  _starred: function (e) {
+	    e.preventDefault();
+	    ApiUtil.toggleStarred(this.props.email);
+	  },
+	
+	  _important: function (e) {
+	    e.preventDefault();
+	    ApiUtil.toggleImportant(this.props.email);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'span',
+	        { className: 'marked-box' },
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          onChange: this._marked,
+	          checked: this.props.email.marked })
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'starred-box' },
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          onChange: this._starred,
+	          checked: this.props.email.starred })
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'important-box' },
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          onChange: this._important,
+	          checked: this.props.email.important })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Checkboxes;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(220);
+	var ClickConstants = __webpack_require__(258);
+	
+	ClickActions = {
+	  receiveClick: function () {
+	    var action = {
+	      actionType: ClickConstants.APP_CLICKED
+	    };
+	    AppDispatcher.dispatch(action);
+	  }
+	};
+	
+	module.exports = ClickActions;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports) {
+
+	ClickConstants = {
+	  APP_CLICKED: 'APP_CLICKED'
+	};
+	
+	module.exports = ClickConstants;
+
+/***/ },
+/* 259 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(227).Store;
+	var ClickConstants = __webpack_require__(258);
+	var AppDispatcher = __webpack_require__(220);
+	
+	var ClickStore = new Store(AppDispatcher);
+	
+	ClickStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ClickConstants.APP_CLICKED:
+	      ClickStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = ClickStore;
 
 /***/ }
 /******/ ]);

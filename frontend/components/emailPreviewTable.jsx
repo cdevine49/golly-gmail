@@ -1,6 +1,7 @@
 var React = require('react');
 var EmailStore = require('../stores/emailStore');
 var ApiUtil = require('../utils/apiUtil');
+var Checkboxes = require('./checkbox');
 var Link = require('react-router').Link;
 
 var EmailPreviewTable = React.createClass({
@@ -20,7 +21,11 @@ var EmailPreviewTable = React.createClass({
   },
 
   _onChange: function () {
-    this.setState({ emails: EmailStore.all()} );
+    this.setState({ emails: EmailStore.all().sort(
+      function(x, y) {
+        return Date.parse(y.created_at) - Date.parse(x.created_at);}
+      )
+    });
   },
 
   // + (email.marked ? ' marked' : '' )
@@ -31,14 +36,12 @@ var EmailPreviewTable = React.createClass({
     var emailPreviews = this.state.emails.map(function (email, i) {
       return (
         <div key={ i } className='email-preview-list group'>
-          <span className='marked-box'><input type='checkbox' onClick={ApiUtil.editEmail}></input></span>
-          <span className='starred-box'><input type='checkbox'></input></span>
-          <span className='important-box'><input type='checkbox'></input></span>
+          <Checkboxes email={email}/>
           <Link className='email-preview-sender email-preview-link' to={"/inbox/" + email.id}>{ email.from_name }</Link>
           <Link
             className='email-preview-subject email-preview-link'
-            to={"/inbox/" + email.id}>{ email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject }</Link>
-          <span className={ (email.subject && email.body) ? 'subject-dash-body' : 'hidden' }>-</span>
+            to={"/inbox/" + email.id}>{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</Link>
+          <span className={ (email.body) ? 'subject-dash-body' : 'hidden' }>-</span>
           <Link className='email-preview-body email-preview-link' to={"/inbox/" + email.id}>{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (100 - email.subject.length)) }</Link>
         </div>
       );
@@ -48,7 +51,7 @@ var EmailPreviewTable = React.createClass({
       emailPreviews = <p>Loading emails...</p>;
     }
     return (
-      <section className="emails-previews-table">
+      <section className="email-previews-table-container">
         {this.props.children}
         <div className='email-previews-table'>
           { emailPreviews }

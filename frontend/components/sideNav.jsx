@@ -29,7 +29,7 @@ var SideNav = React.createClass({
           <li><a href='#'>Sent Mail</a></li>
           <li><a href='#'>Drafts</a></li>
         </ul>
-        {this.state.formOpen ? <ComposeForm onSubmit={this._composeForm}/> : ''}
+        {this.state.formOpen ? <ComposeForm onClose={this._composeForm}/> : ''}
       </nav>
     );
   }
