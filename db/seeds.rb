@@ -66,38 +66,107 @@ User.create(
 
 Email.create(
   subject: "The first email seed",
-  body: "what subject says",
+  body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
   to: "conor@gollygmail.com",
-  from: "lily@gollygmail.com",
-
+  from_email: "lily@gollygmail.com",
+  from_name: "Lily Lastname"
 )
+
+Email.create(
+  subject: "The second email seed",
+  body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  to: "conor@gollygmail.com",
+  from_email: "lily@gollygmail.com",
+  from_name: "Lily Lastname"
+)
+Email.create(
+  subject: "The third email seed",
+  body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  to: "conor@gollygmail.com",
+  from_email: "lily@gollygmail.com",
+  from_name: "Lily Lastname"
+)
+Email.create(
+  subject: "The fourth email seed",
+  body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  to: "conor@gollygmail.com",
+  from_email: "lily@gollygmail.com",
+  from_name: "Lily Lastname"
+)
+Email.create(
+  subject: "The fifth email seed",
+  body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  to: "conor@gollygmail.com",
+  from_email: "lily@gollygmail.com",
+  from_name: "Lily Lastname"
+)
+Email.create(
+  subject: "The sixth email seed",
+  body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  to: "conor@gollygmail.com",
+  from_email: "lily@gollygmail.com",
+  from_name: "Lily Lastname"
+)
+Email.create(
+  subject: "The seventh email seed",
+  body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  to: "conor@gollygmail.com",
+  from_email: "lily@gollygmail.com",
+  from_name: "Lily Lastname"
+)
+
+Email.create(
+  subject: "I am a very long subject Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  to: "conor@gollygmail.com",
+  from_email: "lily@gollygmail.com",
+  from_name: "Lily Lastname"
+)
+
+Email.create(
+  subject: "",
+  body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+  to: "conor@gollygmail.com",
+  from_email: "lily@gollygmail.com",
+  from_name: "Lily Lastname"
+)
+
+  Email.create(
+    subject: "Yet another seed subject",
+    body: "",
+    to: "conor@gollygmail.com",
+    from_email: "lily@gollygmail.com",
+    from_name: "Lily Lastname"
+  )
 
 Email.create(
   subject: "I hope this works",
   body: "it probably wont though",
   to: "tommy@gollygmail.com",
-  from: "conor@gollygmail.com"
+  from_email: "conor@gollygmail.com",
+  from_name: "Conor Devine"
 )
 
 Email.create(
   subject: "Another test email",
   body: "at this point, Im running out of ideas",
   to: "leen@gollygmail.com",
-  from: "tommy@gollygmail.com"
+  from_email: "tommy@gollygmail.com",
+  from_name: "Tommy Lastname"
 )
 
 Email.create(
   subject: "Cant stop me now",
   body: "Im having such a good time",
   to: "lily@gollygmail.com",
-  from: "fred@gollygmail.com"
-
+  from_email: "fred@gollygmail.com",
+  from_name: "Fred Lastname"
 )
 
 Email.create(
   subject: "Where do we go?",
   body: "where do we go now?",
   to: "fred@gollygmail.com",
-  from: "lily@gollygmail.com"
-
+  from_email: "lily@gollygmail.com",
+  from_name: "Lily Lastname"
 )

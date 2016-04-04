@@ -5,7 +5,8 @@ class Api::EmailsController < ApplicationController
 
   def create
     email = Email.new(email_params)
-    email.from = current_user.gollygmail
+    email.from_name = current_user.first_name + ' ' + current_user.last_name
+    email.from_email = current_user.gollygmail
     if User.find_by(gollygmail: email.to)
       email.save
       render json: email
