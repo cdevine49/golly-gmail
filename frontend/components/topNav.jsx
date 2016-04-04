@@ -1,10 +1,17 @@
 var React = require('react');
 var ApiUtil = require('../utils/apiUtil');
 var SessionStore = require('../stores/sessionStore');
+var ClickStore = require('../stores/clickStore');
 var Search = require('./search.jsx');
 var Link = require('react-router').Link;
 
 var TopNav = React.createClass({
+
+  getInitialState: function() {
+    return {
+      account_dropdown: false
+    };
+  },
 
   contextTypes: {
     router: React.PropTypes.object.isRequired
@@ -12,6 +19,7 @@ var TopNav = React.createClass({
 
   componentDidMount: function() {
     this.sessionStoreToken = SessionStore.addListener(this._onChange);
+    this.clickStoreToken = ClickStore.addListener(this._handleAppClick);
     this._onChange();
   },
 
@@ -25,6 +33,20 @@ var TopNav = React.createClass({
     }
   },
 
+  _handleAppClick: function () {
+    this.setState({account_dropdown: false});
+  },
+
+  _handleAccountBoxClick: function (e) {
+    e.stopPropagation();
+  },
+
+  _handleBadgeClick: function (e) {
+    e.stopPropagation();
+    console.log('badge-click');
+    this.setState({account_dropdown: !this.state.account_dropdown});
+  },
+
   render: function() {
     return (
       <header className='main-header'>
@@ -33,9 +55,9 @@ var TopNav = React.createClass({
         <Search />
         <div className='header-right group'>
           <span className='header-name'>{SessionStore.currentUser().first_name}</span>
-          <span className='header-badge'>{SessionStore.currentUser().first_name[0].toUpperCase()}</span>
+          <span className='header-badge' onClick={this._handleBadgeClick}>{SessionStore.currentUser().first_name[0].toUpperCase()}</span>
         </div>
-        <div className='account-box hidden'>
+        <div className={this.state.account_dropdown ? 'account-box' : 'account-box hidden'} onClick={this._handleAccountBoxClick}>
           <div className='account-info group'>
             <div className='profile-pic'></div>
             <div className='user-info'>
@@ -57,27 +79,26 @@ var TopNav = React.createClass({
 });
 
 // $(document).ready(function(){
-//       $('.account-box').on('click', function(event){
-//         debugger
-//         console.log('click - form');
-//         event.stopPropagation();
+//       // $('.account-box').on('click', function(event){
+//       //   debugger
+//       //   console.log('click - form');
+//       //   event.stopPropagation();
+//       // });
+//       //
+//       //
+//       // $('.header-badge').click(function(event){
+//       //   debugger
+//       //   $('.account-box').toggle();
+//       //   event.stopPropagation();
+//       // });
+//
+//       $('body').click(function(event){
+//         console.log('click - body');
+//         //hide the form if the body is clicked
+//         $('.account-box').css('display','none');
 //       });
 //
-//
-//       $('.header-badge').click(function(event){
-//         debugger
-//         $('.account-box').toggle();
-//         event.stopPropagation();
-//       });
-//
-      // $('html').click(function(event){
-      //   debugger
-      //   console.log('click - body');
-      //   //hide the form if the body is clicked
-      //   $('.account-box').css('display','none');
-      // });
-//
-    // });
+//     });
 
 // <Link className='my-account-link' to={'/account/'}>My   account</Link>
 module.exports = TopNav;

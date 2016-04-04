@@ -19,6 +19,14 @@ ApiActions = {
     AppDispatcher.dispatch(action);
   },
 
+  // updateEmail: function (email) {
+  //   var action = {
+  //     actionType: EmailConstants.EMAIL_UPDATED,
+  //     email: email
+  //   };
+  //   AppDispatcher.dispatch(action);
+  // },
+
   currentUserReceived: function(currentUser) {
       var action = {
         actionType: SessionConstants.CURRENT_USER_RECEIVED,

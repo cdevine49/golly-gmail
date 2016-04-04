@@ -38,10 +38,11 @@ var EmailDetails = React.createClass({
     }
 
     return (
-      <article>
+      <section className='email-detail-view'>
         <h2>{ this.state.email.subject }</h2>
-        <p>{ this.state.email.body }</p>
-      </article>
+        <h2>{ this.state.email.body }</h2>
+        <a href={this.state.email.image_url }>attachment</a>
+      </section>
     );
   }
 

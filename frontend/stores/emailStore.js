@@ -2,12 +2,16 @@ var Store = require('flux/utils').Store;
 var AppDispatcher = require('../dispatcher/dispatcher');
 var EmailConstants = require('../constants/emailConstants');
 
-var _emails = [];
+var _emails = {};
 
 var EmailStore = new Store(AppDispatcher);
 
 EmailStore.all = function () {
-  return _emails.slice();
+  var emails = [];
+  for (var id in _emails) {
+    emails.push(_emails[id]);
+  }
+  return emails;
 };
 
 EmailStore.find = function (id) {
@@ -21,14 +25,24 @@ EmailStore.__onDispatch = function (payload) {
       EmailStore.__emitChange();
       break;
     case EmailConstants.EMAIL_RECEIVED:
-      _emails.unshift(payload.email);
+      resetEmail(payload.email);
       EmailStore.__emitChange();
       break;
+    // case EmailConstants.EMAIL_UPDATED:
+    //   _emails[payload.email.id] = payload.email;
+    //   EmailStore.__emitChange();
   }
 };
 
 var resetEmails = function (emails) {
-  _emails = emails;
+  _emails = {};
+  emails.forEach(function (email) {
+    _emails[email.id] = email;
+  });
+};
+
+var resetEmail = function (email) {
+  _emails[email.id] = email;
 };
 
 window.EmailStore = EmailStore;

@@ -383,6 +383,7 @@ button, article, footer, small {
 .account-box {
   width: 320px;
   height: 190px;
+  background-color: #FFFFFF;
   border: 1px solid #ccc;
   position: fixed;
   top: 60px;
@@ -472,12 +473,16 @@ button, article, footer, small {
 
 /* Email Previews Table */
 
+.email-previews-table-container {
+
+}
+
 .email-previews-table {
   margin-top: 125px;
   margin-left: 208px;
-  /*width: 1048px;*/
+  width: 1048px;
   width: auto;
-  height: 200px;
+  height: 500px;
   overflow: scroll;
 }
 
@@ -521,8 +526,95 @@ button, article, footer, small {
 
 }
 
+/* Compose Form */
+
+.compose-form-container {
+  width: 510px;
+  border: 1px solid #e5e5e5;
+  bottom: 0;
+  right: 25px;
+  position: fixed;
+}
+
+.compose-form {
+  height: 475px;
+  width: 510px;
+  background-color: #ffffff;
+}
+
+.compose-form-header {
+  background-color: #404040;
+  font-size: 14px;
+
+}
+
+.compose-form-header-minimize {
+  float: left;
+  color: #ffffff;
+  width: 465px;
+  padding: 12px 8px;
+}
+
+.compose-form-header-close {
+  float: right;
+  color: #808080;
+  width: 8px;
+  padding: 12px 8px;
+}
+
+.compose-form > input {
+  width: 490px;
+  height: 45px;
+  padding: 0 10px;
+  border-bottom: 1px solid #cfcfcf;
+  font-size: 14px;
+  color: #222;
+}
+
+.compose-form-recipient {
+  resize: vertical;
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.compose-form-subject {
+
+}
+
+.compose-form-body {
+  height: 320px;
+  width: 490px;
+  padding: 10px;
+  vertical-align: top;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  resize: vertical;
+}
+
+.compose-form-footer {
+  background: #f5f5f5;
+  border: 1px solid #e5e5e5;
+  height: 45px;
+}
+
+.compose-form-button {
+  height: 25px;
+  margin: 5px;
+  line-height: 1;
+  color: #F8FFFF;
+  background: #488BF9;
+  padding: 3px 20px;
+  border-radius: 3px;
+}
+
+/* Email Detail Page */
 
 
+.email-detail-view {
+  margin-left: 200px;
+  margin-top: 200px;
+}
 
    /*.sign-in {
      display: block;

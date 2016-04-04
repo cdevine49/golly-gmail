@@ -16,7 +16,7 @@ ApiUtil = {
     });
   },
 
-  createEmail: function(formData) {
+  createEmail: function(formData, callback) {
     $.ajax({
       type: 'POST',
       url: 'api/emails',
@@ -24,6 +24,52 @@ ApiUtil = {
       contentType: false,
       datatype: 'json',
       data: formData,
+      success: function (email) {
+        ApiActions.receiveEmail(email);
+        callback && callback();
+      },
+      error: function () {
+        console.log('ApiUtil#fetchEmails error');
+      },
+    });
+  },
+
+  toggleMarked: function(email) {
+    $.ajax({
+      type: 'PATCH',
+      url: 'api/emails/' + email.id,
+      datatype: 'json',
+      data: {email: {marked: !email.marked}},
+      success: function (email) {
+        ApiActions.receiveEmail(email);
+      },
+      error: function () {
+        console.log('ApiUtil#fetchEmails error');
+      }
+    });
+  },
+
+  toggleStarred: function(email) {
+    $.ajax({
+      type: 'PATCH',
+      url: 'api/emails/' + email.id,
+      datatype: 'json',
+      data: {email: {starred: !email.starred}},
+      success: function (email) {
+        ApiActions.receiveEmail(email);
+      },
+      error: function () {
+        console.log('ApiUtil#fetchEmails error');
+      }
+    });
+  },
+
+  toggleImportant: function(email) {
+    $.ajax({
+      type: 'PATCH',
+      url: 'api/emails/' + email.id,
+      datatype: 'json',
+      data: {email: {important: !email.important}},
       success: function (email) {
         ApiActions.receiveEmail(email);
       },
@@ -92,7 +138,6 @@ ApiUtil = {
       }
     });
   }
-
 };
 
 window.ApiUtil = ApiUtil;
