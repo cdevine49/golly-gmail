@@ -49,10 +49,10 @@
 	var ReactRouter = __webpack_require__(159);
 	
 	var App = __webpack_require__(216);
-	var EmailPreviewTable = __webpack_require__(251);
-	var EmailDetails = __webpack_require__(253);
-	var LoginForm = __webpack_require__(254);
-	var SignupForm = __webpack_require__(255);
+	var EmailPreviewTable = __webpack_require__(254);
+	var EmailDetails = __webpack_require__(257);
+	var LoginForm = __webpack_require__(258);
+	var SignupForm = __webpack_require__(259);
 	
 	var SessionStore = __webpack_require__(226);
 	var ApiUtil = __webpack_require__(218);
@@ -7994,6 +7994,10 @@
 	  }
 	};
 	
+	function registerNullComponentID() {
+	  ReactEmptyComponentRegistry.registerNullComponentID(this._rootNodeID);
+	}
+	
 	var ReactEmptyComponent = function (instantiate) {
 	  this._currentElement = null;
 	  this._rootNodeID = null;
@@ -8002,7 +8006,7 @@
 	assign(ReactEmptyComponent.prototype, {
 	  construct: function (element) {},
 	  mountComponent: function (rootID, transaction, context) {
-	    ReactEmptyComponentRegistry.registerNullComponentID(rootID);
+	    transaction.getReactMountReady().enqueue(registerNullComponentID, this);
 	    this._rootNodeID = rootID;
 	    return ReactReconciler.mountComponent(this._renderedComponent, rootID, transaction, context);
 	  },
@@ -18725,7 +18729,7 @@
 	
 	'use strict';
 	
-	module.exports = '0.14.7';
+	module.exports = '0.14.8';
 
 /***/ },
 /* 147 */
@@ -24765,8 +24769,8 @@
 
 	var React = __webpack_require__(1);
 	var TopNav = __webpack_require__(217);
-	var SideNav = __webpack_require__(245);
-	var ClickActions = __webpack_require__(257);
+	var SideNav = __webpack_require__(247);
+	var ClickActions = __webpack_require__(253);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24797,8 +24801,8 @@
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
 	var SessionStore = __webpack_require__(226);
-	var ClickStore = __webpack_require__(259);
-	var Search = __webpack_require__(244);
+	var ClickStore = __webpack_require__(244);
+	var Search = __webpack_require__(246);
 	var Link = __webpack_require__(159).Link;
 	
 	var TopNav = React.createClass({
@@ -31972,6 +31976,36 @@
 /* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Store = __webpack_require__(227).Store;
+	var ClickConstants = __webpack_require__(245);
+	var AppDispatcher = __webpack_require__(220);
+	
+	var ClickStore = new Store(AppDispatcher);
+	
+	ClickStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ClickConstants.APP_CLICKED:
+	      ClickStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = ClickStore;
+
+/***/ },
+/* 245 */
+/***/ function(module, exports) {
+
+	ClickConstants = {
+	  APP_CLICKED: 'APP_CLICKED'
+	};
+	
+	module.exports = ClickConstants;
+
+/***/ },
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var React = __webpack_require__(1);
 	
 	var Search = React.createClass({
@@ -32006,11 +32040,11 @@
 	module.exports = Search;
 
 /***/ },
-/* 245 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ComposeForm = __webpack_require__(246);
+	var ComposeForm = __webpack_require__(248);
 	
 	var SideNav = React.createClass({
 	  displayName: 'SideNav',
@@ -32096,13 +32130,13 @@
 	module.exports = SideNav;
 
 /***/ },
-/* 246 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
 	var SessionStore = __webpack_require__(226);
-	var LinkedStateMixin = __webpack_require__(247);
+	var LinkedStateMixin = __webpack_require__(249);
 	
 	var ComposeForm = React.createClass({
 	  displayName: 'ComposeForm',
@@ -32248,13 +32282,13 @@
 	module.exports = ComposeForm;
 
 /***/ },
-/* 247 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(248);
+	module.exports = __webpack_require__(250);
 
 /***/ },
-/* 248 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32271,8 +32305,8 @@
 	
 	'use strict';
 	
-	var ReactLink = __webpack_require__(249);
-	var ReactStateSetters = __webpack_require__(250);
+	var ReactLink = __webpack_require__(251);
+	var ReactStateSetters = __webpack_require__(252);
 	
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -32295,7 +32329,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 249 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32369,7 +32403,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 250 */
+/* 252 */
 /***/ function(module, exports) {
 
 	/**
@@ -32478,11 +32512,29 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 251 */
+/* 253 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(220);
+	var ClickConstants = __webpack_require__(245);
+	
+	ClickActions = {
+	  receiveClick: function () {
+	    var action = {
+	      actionType: ClickConstants.APP_CLICKED
+	    };
+	    AppDispatcher.dispatch(action);
+	  }
+	};
+	
+	module.exports = ClickActions;
+
+/***/ },
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EmailStore = __webpack_require__(252);
+	var EmailStore = __webpack_require__(255);
 	var ApiUtil = __webpack_require__(218);
 	var Checkboxes = __webpack_require__(256);
 	var Link = __webpack_require__(159).Link;
@@ -32570,7 +32622,7 @@
 	module.exports = EmailPreviewTable;
 
 /***/ },
-/* 252 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var Store = __webpack_require__(227).Store;
@@ -32625,11 +32677,75 @@
 	module.exports = EmailStore;
 
 /***/ },
-/* 253 */
+/* 256 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EmailStore = __webpack_require__(252);
+	
+	var Checkboxes = React.createClass({
+	  displayName: 'Checkboxes',
+	
+	
+	  // componentWillReceiveProps: function (newProps) {
+	  //
+	  // },
+	
+	  _marked: function (e) {
+	    e.preventDefault();
+	    ApiUtil.toggleMarked(this.props.email);
+	  },
+	
+	  _starred: function (e) {
+	    e.preventDefault();
+	    ApiUtil.toggleStarred(this.props.email);
+	  },
+	
+	  _important: function (e) {
+	    e.preventDefault();
+	    ApiUtil.toggleImportant(this.props.email);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'span',
+	        { className: 'marked-box' },
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          onChange: this._marked,
+	          checked: this.props.email.marked })
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'starred-box' },
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          onChange: this._starred,
+	          checked: this.props.email.starred })
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'important-box' },
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          onChange: this._important,
+	          checked: this.props.email.important })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Checkboxes;
+
+/***/ },
+/* 257 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var EmailStore = __webpack_require__(255);
 	var ApiUtil = __webpack_require__(218);
 	var History = __webpack_require__(159).History;
 	
@@ -32699,7 +32815,7 @@
 	module.exports = EmailDetails;
 
 /***/ },
-/* 254 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -32810,7 +32926,7 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 255 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -33113,118 +33229,6 @@
 	});
 	
 	module.exports = LoginForm;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var Checkboxes = React.createClass({
-	  displayName: 'Checkboxes',
-	
-	
-	  // componentWillReceiveProps: function (newProps) {
-	  //
-	  // },
-	
-	  _marked: function (e) {
-	    e.preventDefault();
-	    ApiUtil.toggleMarked(this.props.email);
-	  },
-	
-	  _starred: function (e) {
-	    e.preventDefault();
-	    ApiUtil.toggleStarred(this.props.email);
-	  },
-	
-	  _important: function (e) {
-	    e.preventDefault();
-	    ApiUtil.toggleImportant(this.props.email);
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'span',
-	        { className: 'marked-box' },
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          onChange: this._marked,
-	          checked: this.props.email.marked })
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: 'starred-box' },
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          onChange: this._starred,
-	          checked: this.props.email.starred })
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: 'important-box' },
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          onChange: this._important,
-	          checked: this.props.email.important })
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Checkboxes;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(220);
-	var ClickConstants = __webpack_require__(258);
-	
-	ClickActions = {
-	  receiveClick: function () {
-	    var action = {
-	      actionType: ClickConstants.APP_CLICKED
-	    };
-	    AppDispatcher.dispatch(action);
-	  }
-	};
-	
-	module.exports = ClickActions;
-
-/***/ },
-/* 258 */
-/***/ function(module, exports) {
-
-	ClickConstants = {
-	  APP_CLICKED: 'APP_CLICKED'
-	};
-	
-	module.exports = ClickConstants;
-
-/***/ },
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(227).Store;
-	var ClickConstants = __webpack_require__(258);
-	var AppDispatcher = __webpack_require__(220);
-	
-	var ClickStore = new Store(AppDispatcher);
-	
-	ClickStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case ClickConstants.APP_CLICKED:
-	      ClickStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = ClickStore;
 
 /***/ }
 /******/ ]);
