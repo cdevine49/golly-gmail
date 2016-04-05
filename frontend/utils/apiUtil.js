@@ -2,7 +2,7 @@ var ApiActions = require('../actions/apiActions');
 
 ApiUtil = {
 
-  fetchEmails: function(path) {
+  fetchEmails: function(path, callback) {
     $.ajax({
       type: 'GET',
       url: 'api/emails',
@@ -10,6 +10,7 @@ ApiUtil = {
       data: {path: path},
       success: function (emails) {
         ApiActions.receiveEmails(emails);
+        callback && callback()
       },
       error: function () {
         console.log('ApiUtil#fetchEmails error');

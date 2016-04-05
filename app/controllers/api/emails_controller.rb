@@ -5,6 +5,7 @@ class Api::EmailsController < ApplicationController
       @emails = Email.where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(starred: true)
       .order(created_at: :desc)
+      # .page(params[:page])
     when 'important'
       @emails = Email.where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(important: true)
@@ -43,7 +44,7 @@ class Api::EmailsController < ApplicationController
 
   private
   def email_params
-    params.require(:email).permit(:subject, :body, :to, :image, :marked, :starred, :important, :read)
+    params.require(:email).permit(:subject, :body, :to, :image, :marked, :starred, :important, :read, :page)
   end
 
 end

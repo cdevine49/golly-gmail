@@ -24930,7 +24930,7 @@
 	
 	ApiUtil = {
 	
-	  fetchEmails: function (path) {
+	  fetchEmails: function (path, callback) {
 	    $.ajax({
 	      type: 'GET',
 	      url: 'api/emails',
@@ -24938,6 +24938,7 @@
 	      data: { path: path },
 	      success: function (emails) {
 	        ApiActions.receiveEmails(emails);
+	        callback && callback();
 	      },
 	      error: function () {
 	        console.log('ApiUtil#fetchEmails error');
@@ -32649,8 +32650,8 @@
 	
 	  componentDidMount: function () {
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
-	    ApiUtil.fetchEmails();
-	    ApiUtil.toggleRead(EmailStore.find(this.props.params.id));
+	    ApiUtil.fetchEmails(this.props.route.path.slice(0, -4));
+	    // ApiUtil.toggleRead(EmailStore.find(this.props.params.id));
 	  },
 	
 	  componentWillUnmount: function () {
@@ -32658,12 +32659,21 @@
 	  },
 	
 	  _onChange: function () {
-	    this.setState({ email: EmailStore.find(this.props.params.id) });
+	    if (EmailStore.find(this.props.params.id)) {
+	      this.setState({ email: EmailStore.find(this.props.params.id) });
+	    }
+	    if (EmailStore.find(this.props.params.id) && !EmailStore.find(this.props.params.id).read) {
+	      ApiUtil.toggleRead(EmailStore.find(this.props.params.id));
+	    }
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
-	    this.setState({ email: EmailStore.find(newProps.params.id) });
-	    ApiUtil.toggleRead(EmailStore.find(this.props.params.id));
+	    if (EmailStore.find(newProps.params.id)) {
+	      this.setState({ email: EmailStore.find(newProps.params.id) });
+	    }
+	    if (EmailStore.find(newProps.params.id) && !EmailStore.find(newProps.params.id).read) {
+	      ApiUtil.toggleRead(EmailStore.find(newProps.params.id));
+	    }
 	  },
 	
 	  render: function () {
