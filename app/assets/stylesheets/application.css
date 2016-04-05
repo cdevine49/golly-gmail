@@ -462,9 +462,17 @@ button, article, footer, small {
    border-radius: 2px;
  }
 
+ .compose-button:hover {
+   background: #c83929;
+ }
+
  .sidenav-links {
    margin-top: 10px;
    font-size: 14px;
+ }
+
+ .sidenav-links >li:hover {
+   background: #eeeeee;
  }
 
  .sidenav-links > li {
@@ -486,11 +494,20 @@ button, article, footer, small {
   overflow: scroll;
 }
 
-.email-preview-list {
+.email-preview-item {
   border-bottom: 1px solid #e5e5e5;
   font-size: 14px;
   height: 25px;
 
+}
+
+.email-read {
+  background-color: #F4F4F4;
+  font-weight: normal;
+}
+
+.email-unread {
+  /*font-weight: bold;*/
 }
 
 .marked-box,
@@ -509,12 +526,12 @@ button, article, footer, small {
 
 .email-preview-sender {
   margin-left: 15px;
-  font-weight: bold;
+  /*font-weight: bold;*/
   width: 184px;
 }
 
 .email-preview-subject {
-  font-weight: bold;
+  /*font-weight: bold;*/
 }
 
 .subject-dash-body {
@@ -652,6 +669,14 @@ button, article, footer, small {
 
 .yellow {
   color: yellow;
+}
+
+.normal {
+  font-weight: normal;
+}
+
+.bold {
+  font-weight: bold;
 }
 
 /* Dropdown list */

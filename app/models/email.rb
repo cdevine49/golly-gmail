@@ -1,6 +1,5 @@
 class Email < ActiveRecord::Base
   validates :to, presence: true
-  #add validation errors for no recipient
 
   belongs_to(
     :user,

@@ -28,18 +28,15 @@ var EmailPreviewTable = React.createClass({
     });
   },
 
-  // + (email.marked ? ' marked' : '' )
-  // + (email.marked ? ' starred' : '' )
-  // + (email.marked ? ' important' : '' )
   render: function () {
 
     var emailPreviews = this.state.emails.map(function (email, i) {
       return (
-        <div key={ i } className='email-preview-list group'>
+        <div key={ i } className={'email-preview-item group' + (email.read ? ' email-read' : ' email-unread')}>
           <Checkboxes email={email}/>
-          <Link className='email-preview-sender email-preview-link' to={"/inbox/" + email.id}>{ email.from_name }</Link>
+          <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={"/inbox/" + email.id}>{ email.from_name }</Link>
           <Link
-            className='email-preview-subject email-preview-link'
+            className={'email-preview-subject email-preview-link'  + (email.read ? ' normal' : ' bold')}
             to={"/inbox/" + email.id}>{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</Link>
           <span className={ (email.body) ? 'subject-dash-body' : 'hidden' }>-</span>
           <Link className='email-preview-body email-preview-link' to={"/inbox/" + email.id}>{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (100 - email.subject.length)) }</Link>
@@ -60,8 +57,6 @@ var EmailPreviewTable = React.createClass({
       </section>
     );
   }
-
-
 });
 
 module.exports = EmailPreviewTable;
