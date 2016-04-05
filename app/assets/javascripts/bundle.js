@@ -24916,28 +24916,6 @@
 	
 	});
 	
-	// $(document).ready(function(){
-	//       // $('.account-box').on('click', function(event){
-	//       //   debugger
-	//       //   console.log('click - form');
-	//       //   event.stopPropagation();
-	//       // });
-	//       //
-	//       //
-	//       // $('.header-badge').click(function(event){
-	//       //   debugger
-	//       //   $('.account-box').toggle();
-	//       //   event.stopPropagation();
-	//       // });
-	//
-	//       $('body').click(function(event){
-	//         console.log('click - body');
-	//         //hide the form if the body is clicked
-	//         $('.account-box').css('display','none');
-	//       });
-	//
-	//     });
-	
 	// <Link className='my-account-link' to={'/account/'}>My   account</Link>
 	module.exports = TopNav;
 
@@ -32527,7 +32505,6 @@
 	  },
 	
 	  render: function () {
-	
 	    var emailPreviews = this.state.emails.map(function (email, i) {
 	      return React.createElement(
 	        'div',
@@ -33143,19 +33120,16 @@
 	
 	  _marked: function (e) {
 	    e.preventDefault();
-	    e.stopPropogation();
 	    ApiUtil.toggleMarked(this.props.email);
 	  },
 	
 	  _starred: function (e) {
 	    e.preventDefault();
-	    e.stopPropogation();
 	    ApiUtil.toggleStarred(this.props.email);
 	  },
 	
 	  _important: function (e) {
 	    e.preventDefault();
-	    e.stopPropogation();
 	    ApiUtil.toggleImportant(this.props.email);
 	  },
 	

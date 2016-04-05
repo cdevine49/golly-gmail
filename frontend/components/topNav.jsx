@@ -78,27 +78,5 @@ var TopNav = React.createClass({
 
 });
 
-// $(document).ready(function(){
-//       // $('.account-box').on('click', function(event){
-//       //   debugger
-//       //   console.log('click - form');
-//       //   event.stopPropagation();
-//       // });
-//       //
-//       //
-//       // $('.header-badge').click(function(event){
-//       //   debugger
-//       //   $('.account-box').toggle();
-//       //   event.stopPropagation();
-//       // });
-//
-//       $('body').click(function(event){
-//         console.log('click - body');
-//         //hide the form if the body is clicked
-//         $('.account-box').css('display','none');
-//       });
-//
-//     });
-
 // <Link className='my-account-link' to={'/account/'}>My   account</Link>
 module.exports = TopNav;

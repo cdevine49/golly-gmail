@@ -8,19 +8,16 @@ var Checkboxes = React.createClass({
 
   _marked: function (e) {
     e.preventDefault();
-    e.stopPropogation();
     ApiUtil.toggleMarked(this.props.email);
   },
 
   _starred: function (e) {
     e.preventDefault();
-    e.stopPropogation();
     ApiUtil.toggleStarred(this.props.email);
   },
 
   _important: function (e) {
     e.preventDefault();
-    e.stopPropogation();
     ApiUtil.toggleImportant(this.props.email);
   },
 

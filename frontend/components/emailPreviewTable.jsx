@@ -29,7 +29,6 @@ var EmailPreviewTable = React.createClass({
   },
 
   render: function () {
-
     var emailPreviews = this.state.emails.map(function (email, i) {
       return (
         <div key={ i } className={'email-preview-item group' + (email.read ? ' email-read' : ' email-unread')}>
