@@ -20,6 +20,11 @@ gem 'figaro'
 gem 'aws-sdk', '>= 2.0'
 #######################################################
 
+################ PAGINATION AND SEARCH GEMS #####################
+gem 'pg_search'
+gem 'kaminari'
+#######################################################
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
