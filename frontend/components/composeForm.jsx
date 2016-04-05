@@ -64,7 +64,9 @@ var ComposeForm = React.createClass({
       formData.append("email[subject]", this.state.subject);
       formData.append("email[body]", this.state.body);
       formData.append("email[to]", this.state.to);
-      formData.append("email[image]", this.state.imageFile);
+      if (this.state.imageFile) {
+        formData.append("email[image]", this.state.imageFile);
+      }
       ApiUtil.createEmail(formData, this.resetForm.bind(this));
       this.props.onClose();
     } else {

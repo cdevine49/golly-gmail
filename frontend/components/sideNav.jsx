@@ -23,10 +23,10 @@ var SideNav = React.createClass({
       <nav className='sidenav'>
         <button className='compose-button' onClick={this._composeForm}>Compose</button>
         <ul className='sidenav-links'>
-          <li><a href='#'>Inbox</a></li>
-          <li><a href='#'>Starred</a></li>
-          <li><a href='#'>Important</a></li>
-          <li><a href='#'>Sent Mail</a></li>
+          <li><a href='#/inbox/'>Inbox</a></li>
+          <li><a href='#/starred/'>Starred</a></li>
+          <li><a href='#/important/'>Important</a></li>
+          <li><a href='#/sent/'>Sent Mail</a></li>
           <li><a href='#'>Drafts</a></li>
         </ul>
         {this.state.formOpen ? <ComposeForm onClose={this._composeForm}/> : ''}

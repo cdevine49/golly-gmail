@@ -1,9 +1,26 @@
 class Api::EmailsController < ApplicationController
   def index
-    @emails = Email.where(to: current_user.gollygmail).order(created_at: :desc)
+    case params[:path]
+    when 'starred'
+      @emails = Email.where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
+      .where(starred: true)
+      .order(created_at: :desc)
+    when 'important'
+      @emails = Email.where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
+      .where(important: true)
+      .order(created_at: :desc)
+    when 'sent'
+      @emails = Email.where("emails.from_email = ?", current_user.gollygmail)
+      .order(created_at: :desc)
+    else
+      @emails = Email.where("emails.to = ?", current_user.gollygmail)
+      .order(created_at: :desc)
+    end
+
   end
 
   def create
+    debugger
     email = Email.new(email_params)
     email.from_name = current_user.first_name + ' ' + current_user.last_name
     email.from_email = current_user.gollygmail

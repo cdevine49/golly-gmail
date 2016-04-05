@@ -1,5 +1,6 @@
 var React = require('react');
 var EmailStore = require('../stores/emailStore');
+var SessionStore = require('../stores/sessionStore');
 var ApiUtil = require('../utils/apiUtil');
 var Checkboxes = require('./checkbox');
 var Link = require('react-router').Link;
@@ -12,7 +13,11 @@ var EmailPreviewTable = React.createClass({
 
   componentDidMount: function () {
     this.emailStoreToken = EmailStore.addListener(this._onChange);
-    ApiUtil.fetchEmails();
+    ApiUtil.fetchEmails(this.props.route.path);
+  },
+
+  componentWillReceiveProps: function (newProps) {
+    ApiUtil.fetchEmails(newProps.route.path);
   },
 
 
@@ -33,12 +38,13 @@ var EmailPreviewTable = React.createClass({
       return (
         <div key={ i } className={'email-preview-item group' + (email.read ? ' email-read' : ' email-unread')}>
           <Checkboxes email={email}/>
-          <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={"/inbox/" + email.id}>{ email.from_name }</Link>
+          <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={"/inbox/" + email.id}>{ SessionStore.currentUser().gollygmail === email.from_email ? 'Me' : email.from_name }</Link>
           <Link
             className={'email-preview-subject email-preview-link'  + (email.read ? ' normal' : ' bold')}
             to={"/inbox/" + email.id}>{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</Link>
           <span className={ (email.body) ? 'subject-dash-body' : 'hidden' }>-</span>
           <Link className='email-preview-body email-preview-link' to={"/inbox/" + email.id}>{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (100 - email.subject.length)) }</Link>
+          <Link className='email-preview-link end-content' to={"/inbox/" + email.id}></Link>
         </div>
       );
     });

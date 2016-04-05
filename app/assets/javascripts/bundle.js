@@ -71,7 +71,10 @@
 	      { path: '/', component: App, onEnter: _ensureLoggedIn },
 	      React.createElement(IndexRoute, { component: EmailPreviewTable }),
 	      React.createElement(Route, { path: 'inbox', component: EmailPreviewTable }),
-	      React.createElement(Route, { path: 'inbox/:id', component: EmailDetails })
+	      React.createElement(Route, { path: 'inbox/:id', component: EmailDetails }),
+	      React.createElement(Route, { path: 'starred', component: EmailPreviewTable }),
+	      React.createElement(Route, { path: 'important', component: EmailPreviewTable }),
+	      React.createElement(Route, { path: 'sent', component: EmailPreviewTable })
 	    ),
 	    React.createElement(Route, { path: '/login', component: LoginForm }),
 	    React.createElement(Route, { path: '/signup', component: SignupForm })
@@ -24927,11 +24930,12 @@
 	
 	ApiUtil = {
 	
-	  fetchEmails: function () {
+	  fetchEmails: function (path) {
 	    $.ajax({
 	      type: 'GET',
 	      url: 'api/emails',
-	      datatype: 'json',
+	      dataType: 'json',
+	      data: { path: path },
 	      success: function (emails) {
 	        ApiActions.receiveEmails(emails);
 	      },
@@ -32039,7 +32043,7 @@
 	          null,
 	          React.createElement(
 	            'a',
-	            { href: '#' },
+	            { href: '#/inbox/' },
 	            'Inbox'
 	          )
 	        ),
@@ -32048,7 +32052,7 @@
 	          null,
 	          React.createElement(
 	            'a',
-	            { href: '#' },
+	            { href: '#/starred/' },
 	            'Starred'
 	          )
 	        ),
@@ -32057,7 +32061,7 @@
 	          null,
 	          React.createElement(
 	            'a',
-	            { href: '#' },
+	            { href: '#/important/' },
 	            'Important'
 	          )
 	        ),
@@ -32066,7 +32070,7 @@
 	          null,
 	          React.createElement(
 	            'a',
-	            { href: '#' },
+	            { href: '#/sent/' },
 	            'Sent Mail'
 	          )
 	        ),
@@ -32160,7 +32164,9 @@
 	      formData.append("email[subject]", this.state.subject);
 	      formData.append("email[body]", this.state.body);
 	      formData.append("email[to]", this.state.to);
-	      formData.append("email[image]", this.state.imageFile);
+	      if (this.state.imageFile) {
+	        formData.append("email[image]", this.state.imageFile);
+	      }
 	      ApiUtil.createEmail(formData, this.resetForm.bind(this));
 	      this.props.onClose();
 	    } else {
@@ -32476,6 +32482,7 @@
 
 	var React = __webpack_require__(1);
 	var EmailStore = __webpack_require__(252);
+	var SessionStore = __webpack_require__(226);
 	var ApiUtil = __webpack_require__(218);
 	var Checkboxes = __webpack_require__(256);
 	var Link = __webpack_require__(159).Link;
@@ -32490,7 +32497,11 @@
 	
 	  componentDidMount: function () {
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
-	    ApiUtil.fetchEmails();
+	    ApiUtil.fetchEmails(this.props.route.path);
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    ApiUtil.fetchEmails(newProps.route.path);
 	  },
 	
 	  componentWillUnmount: function () {
@@ -32513,7 +32524,7 @@
 	        React.createElement(
 	          Link,
 	          { className: 'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold'), to: "/inbox/" + email.id },
-	          email.from_name
+	          SessionStore.currentUser().gollygmail === email.from_email ? 'Me' : email.from_name
 	        ),
 	        React.createElement(
 	          Link,
@@ -32531,7 +32542,8 @@
 	          Link,
 	          { className: 'email-preview-body email-preview-link', to: "/inbox/" + email.id },
 	          email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, 100 - email.subject.length)
-	        )
+	        ),
+	        React.createElement(Link, { className: 'email-preview-link end-content', to: "/inbox/" + email.id })
 	      );
 	    });
 	
