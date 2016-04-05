@@ -2,15 +2,16 @@ var ApiActions = require('../actions/apiActions');
 
 ApiUtil = {
 
-  fetchEmails: function(path, callback) {
+  fetchEmails: function(path, page) {
+    debugger
     $.ajax({
       type: 'GET',
       url: 'api/emails',
       dataType: 'json',
-      data: {path: path},
+      data: {path: path, page: page},
       success: function (emails) {
+        debugger
         ApiActions.receiveEmails(emails);
-        callback && callback()
       },
       error: function () {
         console.log('ApiUtil#fetchEmails error');

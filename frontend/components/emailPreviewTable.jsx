@@ -8,18 +8,17 @@ var Link = require('react-router').Link;
 var EmailPreviewTable = React.createClass({
 
   getInitialState: function () {
-    return { emails: [] };
+    return { emails: [], page: 1 };
   },
 
   componentDidMount: function () {
     this.emailStoreToken = EmailStore.addListener(this._onChange);
-    ApiUtil.fetchEmails(this.props.route.path);
+    ApiUtil.fetchEmails(this.props.route.path, this.state.page);
   },
 
   componentWillReceiveProps: function (newProps) {
-    ApiUtil.fetchEmails(newProps.route.path);
+    ApiUtil.fetchEmails(newProps.route.path, this.state.page);
   },
-
 
   componentWillUnmount: function () {
     this.emailStoreToken.remove();

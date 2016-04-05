@@ -9,7 +9,7 @@ json.array!(@emails) do |email|
     email,
     :id, :subject, :body, :to, :from_name,
     :from_email, :created_at, :updated_at,
-    :marked, :starred, :important, :read,
+    :marked, :starred, :important, :read
   )
 
   if email.image.exists?
