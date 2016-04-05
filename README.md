@@ -1,4 +1,4 @@
-# FresherNote
+# GollyGmail
 
 [Heroku link][http://gollygmail.herokuapp.com/]
 
@@ -18,6 +18,7 @@
   Search bar present but not functional
   
 
+
 ## Minimum Viable Product
 
 gollygmail is a gmail clone built using Ruby on Rails and React
@@ -28,7 +29,7 @@ It allows users to:
 - [ ] Send / Receive emails
 - [ ] Mark emails as Read / Unread
 - [ ] Archive / Delete / Recover emails
-- [ ] Label notes with multiple labels
+- [ ] Label emails with multiple labels
 - [ ] Star emails to mark as important / special
 - [ ] Users can configure inbox based on labels and stars
 - [ ] Search through emails
