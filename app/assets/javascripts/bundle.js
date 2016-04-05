@@ -24930,15 +24930,16 @@
 	
 	ApiUtil = {
 	
-	  fetchEmails: function (path, callback) {
+	  fetchEmails: function (path, page) {
+	    debugger;
 	    $.ajax({
 	      type: 'GET',
 	      url: 'api/emails',
 	      dataType: 'json',
-	      data: { path: path },
+	      data: { path: path, page: page },
 	      success: function (emails) {
+	        debugger;
 	        ApiActions.receiveEmails(emails);
-	        callback && callback();
 	      },
 	      error: function () {
 	        console.log('ApiUtil#fetchEmails error');
@@ -32493,16 +32494,16 @@
 	
 	
 	  getInitialState: function () {
-	    return { emails: [] };
+	    return { emails: [], page: 1 };
 	  },
 	
 	  componentDidMount: function () {
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
-	    ApiUtil.fetchEmails(this.props.route.path);
+	    ApiUtil.fetchEmails(this.props.route.path, this.state.page);
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
-	    ApiUtil.fetchEmails(newProps.route.path);
+	    ApiUtil.fetchEmails(newProps.route.path, this.state.page);
 	  },
 	
 	  componentWillUnmount: function () {

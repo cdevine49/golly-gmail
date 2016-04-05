@@ -5,19 +5,21 @@ class Api::EmailsController < ApplicationController
       @emails = Email.where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(starred: true)
       .order(created_at: :desc)
-      # .page(params[:page])
+      .page(params[:page]).per(50)
     when 'important'
       @emails = Email.where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(important: true)
       .order(created_at: :desc)
+      .page(params[:page]).per(50)
     when 'sent'
       @emails = Email.where("emails.from_email = ?", current_user.gollygmail)
       .order(created_at: :desc)
+      .page(params[:page]).per(50)
     else
       @emails = Email.where("emails.to = ?", current_user.gollygmail)
       .order(created_at: :desc)
+      .page(params[:page]).per(50)
     end
-
   end
 
   def create
