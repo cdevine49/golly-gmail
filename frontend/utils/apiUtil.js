@@ -2,11 +2,12 @@ var ApiActions = require('../actions/apiActions');
 
 ApiUtil = {
 
-  fetchEmails: function() {
+  fetchEmails: function(path) {
     $.ajax({
       type: 'GET',
       url: 'api/emails',
-      datatype: 'json',
+      dataType: 'json',
+      data: {path: path},
       success: function (emails) {
         ApiActions.receiveEmails(emails);
       },

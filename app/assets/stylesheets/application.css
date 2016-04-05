@@ -497,8 +497,9 @@ button, article, footer, small {
 .email-preview-item {
   border-bottom: 1px solid #e5e5e5;
   font-size: 14px;
-  height: 25px;
-
+  height: 40px;
+  vertical-align: middle;
+  line-height: 2;
 }
 
 .email-read {
@@ -518,20 +519,22 @@ button, article, footer, small {
   margin-top: 2px;
 }
 
+.marked-box {
+  margin-left: 5px;
+}
+
 .email-preview-link {
   float: left;
-  margin-top: 5px;
+  padding-top: 5px;
 
 }
 
 .email-preview-sender {
-  margin-left: 15px;
-  /*font-weight: bold;*/
+  padding-left: 15px;
   width: 184px;
 }
 
 .email-preview-subject {
-  /*font-weight: bold;*/
 }
 
 .subject-dash-body {
@@ -540,8 +543,12 @@ button, article, footer, small {
 }
 
 .email-preview-body {
-
 }
+
+/*.end-content {
+  height: auto;
+  width: auto;
+}*/
 
 /* Compose Form */
 

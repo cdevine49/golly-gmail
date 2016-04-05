@@ -22,7 +22,10 @@ document.addEventListener('DOMContentLoaded', function () {
       <Route path='/' component={App} onEnter={_ensureLoggedIn} >
         <IndexRoute component={EmailPreviewTable} />
         <Route path='inbox' component={EmailPreviewTable} />
-        <Route path='inbox/:id' component={EmailDetails} />
+          <Route path='inbox/:id' component={EmailDetails} />
+        <Route path='starred' component={EmailPreviewTable}/>
+        <Route path='important' component={EmailPreviewTable}/>
+        <Route path='sent' component={EmailPreviewTable}/>
       </Route>
 
       <Route path='/login' component={LoginForm}/>
