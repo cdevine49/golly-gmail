@@ -18,6 +18,7 @@ var EmailDetails = React.createClass({
   componentDidMount: function() {
     this.emailStoreToken = EmailStore.addListener(this._onChange);
     ApiUtil.fetchEmails();
+    ApiUtil.toggleRead(EmailStore.find(this.props.params.id));
   },
 
   componentWillUnmount: function () {
@@ -30,6 +31,7 @@ var EmailDetails = React.createClass({
 
   componentWillReceiveProps: function (newProps) {
     this.setState({ email: EmailStore.find(newProps.params.id) });
+    ApiUtil.toggleRead(EmailStore.find(this.props.params.id));
   },
 
   render: function() {
@@ -41,7 +43,7 @@ var EmailDetails = React.createClass({
       <section className='email-detail-view'>
         <h2>{ this.state.email.subject }</h2>
         <h2>{ this.state.email.body }</h2>
-        <a href={this.state.email.image_url }>attachment</a>
+        <a className={this.state.email.image_url ? 'email-attachment-download' : 'hidden'} href={this.state.email.image_url }>attachment</a>
       </section>
     );
   }

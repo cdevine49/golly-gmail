@@ -79,6 +79,21 @@ ApiUtil = {
     });
   },
 
+  toggleRead: function(email) {
+    $.ajax({
+      type: 'PATCH',
+      url: 'api/emails/' + email.id,
+      datatype: 'json',
+      data: {email: {read: !email.read}},
+      success: function (email) {
+        ApiActions.receiveEmail(email);
+      },
+      error: function () {
+        console.log('ApiUtil#fetchEmails error');
+      }
+    });
+  },
+
   login: function(credentials, callback) {
     $.ajax({
       type: "POST",

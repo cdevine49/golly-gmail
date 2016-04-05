@@ -6,5 +6,7 @@ json.array!(@emails) do |email|
     :marked, :starred, :important, :read,
   )
 
-  json.image_url asset_path(email.image.url)
+  if email.image.exists?
+    json.image_url asset_path(email.image.url)
+  end
 end

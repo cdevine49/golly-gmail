@@ -4,6 +4,20 @@
 
 [heroku]: http://www.herokuapp.com
 
+## Current Functionality
+  Redirect to login when user tries to enter site if not currently logged in
+  Allows user to sign up
+  User can sign out or sign out and head to new user page by clicking orange badge on top right
+  User can compose new emails
+  Emails can be received by other gollygmail users
+  Emails can include attachments
+  Inbox contains email previews
+  Checkboxes update emails to be marked, starred, or important respectively (CSS to distinguish checkboxes not yet done)
+  Email previews are colored gray if the email has been read
+  Email previews link to email detail page (very little CSS done on this page)
+  Search bar present but not functional
+  
+
 ## Minimum Viable Product
 
 gollygmail is a gmail clone built using Ruby on Rails and React
