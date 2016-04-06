@@ -26,7 +26,7 @@ var SideNav = React.createClass({
           <li><a href='#/inbox/'>Inbox</a></li>
           <li><a href='#/starred/'>Starred</a></li>
           <li><a href='#/important/'>Important</a></li>
-          <li><a href='#/sent/'>Sent Mail</a></li>
+          <li><a href='#/outbox/'>Sent Mail</a></li>
           <li><a href='#'>Drafts</a></li>
         </ul>
         {this.state.formOpen ? <ComposeForm onClose={this._composeForm}/> : ''}

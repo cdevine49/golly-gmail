@@ -2,7 +2,10 @@ class Email < ActiveRecord::Base
   validates :to, presence: true
 
   include PgSearch
-  multisearchable :against => [:subject, :body, :from_name, :from_email, :image_file_name]
+  pg_search_scope :search_emails,
+                  :against => [:subject, :body, :from_name, :from_email, :image_file_name],
+                  :order_within_rank => "emails.created_at DESC",
+                  :using => { :tsearch => { :prefix => true }}
 
   belongs_to(
     :user,

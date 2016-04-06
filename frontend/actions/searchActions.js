@@ -5,7 +5,7 @@ SearchActions = {
   receiveResults: function(response) {
     var action = {
       actionType: SearchConstants.RESULTS_RECEIVED,
-      searchResults: resonse.search_results,
+      searchResults: response.search_results,
       meta: response.meta
     };
     AppDispatcher.dispatch(action);

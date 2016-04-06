@@ -28,3 +28,12 @@
   float: left;
   margin-right: 20px;
 }
+
+.search-result-email-pic {
+  width: 20px;
+  height: 18px;
+  margin: 13px;
+  float: left;
+  background-size: contain;
+  background-image: asset-url("email-icon.png")
+}
