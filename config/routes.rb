@@ -6,5 +6,6 @@ Rails.application.routes.draw do
     resources :emails, only: [:index, :new, :create, :update]
     resources :mailboxes, only: [:index, :create]
     resource :session, only: [:show, :create, :destroy]
+    resources :searches, only: [:index]
   end
 end

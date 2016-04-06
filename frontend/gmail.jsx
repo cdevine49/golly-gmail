@@ -25,7 +25,9 @@ document.addEventListener('DOMContentLoaded', function () {
           <Route path='inbox/:id' component={EmailDetails} />
         <Route path='starred' component={EmailPreviewTable}/>
         <Route path='important' component={EmailPreviewTable}/>
-        <Route path='sent' component={EmailPreviewTable}/>
+        <Route path='outbox' component={EmailPreviewTable}/>
+          <Route path='outbox/:id' component={EmailDetails}/>
+        <Route path='search-results' component={EmailPreviewTable}/>
       </Route>
 
       <Route path='/login' component={LoginForm}/>

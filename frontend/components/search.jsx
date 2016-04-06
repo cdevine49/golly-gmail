@@ -1,6 +1,7 @@
 var React = require('react');
 var SearchStore = require('../stores/searchStore');
 var ApiUtil = require('../utils/apiUtil');
+var Link = require('react-router').Link;
 
 var Search = React.createClass({
 
@@ -23,7 +24,7 @@ var Search = React.createClass({
     this.setState({ result: SearchStore.all() });
   },
 
-  handleInput: function (event) {
+  handleInput: function (e) {
     var query = e.currentTarget.value;
    this.setState({ query: query }, function () {
      if (query.length > 2) {
@@ -32,22 +33,21 @@ var Search = React.createClass({
    }.bind(this));
   },
 
-  // nextPage: function () {
-  //   var meta = SearchStore.meta();
-  //   Apiutil.search(this.state.query, meta.page + 1);
-  // },
-
   search: function () {
     ApiUtil.search(this.state.query, 1);
   },
 
   results: function () {
-    return SearchStore.all().map(function (result) {
-      if (result._type === "Post") {
+    return SearchStore.all().map(function (result, i) {
+      if (result._type === "Email") {
         return (
-          <Link key={ result.id }>
-            Post #{ result.id }: { result.title }
-          </Link>
+          <div key={i} className='search-result-item-container group'>
+            <div className='search-result-email-pic'></div>
+            <li className='search-result-fixed-li'>
+              <Link className='search-result-fixed-link search-result-subject' to={"/inbox/" + result.id}>{ result.subject }</Link>
+              <Link className='search-result-fixed-link search-result-name' to={"/inbox/" + result.id}>{ result.from_name }</Link>
+            </li>
+          </div>
         );
 
       } else {
@@ -67,9 +67,9 @@ var Search = React.createClass({
           <input type='text' onChange={this.handleInput} value={this.state.query}></input>
           <button className='search-button'>B</button>
         </form>
-        <div>
+        <ul className='search-results-fixed'>
           { this.results() }
-        </div>
+        </ul>
       </article>
     );
   }

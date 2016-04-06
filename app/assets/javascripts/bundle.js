@@ -74,7 +74,9 @@
 	      React.createElement(Route, { path: 'inbox/:id', component: EmailDetails }),
 	      React.createElement(Route, { path: 'starred', component: EmailPreviewTable }),
 	      React.createElement(Route, { path: 'important', component: EmailPreviewTable }),
-	      React.createElement(Route, { path: 'sent', component: EmailPreviewTable })
+	      React.createElement(Route, { path: 'outbox', component: EmailPreviewTable }),
+	      React.createElement(Route, { path: 'outbox/:id', component: EmailDetails }),
+	      React.createElement(Route, { path: 'search-results', component: EmailPreviewTable })
 	    ),
 	    React.createElement(Route, { path: '/login', component: LoginForm }),
 	    React.createElement(Route, { path: '/signup', component: SignupForm })
@@ -31986,6 +31988,7 @@
 	var React = __webpack_require__(1);
 	var SearchStore = __webpack_require__(260);
 	var ApiUtil = __webpack_require__(218);
+	var Link = __webpack_require__(159).Link;
 	
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -32010,7 +32013,7 @@
 	    this.setState({ result: SearchStore.all() });
 	  },
 	
-	  handleInput: function (event) {
+	  handleInput: function (e) {
 	    var query = e.currentTarget.value;
 	    this.setState({ query: query }, function () {
 	      if (query.length > 2) {
@@ -32019,25 +32022,31 @@
 	    }.bind(this));
 	  },
 	
-	  // nextPage: function () {
-	  //   var meta = SearchStore.meta();
-	  //   Apiutil.search(this.state.query, meta.page + 1);
-	  // },
-	
 	  search: function () {
 	    ApiUtil.search(this.state.query, 1);
 	  },
 	
 	  results: function () {
-	    return SearchStore.all().map(function (result) {
-	      if (result._type === "Post") {
+	    return SearchStore.all().map(function (result, i) {
+	      if (result._type === "Email") {
 	        return React.createElement(
-	          Link,
-	          { key: result.id },
-	          'Post #',
-	          result.id,
-	          ': ',
-	          result.title
+	          'div',
+	          { key: i, className: 'search-result-item-container group' },
+	          React.createElement('div', { className: 'search-result-email-pic' }),
+	          React.createElement(
+	            'li',
+	            { className: 'search-result-fixed-li' },
+	            React.createElement(
+	              Link,
+	              { className: 'search-result-fixed-link search-result-subject', to: "/inbox/" + result.id },
+	              result.subject
+	            ),
+	            React.createElement(
+	              Link,
+	              { className: 'search-result-fixed-link search-result-name', to: "/inbox/" + result.id },
+	              result.from_name
+	            )
+	          )
 	        );
 	      } else {
 	        return React.createElement(
@@ -32067,8 +32076,8 @@
 	        )
 	      ),
 	      React.createElement(
-	        'div',
-	        null,
+	        'ul',
+	        { className: 'search-results-fixed' },
 	        this.results()
 	      )
 	    );
@@ -32146,7 +32155,7 @@
 	          null,
 	          React.createElement(
 	            'a',
-	            { href: '#/sent/' },
+	            { href: '#/outbox/' },
 	            'Sent Mail'
 	          )
 	        ),
@@ -33447,7 +33456,7 @@
 	  receiveResults: function (response) {
 	    var action = {
 	      actionType: SearchConstants.RESULTS_RECEIVED,
-	      searchResults: resonse.search_results,
+	      searchResults: response.search_results,
 	      meta: response.meta
 	    };
 	    AppDispatcher.dispatch(action);
