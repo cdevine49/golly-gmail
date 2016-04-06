@@ -307,7 +307,7 @@ button, article, footer, small {
 
  /* Header */
 .main-header {
-  height: 112px;
+  height: 60px;
   position: fixed;
   top: 0;
   width: 100%;
@@ -334,7 +334,7 @@ button, article, footer, small {
 .searchbar {
   float: left;
   background: #FFFFFF;
-  margin: 15px  ;
+  margin: 15px 0 15px 20px;
   margin-right: 0;
 }
 
@@ -348,6 +348,7 @@ button, article, footer, small {
 
 .search-button {
   background: #488BF9;
+  color: #FFFFFF;
   float: left;
   text-align: center;
   width: 60px;
@@ -435,12 +436,6 @@ button, article, footer, small {
 }
 
 
-/* Header Navbar */
-
-.header-navbar {
-  height: 45px;
-  border-bottom: 1px solid #e5e5e5;
-}
 
 /* Side Navigation Bar */
 
@@ -471,22 +466,102 @@ button, article, footer, small {
    font-size: 14px;
  }
 
- .sidenav-links >li:hover {
+ .sidenav-links > li > a {
+   display: block;
+   width: 160px;
+ }
+
+ .sidenav-links > li > a:hover {
    background: #eeeeee;
  }
 
  .sidenav-links > li {
    padding: 2px 0;
+   width: 160px;
  }
+
+ /* Header Navbar */
+
+ .header-navbar {
+   margin-top: 60px;
+   margin-left: 212px;
+   top: 112px;
+   height: 45px;
+   width: auto;
+   border-bottom: 1px solid #e5e5e5;
+ }
+
+ .navbar-left-buttons {
+   float: left;
+   width: 750px;
+   height: 40px;
+ }
+
+.navbar-right-buttons {
+  float: left;
+  width: 240px;
+  height: 40px;
+  margin-right: 30px;
+}
+
+.pages-and-emails {
+  float: right;
+  padding: 15px;
+  text-align: right;
+  /*font-weight: bold;*/
+  font-size: 13px;
+}
+
+.first-on-page {
+  float: left;
+  font-weight: bold;
+}
+
+.dash-between {
+  float: left;
+  font-weight: normal;
+}
+
+.total-on-page {
+  float: left;
+  font-weight: bold;
+}
+
+.just-of {
+  float: left;
+  font-weight: normal;
+  margin: 0 2px;
+}
+
+.total-emails-in-database {
+  float: left;
+  font-weight: bold;
+}
+
+.previous-page-button,
+.next-page-button {
+  float: right;
+  margin-top: 7px;
+  background: #F4F4F4;
+  width: 35px;
+  height: 30px;
+  text-align: center;
+  border: 1px solid #e5e5e5;
+  border-radius: 1px;
+}
+
+.previous-page-button {
+  border-right: none;
+}
+
+
 
 /* Email Previews Table */
 
-.email-previews-table-container {
 
-}
 
 .email-previews-table {
-  margin-top: 125px;
+  margin-top: 10px;
   margin-left: 208px;
   width: 1048px;
   width: auto;

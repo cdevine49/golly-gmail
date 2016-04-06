@@ -3,6 +3,7 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 var EmailConstants = require('../constants/emailConstants');
 
 var _emails = {};
+var _meta = {};
 
 var EmailStore = new Store(AppDispatcher);
 
@@ -18,10 +19,15 @@ EmailStore.find = function (id) {
   return _emails[id];
 };
 
+EmailStore.meta = function () {
+  return $.extend(true, {}, _meta);
+};
+
 EmailStore.__onDispatch = function (payload) {
   switch (payload.actionType) {
     case EmailConstants.EMAILS_RECEIVED:
       resetEmails(payload.emails);
+      _meta = payload.meta;
       EmailStore.__emitChange();
       break;
     case EmailConstants.EMAIL_RECEIVED:

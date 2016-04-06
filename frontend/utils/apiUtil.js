@@ -1,17 +1,16 @@
 var ApiActions = require('../actions/apiActions');
+var SearchActions = require('../actions/searchActions');
 
 ApiUtil = {
 
-  fetchEmails: function(path, page) {
-    debugger
+  fetchEmails: function (path, page) {
     $.ajax({
       type: 'GET',
       url: 'api/emails',
       dataType: 'json',
       data: {path: path, page: page},
-      success: function (emails) {
-        debugger
-        ApiActions.receiveEmails(emails);
+      success: function (response) {
+        ApiActions.receiveEmails(response);
       },
       error: function () {
         console.log('ApiUtil#fetchEmails error');
@@ -19,7 +18,7 @@ ApiUtil = {
     });
   },
 
-  createEmail: function(formData, callback) {
+  createEmail: function (formData, callback) {
     $.ajax({
       type: 'POST',
       url: 'api/emails',
@@ -37,7 +36,7 @@ ApiUtil = {
     });
   },
 
-  toggleMarked: function(email) {
+  toggleMarked: function (email) {
     $.ajax({
       type: 'PATCH',
       url: 'api/emails/' + email.id,
@@ -52,7 +51,7 @@ ApiUtil = {
     });
   },
 
-  toggleStarred: function(email) {
+  toggleStarred: function (email) {
     $.ajax({
       type: 'PATCH',
       url: 'api/emails/' + email.id,
@@ -67,7 +66,7 @@ ApiUtil = {
     });
   },
 
-  toggleImportant: function(email) {
+  toggleImportant: function (email) {
     $.ajax({
       type: 'PATCH',
       url: 'api/emails/' + email.id,
@@ -82,7 +81,7 @@ ApiUtil = {
     });
   },
 
-  toggleRead: function(email) {
+  toggleRead: function (email) {
     $.ajax({
       type: 'PATCH',
       url: 'api/emails/' + email.id,
@@ -97,62 +96,80 @@ ApiUtil = {
     });
   },
 
-  login: function(credentials, callback) {
+  login: function (credentials, callback) {
     $.ajax({
       type: "POST",
       url: "/api/session",
       dataType: "json",
       data: credentials,
-      success: function(currentUser) {
+      success: function (currentUser) {
         ApiActions.currentUserReceived(currentUser);
         callback && callback();
       },
-      error: function() {
+      error: function () {
         console.log('ApiUtil#login error');
       },
     });
   },
 
-  signin: function(credentials, callback) {
+  signin: function (credentials, callback) {
     $.ajax({
       type: "POST",
       url: "/api/users",
       dataType: "json",
       data: {user: credentials},
-      success: function(currentUser) {
+      success: function (currentUser) {
         ApiActions.currentUserReceived(currentUser);
         callback && callback();
       },
-      error: function() {
+      error: function () {
         console.log('ApiUtil#signin error');
       },
     });
   },
 
-  logout: function() {
+  logout: function () {
     $.ajax({
       type: "DELETE",
       url: "/api/session",
       dataType: "json",
-      success: function() {
+      success: function () {
         ApiActions.logout();
       },
-      error: function() {
+      error: function () {
         console.log('ApiUtil#logout error');
       },
     });
   },
 
-  fetchCurrentUser: function(completion) {
+  fetchCurrentUser: function (completion) {
     $.ajax({
       type: "GET",
       url: "/api/session",
       dataType: "json",
-      success: function(currentUser) {
+      success: function (currentUser) {
         ApiActions.currentUserReceived(currentUser);
       },
-      complete: function() {
+      error: function () {
+        console.log('ApiUtil#fetchCurrentUser error');
+      },
+      complete: function () {
         completion && completion();
+      }
+    });
+  },
+
+  search: function (query, page) {
+    $.ajax({
+      type: "GET",
+      url: "/api/searches",
+      dataType: "json",
+      data: {query: query, page: page},
+      success: function (response) {
+        SearchActions.receiveResults(response);
+      },
+      error: function () {
+        console.log('ApiUtil#search error');
       }
     });
   }

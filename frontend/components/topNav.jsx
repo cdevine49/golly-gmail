@@ -43,14 +43,12 @@ var TopNav = React.createClass({
 
   _handleBadgeClick: function (e) {
     e.stopPropagation();
-    console.log('badge-click');
     this.setState({account_dropdown: !this.state.account_dropdown});
   },
 
   render: function() {
     return (
-      <header className='main-header'>
-        <section className='header-top group'>
+      <header className='main-header header-top group'>
         <div className='GollyGmail-logo-header'>GollyGmail</div>
         <Search />
         <div className='header-right group'>
@@ -70,8 +68,6 @@ var TopNav = React.createClass({
             <button className='account-box-logout-button' onClick={ApiUtil.logout}>Logout</button>
           </div>
         </div>
-      </section>
-        <nav className='header-navbar'></nav>
       </header>
     );
   }

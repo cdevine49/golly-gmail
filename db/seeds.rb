@@ -74,10 +74,23 @@ User.create(
      b.from_email = "conor@gollygmail.com"
      b.from_name = "conor"
      b.to = "drummy@gollygmail.com"
+    if i % 6 == 0
+      a.starred = true
+    end
+
+    if i % 10 == 0
+      a.important = true
+    end
+
+    if i % 8 == 0
+      b.important = true
+      b.starred = true
+    end
    elsif i % 3 || i % 7 === 0
      a.from_email = "simon@gollygmail.com"
      a.from_name = "simon"
      a.to = "conor@gollygmail.com"
+     a.starred = true unless i % 21 == 0
    else
      a.from_email = "conor@gollygmail.com"
      a.from_name = "conor"
@@ -87,4 +100,5 @@ User.create(
      b.to = "conor@gollygmail.com"
    end
    a.save
+   b.save
 end

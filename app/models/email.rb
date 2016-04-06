@@ -1,6 +1,9 @@
 class Email < ActiveRecord::Base
   validates :to, presence: true
 
+  include PgSearch
+  multisearchable :against => [:subject, :body, :from_name, :from_email, :image_file_name]
+
   belongs_to(
     :user,
     class_name: 'User',
