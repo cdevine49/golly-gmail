@@ -8,20 +8,30 @@ var Link = require('react-router').Link;
 var EmailPreviewTable = React.createClass({
 
   getInitialState: function () {
-    return { emails: [], page: 1 };
+    return { emails: [] };
   },
 
   componentDidMount: function () {
     this.emailStoreToken = EmailStore.addListener(this._onChange);
-    ApiUtil.fetchEmails(this.props.route.path, this.state.page);
+    ApiUtil.fetchEmails(this.props.route.path, 1);
   },
 
   componentWillReceiveProps: function (newProps) {
-    ApiUtil.fetchEmails(newProps.route.path, this.state.page);
+    ApiUtil.fetchEmails(newProps.route.path, 1);
   },
 
   componentWillUnmount: function () {
     this.emailStoreToken.remove();
+  },
+
+  nextPage: function () {
+    var meta = EmailStore.meta();
+    ApiUtil.fetchEmails(this.props.route.path, meta.page + 1);
+  },
+
+  previousPage: function () {
+    var meta = EmailStore.meta();
+    ApiUtil.fetchEmails(this.props.route.path, meta.page - 1);
   },
 
   _onChange: function () {
@@ -37,7 +47,7 @@ var EmailPreviewTable = React.createClass({
       return (
         <div key={ i } className={'email-preview-item group' + (email.read ? ' email-read' : ' email-unread')}>
           <Checkboxes email={email}/>
-          <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={"/inbox/" + email.id}>{ SessionStore.currentUser().gollygmail === email.from_email ? 'Me' : email.from_name }</Link>
+          <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={"/inbox/" + email.id}>{ SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name }</Link>
           <Link
             className={'email-preview-subject email-preview-link'  + (email.read ? ' normal' : ' bold')}
             to={"/inbox/" + email.id}>{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</Link>
@@ -51,9 +61,32 @@ var EmailPreviewTable = React.createClass({
     if (emailPreviews.length === 0) {
       emailPreviews = <p>Loading emails...</p>;
     }
+
+    var meta = EmailStore.meta();
+    var firstOnPage = (((meta.page - 1) * 50) + 1);
+    var emailsOnPage = meta.total_count > (meta.page * 50) ? (meta.page * 50) : meta.total_count;
+    var prevDisabled = (meta.page === 1);
+    var nextDisabled = (meta.page * 50 >= meta.total_count);
     return (
       <section className="email-previews-table-container">
         {this.props.children}
+        <nav className='header-navbar group'>
+          <div className='navbar-left-buttons'>
+            <div className='select'></div>
+            <div className='refresh'></div>
+            <div className='more-options'></div>
+          </div>
+          <div className='page-count navbar-right-buttons group'>
+            <button className={'next-page-button'} onClick={this.nextPage} disabled={nextDisabled}>N</button>
+            <button className={'previous-page-button'} onClick={this.previousPage} disabled={prevDisabled}>P</button>
+            <span className='pages-and-emails group'>
+              <p className='first-on-page'>{ firstOnPage }</p>
+              <p className='dash-between'>-</p>
+              <p className='total-on-page'>{ emailsOnPage }</p>
+              <p className='just-of'>of</p>
+              <p className='total-emails-in-database'>{meta.total_count}</p></span>
+          </div>
+        </nav>
         <div className='email-previews-table'>
           { emailPreviews }
         </div>
@@ -62,5 +95,10 @@ var EmailPreviewTable = React.createClass({
     );
   }
 });
+
+// <p className='pages-and-emails'>{ firstOnPage + '-' + emailsOnPage} + ' ' <p className='just-of'>of</p> ' ' + {meta.total_count}</p>
+// <p className='pages-left'>{ firstOnPage + '-' + emailsOnPage}</p>
+// <p className='just-of'>' of '</p>
+// <p className='pages-right'>{meta.total_count}</p>
 
 module.exports = EmailPreviewTable;

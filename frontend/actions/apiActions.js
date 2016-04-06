@@ -3,10 +3,11 @@ var EmailConstants = require('../constants/emailConstants');
 var SessionConstants = require('../constants/sessionConstants');
 
 ApiActions = {
-  receiveEmails: function(emails) {
+  receiveEmails: function(response) {
     var action = {
       actionType: EmailConstants.EMAILS_RECEIVED,
-      emails: emails
+      emails: response.emails,
+      meta: response.meta
     };
     AppDispatcher.dispatch(action);
   },

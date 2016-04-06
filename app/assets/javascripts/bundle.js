@@ -24844,76 +24844,70 @@
 	
 	  _handleBadgeClick: function (e) {
 	    e.stopPropagation();
-	    console.log('badge-click');
 	    this.setState({ account_dropdown: !this.state.account_dropdown });
 	  },
 	
 	  render: function () {
 	    return React.createElement(
 	      'header',
-	      { className: 'main-header' },
+	      { className: 'main-header header-top group' },
 	      React.createElement(
-	        'section',
-	        { className: 'header-top group' },
+	        'div',
+	        { className: 'GollyGmail-logo-header' },
+	        'GollyGmail'
+	      ),
+	      React.createElement(Search, null),
+	      React.createElement(
+	        'div',
+	        { className: 'header-right group' },
 	        React.createElement(
-	          'div',
-	          { className: 'GollyGmail-logo-header' },
-	          'GollyGmail'
-	        ),
-	        React.createElement(Search, null),
-	        React.createElement(
-	          'div',
-	          { className: 'header-right group' },
-	          React.createElement(
-	            'span',
-	            { className: 'header-name' },
-	            SessionStore.currentUser().first_name
-	          ),
-	          React.createElement(
-	            'span',
-	            { className: 'header-badge', onClick: this._handleBadgeClick },
-	            SessionStore.currentUser().first_name[0].toUpperCase()
-	          )
+	          'span',
+	          { className: 'header-name' },
+	          SessionStore.currentUser().first_name
 	        ),
 	        React.createElement(
-	          'div',
-	          { className: this.state.account_dropdown ? 'account-box' : 'account-box hidden', onClick: this._handleAccountBoxClick },
-	          React.createElement(
-	            'div',
-	            { className: 'account-info group' },
-	            React.createElement('div', { className: 'profile-pic' }),
-	            React.createElement(
-	              'div',
-	              { className: 'user-info' },
-	              React.createElement(
-	                'span',
-	                { className: 'name' },
-	                SessionStore.currentUser().first_name + ' ' + SessionStore.currentUser().last_name
-	              ),
-	              React.createElement(
-	                'span',
-	                { className: 'email' },
-	                SessionStore.currentUser().gollygmail
-	              )
-	            )
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'signin-signup-links group' },
-	            React.createElement(
-	              Link,
-	              { className: 'new-account-link', to: '/signup/' },
-	              'Add account'
-	            ),
-	            React.createElement(
-	              'button',
-	              { className: 'account-box-logout-button', onClick: ApiUtil.logout },
-	              'Logout'
-	            )
-	          )
+	          'span',
+	          { className: 'header-badge', onClick: this._handleBadgeClick },
+	          SessionStore.currentUser().first_name[0].toUpperCase()
 	        )
 	      ),
-	      React.createElement('nav', { className: 'header-navbar' })
+	      React.createElement(
+	        'div',
+	        { className: this.state.account_dropdown ? 'account-box' : 'account-box hidden', onClick: this._handleAccountBoxClick },
+	        React.createElement(
+	          'div',
+	          { className: 'account-info group' },
+	          React.createElement('div', { className: 'profile-pic' }),
+	          React.createElement(
+	            'div',
+	            { className: 'user-info' },
+	            React.createElement(
+	              'span',
+	              { className: 'name' },
+	              SessionStore.currentUser().first_name + ' ' + SessionStore.currentUser().last_name
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'email' },
+	              SessionStore.currentUser().gollygmail
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'signin-signup-links group' },
+	          React.createElement(
+	            Link,
+	            { className: 'new-account-link', to: '/signup/' },
+	            'Add account'
+	          ),
+	          React.createElement(
+	            'button',
+	            { className: 'account-box-logout-button', onClick: ApiUtil.logout },
+	            'Logout'
+	          )
+	        )
+	      )
 	    );
 	  }
 	
@@ -24927,19 +24921,18 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiActions = __webpack_require__(219);
+	var SearchActions = __webpack_require__(262);
 	
 	ApiUtil = {
 	
 	  fetchEmails: function (path, page) {
-	    debugger;
 	    $.ajax({
 	      type: 'GET',
 	      url: 'api/emails',
 	      dataType: 'json',
 	      data: { path: path, page: page },
-	      success: function (emails) {
-	        debugger;
-	        ApiActions.receiveEmails(emails);
+	      success: function (response) {
+	        ApiActions.receiveEmails(response);
 	      },
 	      error: function () {
 	        console.log('ApiUtil#fetchEmails error');
@@ -25079,8 +25072,26 @@
 	      success: function (currentUser) {
 	        ApiActions.currentUserReceived(currentUser);
 	      },
+	      error: function () {
+	        console.log('ApiUtil#fetchCurrentUser error');
+	      },
 	      complete: function () {
 	        completion && completion();
+	      }
+	    });
+	  },
+	
+	  search: function (query, page) {
+	    $.ajax({
+	      type: "GET",
+	      url: "/api/searches",
+	      dataType: "json",
+	      data: { query: query, page: page },
+	      success: function (response) {
+	        SearchActions.receiveResults(response);
+	      },
+	      error: function () {
+	        console.log('ApiUtil#search error');
 	      }
 	    });
 	  }
@@ -25099,10 +25110,11 @@
 	var SessionConstants = __webpack_require__(225);
 	
 	ApiActions = {
-	  receiveEmails: function (emails) {
+	  receiveEmails: function (response) {
 	    var action = {
 	      actionType: EmailConstants.EMAILS_RECEIVED,
-	      emails: emails
+	      emails: response.emails,
+	      meta: response.meta
 	    };
 	    AppDispatcher.dispatch(action);
 	  },
@@ -31972,6 +31984,8 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var SearchStore = __webpack_require__(260);
+	var ApiUtil = __webpack_require__(218);
 	
 	var Search = React.createClass({
 	  displayName: 'Search',
@@ -31979,23 +31993,83 @@
 	
 	  getInitialState: function () {
 	    return {
-	      inputVal: ""
+	      query: "",
+	      result: ""
 	    };
 	  },
 	
+	  componentDidMount: function () {
+	    this.searchStoreToken = SearchStore.addListener(this._onChange);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.searchStoreToken.remove();
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ result: SearchStore.all() });
+	  },
+	
 	  handleInput: function (event) {
-	    this.setState({ inputVal: event.currentTarget.value });
+	    var query = e.currentTarget.value;
+	    this.setState({ query: query }, function () {
+	      if (query.length > 2) {
+	        this.search();
+	      }
+	    }.bind(this));
+	  },
+	
+	  // nextPage: function () {
+	  //   var meta = SearchStore.meta();
+	  //   Apiutil.search(this.state.query, meta.page + 1);
+	  // },
+	
+	  search: function () {
+	    ApiUtil.search(this.state.query, 1);
+	  },
+	
+	  results: function () {
+	    return SearchStore.all().map(function (result) {
+	      if (result._type === "Post") {
+	        return React.createElement(
+	          Link,
+	          { key: result.id },
+	          'Post #',
+	          result.id,
+	          ': ',
+	          result.title
+	        );
+	      } else {
+	        return React.createElement(
+	          Link,
+	          { key: result.id },
+	          'User #',
+	          result.id,
+	          ': ',
+	          result.name
+	        );
+	      }
+	    });
 	  },
 	
 	  render: function () {
 	    return React.createElement(
-	      'form',
-	      { className: 'searchbar group' },
-	      React.createElement('input', { type: 'text', onChange: this.handleInput, value: this.state.inputVal }),
+	      'article',
+	      null,
 	      React.createElement(
-	        'button',
-	        { className: 'search-button' },
-	        'B'
+	        'form',
+	        { className: 'searchbar group' },
+	        React.createElement('input', { type: 'text', onChange: this.handleInput, value: this.state.query }),
+	        React.createElement(
+	          'button',
+	          { className: 'search-button' },
+	          'B'
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        null,
+	        this.results()
 	      )
 	    );
 	  }
@@ -32494,20 +32568,30 @@
 	
 	
 	  getInitialState: function () {
-	    return { emails: [], page: 1 };
+	    return { emails: [] };
 	  },
 	
 	  componentDidMount: function () {
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
-	    ApiUtil.fetchEmails(this.props.route.path, this.state.page);
+	    ApiUtil.fetchEmails(this.props.route.path, 1);
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
-	    ApiUtil.fetchEmails(newProps.route.path, this.state.page);
+	    ApiUtil.fetchEmails(newProps.route.path, 1);
 	  },
 	
 	  componentWillUnmount: function () {
 	    this.emailStoreToken.remove();
+	  },
+	
+	  nextPage: function () {
+	    var meta = EmailStore.meta();
+	    ApiUtil.fetchEmails(this.props.route.path, meta.page + 1);
+	  },
+	
+	  previousPage: function () {
+	    var meta = EmailStore.meta();
+	    ApiUtil.fetchEmails(this.props.route.path, meta.page - 1);
 	  },
 	
 	  _onChange: function () {
@@ -32526,7 +32610,7 @@
 	        React.createElement(
 	          Link,
 	          { className: 'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold'), to: "/inbox/" + email.id },
-	          SessionStore.currentUser().gollygmail === email.from_email ? 'Me' : email.from_name
+	          SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name
 	        ),
 	        React.createElement(
 	          Link,
@@ -32556,10 +32640,70 @@
 	        'Loading emails...'
 	      );
 	    }
+	
+	    var meta = EmailStore.meta();
+	    var firstOnPage = (meta.page - 1) * 50 + 1;
+	    var emailsOnPage = meta.total_count > meta.page * 50 ? meta.page * 50 : meta.total_count;
+	    var prevDisabled = meta.page === 1;
+	    var nextDisabled = meta.page * 50 >= meta.total_count;
 	    return React.createElement(
 	      'section',
 	      { className: 'email-previews-table-container' },
 	      this.props.children,
+	      React.createElement(
+	        'nav',
+	        { className: 'header-navbar group' },
+	        React.createElement(
+	          'div',
+	          { className: 'navbar-left-buttons' },
+	          React.createElement('div', { className: 'select' }),
+	          React.createElement('div', { className: 'refresh' }),
+	          React.createElement('div', { className: 'more-options' })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'page-count navbar-right-buttons group' },
+	          React.createElement(
+	            'button',
+	            { className: 'next-page-button', onClick: this.nextPage, disabled: nextDisabled },
+	            'N'
+	          ),
+	          React.createElement(
+	            'button',
+	            { className: 'previous-page-button', onClick: this.previousPage, disabled: prevDisabled },
+	            'P'
+	          ),
+	          React.createElement(
+	            'span',
+	            { className: 'pages-and-emails group' },
+	            React.createElement(
+	              'p',
+	              { className: 'first-on-page' },
+	              firstOnPage
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'dash-between' },
+	              '-'
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'total-on-page' },
+	              emailsOnPage
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'just-of' },
+	              'of'
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'total-emails-in-database' },
+	              meta.total_count
+	            )
+	          )
+	        )
+	      ),
 	      React.createElement(
 	        'div',
 	        { className: 'email-previews-table' },
@@ -32568,6 +32712,11 @@
 	    );
 	  }
 	});
+	
+	// <p className='pages-and-emails'>{ firstOnPage + '-' + emailsOnPage} + ' ' <p className='just-of'>of</p> ' ' + {meta.total_count}</p>
+	// <p className='pages-left'>{ firstOnPage + '-' + emailsOnPage}</p>
+	// <p className='just-of'>' of '</p>
+	// <p className='pages-right'>{meta.total_count}</p>
 	
 	module.exports = EmailPreviewTable;
 
@@ -32580,6 +32729,7 @@
 	var EmailConstants = __webpack_require__(224);
 	
 	var _emails = {};
+	var _meta = {};
 	
 	var EmailStore = new Store(AppDispatcher);
 	
@@ -32595,10 +32745,15 @@
 	  return _emails[id];
 	};
 	
+	EmailStore.meta = function () {
+	  return $.extend(true, {}, _meta);
+	};
+	
 	EmailStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case EmailConstants.EMAILS_RECEIVED:
 	      resetEmails(payload.emails);
+	      _meta = payload.meta;
 	      EmailStore.__emitChange();
 	      break;
 	    case EmailConstants.EMAIL_RECEIVED:
@@ -33238,6 +33393,68 @@
 	};
 	
 	module.exports = ClickStore;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(227).Store;
+	var AppDispatcher = __webpack_require__(220);
+	var SearchConstants = __webpack_require__(261);
+	var SearchStore = new Store(AppDispatcher);
+	
+	var _searchResults = [];
+	var _meta = {};
+	
+	SearchStore.all = function () {
+	  return _searchResults.slice();
+	};
+	
+	SearchStore.meta = function () {
+	  return $.extend(true, {}, _meta);
+	};
+	
+	SearchStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case SearchConstants.RESULTS_RECEIVED:
+	      _searchResults = payload.searchResults;
+	      _meta = payload.meta;
+	      SearchStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = SearchStore;
+
+/***/ },
+/* 261 */
+/***/ function(module, exports) {
+
+	SearchConstants = {
+	  RESULTS_RECEIVED: 'RESULTS_RECEIVED'
+	};
+	
+	module.exports = SearchConstants;
+
+/***/ },
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(220);
+	var SearchConstants = __webpack_require__(261);
+	
+	SearchActions = {
+	  receiveResults: function (response) {
+	    var action = {
+	      actionType: SearchConstants.RESULTS_RECEIVED,
+	      searchResults: resonse.search_results,
+	      meta: response.meta
+	    };
+	    AppDispatcher.dispatch(action);
+	  }
+	};
+	
+	module.exports = SearchActions;
 
 /***/ }
 /******/ ]);

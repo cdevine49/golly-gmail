@@ -23,7 +23,6 @@ class Api::EmailsController < ApplicationController
   end
 
   def create
-    debugger
     email = Email.new(email_params)
     email.from_name = current_user.first_name + ' ' + current_user.last_name
     email.from_email = current_user.gollygmail
