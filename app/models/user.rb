@@ -27,14 +27,6 @@ class User < ActiveRecord::Base
 		user = User.find_by(provider: provider, uid: uid)
 	end
 
-	def sign_up_with_auth_hash(auth_hash)
-		
-	end
-
-	def update_with_auth_hash(auth_hash)
-		currentUser.update(provider: provider, uid: uid)
-	end
-
 	def self.generate_session_token
 		code = SecureRandom::urlsafe_base64(16)
 		while exists?(session_token: code)

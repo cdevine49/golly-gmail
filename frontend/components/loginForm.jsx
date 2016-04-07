@@ -21,7 +21,7 @@ var LoginForm = React.createClass({
     e.preventDefault();
     var router = this.context.router;
     ApiUtil.login(this.state, function () {
-      router.push('/inbox');
+      router.push('/inbox/');
     });
   },
 
@@ -59,6 +59,7 @@ var LoginForm = React.createClass({
                 onChange={this._updatePassword}
                 value={this.state.password} />
               <button className='login-submit'>Log In</button>
+              <a href="auth/facebook">Sign In With Facebook</a>
           </form>
           <div className='signin-link-and-logo'>
             <Link className='signup-from-signin-link' to={'/signup/'}>Create account</Link>

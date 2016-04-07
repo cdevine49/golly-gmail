@@ -1,4 +1,5 @@
 class Api::EmailsController < ApplicationController
+  before_action :require_logged_in!
   def index
     case params[:path]
     when 'starred'
@@ -53,7 +54,6 @@ class Api::EmailsController < ApplicationController
     when 'search-results'
       @email = Email
       .where("emails.id = ?", params[:id])
-      .search_emails(params[:query])
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
     else
       @email = Email

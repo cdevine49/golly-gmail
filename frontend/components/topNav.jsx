@@ -25,6 +25,7 @@ var TopNav = React.createClass({
 
   componentWillUnmount: function () {
     this.sessionStoreToken.remove();
+    this.clickStoreToken.remove();
   },
 
   _onChange: function () {

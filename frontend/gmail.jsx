@@ -57,14 +57,4 @@ function _ensureLoggedIn(nextState, replace, callback) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 module.exports = App;

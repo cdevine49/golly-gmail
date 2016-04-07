@@ -28,7 +28,7 @@ var LoginForm = React.createClass({
     e.preventDefault();
     var router = this.context.router;
     ApiUtil.signin(this.state, function () {
-      router.push('/inbox');
+      router.push('/inbox/');
     });
   },
 

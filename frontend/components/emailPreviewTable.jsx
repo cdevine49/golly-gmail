@@ -45,7 +45,7 @@ var EmailPreviewTable = React.createClass({
   render: function () {
     var emailPreviews = this.state.emails.map(function (email, i) {
       return (
-        <div key={ i } className={'email-preview-item group' + (email.read ? ' email-read' : ' email-unread')}>
+        <div key={ i } className={'email-preview-item group' + (email.marked ? ' email-marked' : ' email-unmarked') + (email.read ? ' email-read' : ' email-unread')}>
           <Checkboxes email={email}/>
           <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={this.props.location.pathname + email.id}>{ SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name }</Link>
           <Link
@@ -63,7 +63,7 @@ var EmailPreviewTable = React.createClass({
     }
 
     var meta = EmailStore.meta();
-    var firstOnPage = (((meta.page - 1) * 50) + 1);
+    var firstOnPage = (meta.total_count > 0) ? (((meta.page - 1) * 50) + 1) : 0;
     var emailsOnPage = meta.total_count > (meta.page * 50) ? (meta.page * 50) : meta.total_count;
     var prevDisabled = (meta.page === 1);
     var nextDisabled = (meta.page * 50 >= meta.total_count);
@@ -77,8 +77,8 @@ var EmailPreviewTable = React.createClass({
             <div className='more-options'></div>
           </div>
           <div className='page-count navbar-right-buttons group'>
-            <button className={'next-page-button'} onClick={this.nextPage} disabled={nextDisabled}>N</button>
-            <button className={'previous-page-button'} onClick={this.previousPage} disabled={prevDisabled}>P</button>
+            <button className={'nav-button next-page-button'} onClick={this.nextPage} disabled={nextDisabled}>N</button>
+            <button className={'nav-button previous-page-button'} onClick={this.previousPage} disabled={prevDisabled}>P</button>
             <span className='pages-and-emails group'>
               <p className='first-on-page'>{ firstOnPage }</p>
               <p className='dash-between'>-</p>
