@@ -19,6 +19,7 @@ class Api::EmailsController < ApplicationController
       .order(created_at: :desc)
       .page(params[:page]).per(50)
     when 'search-results'
+      debugger
       @emails = Email
       .search_emails(params[:query])
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)

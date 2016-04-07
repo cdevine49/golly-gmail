@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <Route path='outbox' component={EmailPreviewTable}/>
           <Route path='outbox/:id' component={EmailDetails}/>
         <Route path='search-results' component={EmailPreviewTable}/>
+          <Route path='search-results/:id' component={EmailDetails}/>
       </Route>
 
       <Route path='/login' component={LoginForm}/>

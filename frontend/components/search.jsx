@@ -42,7 +42,9 @@ var Search = React.createClass({
   handleInput: function (e) {
     var query = e.currentTarget.value;
    this.setState({ query: query, searchBox: true }, function () {
-     if (query.length > 2) {
+     if (query.length === 0) {
+       this.setState({ searchBox: false});
+     } else {
        this.search();
      }
    }.bind(this));
@@ -59,8 +61,12 @@ var Search = React.createClass({
           <div key={i} className='search-result-item-container group'>
             <div className='search-result-email-pic'></div>
             <li className='search-result-fixed-li'>
-              <Link className='search-result-fixed-link search-result-subject' to={"/inbox/" + result.id}>{ result.subject }</Link>
-              <Link className='search-result-fixed-link search-result-name' to={"/inbox/" + result.id}>{ result.from_name }</Link>
+              <Link className='search-result-fixed-link search-result-subject'
+                to={ {pathname: '/search-results/' + result.id, query: {query: this.state.query} }}>
+                { result.subject }</Link>
+              <Link className='search-result-fixed-link search-result-name'
+                to={ {pathname:'/search-results/' + result.id, query: {query: this.state.query} }}>
+                { result.from_name }</Link>
             </li>
           </div>
         );
@@ -72,7 +78,7 @@ var Search = React.createClass({
           </Link>
         );
       }
-    });
+    }.bind(this));
   },
 
 

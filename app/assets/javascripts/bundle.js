@@ -78,7 +78,8 @@
 	      React.createElement(Route, { path: 'important/:id', component: EmailDetails }),
 	      React.createElement(Route, { path: 'outbox', component: EmailPreviewTable }),
 	      React.createElement(Route, { path: 'outbox/:id', component: EmailDetails }),
-	      React.createElement(Route, { path: 'search-results', component: EmailPreviewTable })
+	      React.createElement(Route, { path: 'search-results', component: EmailPreviewTable }),
+	      React.createElement(Route, { path: 'search-results/:id', component: EmailDetails })
 	    ),
 	    React.createElement(Route, { path: '/login', component: LoginForm }),
 	    React.createElement(Route, { path: '/signup', component: SignupForm })
@@ -24942,6 +24943,7 @@
 	      dataType: 'json',
 	      data: { path: path, page: page, query: searchParam },
 	      success: function (response) {
+	        debugger;
 	        ApiActions.receiveEmails(response);
 	      },
 	      error: function () {
@@ -32039,7 +32041,9 @@
 	  handleInput: function (e) {
 	    var query = e.currentTarget.value;
 	    this.setState({ query: query, searchBox: true }, function () {
-	      if (query.length > 2) {
+	      if (query.length === 0) {
+	        this.setState({ searchBox: false });
+	      } else {
 	        this.search();
 	      }
 	    }.bind(this));
@@ -32061,12 +32065,14 @@
 	            { className: 'search-result-fixed-li' },
 	            React.createElement(
 	              Link,
-	              { className: 'search-result-fixed-link search-result-subject', to: "/inbox/" + result.id },
+	              { className: 'search-result-fixed-link search-result-subject',
+	                to: { pathname: '/search-results/' + result.id, query: { query: this.state.query } } },
 	              result.subject
 	            ),
 	            React.createElement(
 	              Link,
-	              { className: 'search-result-fixed-link search-result-name', to: "/inbox/" + result.id },
+	              { className: 'search-result-fixed-link search-result-name',
+	                to: { pathname: '/search-results/' + result.id, query: { query: this.state.query } } },
 	              result.from_name
 	            )
 	          )
@@ -32081,7 +32087,7 @@
 	          result.name
 	        );
 	      }
-	    });
+	    }.bind(this));
 	  },
 	
 	  render: function () {
@@ -32786,6 +32792,7 @@
 	EmailStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case EmailConstants.EMAILS_RECEIVED:
+	      debugger;
 	      resetEmails(payload.emails);
 	      _meta = payload.meta;
 	      EmailStore.__emitChange();
@@ -32794,9 +32801,6 @@
 	      resetEmail(payload.email);
 	      EmailStore.__emitChange();
 	      break;
-	    // case EmailConstants.EMAIL_UPDATED:
-	    //   _emails[payload.email.id] = payload.email;
-	    //   EmailStore.__emitChange();
 	  }
 	};
 	
@@ -32840,8 +32844,8 @@
 	
 	  componentDidMount: function () {
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
-	    ApiUtil.fetchEmails(this.props.route.path.slice(0, -4));
-	    // ApiUtil.toggleRead(EmailStore.find(this.props.params.id));
+	    ApiUtil.fetchEmails(this.props.route.path.slice(0, -4), 1, this.props.location.query);
+	    // fetching all emails kind of hacky, fix later
 	  },
 	
 	  componentWillUnmount: function () {
@@ -32849,6 +32853,7 @@
 	  },
 	
 	  _onChange: function () {
+	    debugger;
 	    if (EmailStore.find(this.props.params.id)) {
 	      this.setState({ email: EmailStore.find(this.props.params.id) });
 	    }
@@ -32860,6 +32865,7 @@
 	  componentWillReceiveProps: function (newProps) {
 	    if (EmailStore.find(newProps.params.id)) {
 	      this.setState({ email: EmailStore.find(newProps.params.id) });
+	      // won't work for older emails because of hacky fetch all emails
 	    }
 	    if (EmailStore.find(newProps.params.id) && !EmailStore.find(newProps.params.id).read) {
 	      ApiUtil.toggleRead(EmailStore.find(newProps.params.id));
@@ -32867,6 +32873,7 @@
 	  },
 	
 	  render: function () {
+	    debugger;
 	    if (!this.state.email) {
 	      return React.createElement(
 	        'p',

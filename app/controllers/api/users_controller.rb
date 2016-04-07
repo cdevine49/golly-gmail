@@ -27,6 +27,15 @@ class Api::UsersController < ApplicationController
     end
   end
 
+  def update
+    user = currentUser
+    if user.update(user_params)
+      render json: user
+    else
+      render json: { message: "couldn't update" }
+    end
+  end
+
   # def index
   #   if params[:username]
   #     redirect_to '/#password'
