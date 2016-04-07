@@ -1,7 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 	helper_method :current_user, :current_user_name, :current_user_id, :logged_in?
-  # before_action :require_logged_in!
 
 	private
 	def current_user
@@ -43,7 +42,9 @@ class ApplicationController < ActionController::Base
   end
 
 	def require_logged_in!
-		render json: { message: "You are not logged in"} unless logged_in?
+	   unless logged_in?
+       	render text: "You are not logged in", status: 401
+      end
 	end
 
   def require_logged_out!

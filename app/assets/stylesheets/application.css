@@ -486,6 +486,8 @@ button, article, footer, small {
    top: 120px;
    left: 10px;
    width: 160px;
+   height: 35%;
+   min-height: 80px;
    padding: 0 0 0 20px;
  }
 
@@ -504,22 +506,19 @@ button, article, footer, small {
  }
 
  .sidenav-links {
+   display: flex;
+   flex-direction: column;
    margin-top: 10px;
    font-size: 14px;
+   height: 75%;
  }
 
- .sidenav-links > li > a {
-   display: block;
-   width: 160px;
+ .sidenav-links > a {
+   flex: 1;
  }
 
- .sidenav-links > li > a:hover {
+ .sidenav-links > a:hover {
    background: #eeeeee;
- }
-
- .sidenav-links > li {
-   padding: 2px 0;
-   width: 160px;
  }
 
  /* Header Navbar */
@@ -596,6 +595,12 @@ button, article, footer, small {
   border-right: none;
 }
 
+/*.previous-page-button:focus,
+.next-page-button:focus {
+  border: 1px solid #4285F4;
+}*/
+
+
 
 
 /* Email Previews Table */
@@ -626,6 +631,10 @@ button, article, footer, small {
 
 .email-unread {
   /*font-weight: bold;*/
+}
+
+.email-marked {
+  background: #FFFFCC;
 }
 
 .marked-box,

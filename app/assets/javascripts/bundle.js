@@ -49,12 +49,12 @@
 	var ReactRouter = __webpack_require__(159);
 	
 	var App = __webpack_require__(216);
-	var EmailPreviewTable = __webpack_require__(251);
-	var EmailDetails = __webpack_require__(253);
-	var LoginForm = __webpack_require__(254);
-	var SignupForm = __webpack_require__(255);
+	var EmailPreviewTable = __webpack_require__(257);
+	var EmailDetails = __webpack_require__(260);
+	var LoginForm = __webpack_require__(261);
+	var SignupForm = __webpack_require__(262);
 	
-	var SessionStore = __webpack_require__(226);
+	var SessionStore = __webpack_require__(228);
 	var ApiUtil = __webpack_require__(218);
 	
 	var Router = __webpack_require__(159).Router;
@@ -8002,6 +8002,10 @@
 	  }
 	};
 	
+	function registerNullComponentID() {
+	  ReactEmptyComponentRegistry.registerNullComponentID(this._rootNodeID);
+	}
+	
 	var ReactEmptyComponent = function (instantiate) {
 	  this._currentElement = null;
 	  this._rootNodeID = null;
@@ -8010,7 +8014,7 @@
 	assign(ReactEmptyComponent.prototype, {
 	  construct: function (element) {},
 	  mountComponent: function (rootID, transaction, context) {
-	    ReactEmptyComponentRegistry.registerNullComponentID(rootID);
+	    transaction.getReactMountReady().enqueue(registerNullComponentID, this);
 	    this._rootNodeID = rootID;
 	    return ReactReconciler.mountComponent(this._renderedComponent, rootID, transaction, context);
 	  },
@@ -18733,7 +18737,7 @@
 	
 	'use strict';
 	
-	module.exports = '0.14.7';
+	module.exports = '0.14.8';
 
 /***/ },
 /* 147 */
@@ -24773,8 +24777,8 @@
 
 	var React = __webpack_require__(1);
 	var TopNav = __webpack_require__(217);
-	var SideNav = __webpack_require__(245);
-	var ClickActions = __webpack_require__(257);
+	var SideNav = __webpack_require__(250);
+	var ClickActions = __webpack_require__(256);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24804,9 +24808,9 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
-	var SessionStore = __webpack_require__(226);
-	var ClickStore = __webpack_require__(259);
-	var Search = __webpack_require__(244);
+	var SessionStore = __webpack_require__(228);
+	var ClickStore = __webpack_require__(246);
+	var Search = __webpack_require__(248);
 	var Link = __webpack_require__(159).Link;
 	
 	var TopNav = React.createClass({
@@ -24831,6 +24835,7 @@
 	
 	  componentWillUnmount: function () {
 	    this.sessionStoreToken.remove();
+	    this.clickStoreToken.remove();
 	  },
 	
 	  _onChange: function () {
@@ -24931,7 +24936,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiActions = __webpack_require__(219);
-	var SearchActions = __webpack_require__(262);
+	var SearchActions = __webpack_require__(226);
 	
 	ApiUtil = {
 	
@@ -25532,7 +25537,37 @@
 /* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(227).Store;
+	var AppDispatcher = __webpack_require__(220);
+	var SearchConstants = __webpack_require__(227);
+	
+	SearchActions = {
+	  receiveResults: function (response) {
+	    var action = {
+	      actionType: SearchConstants.RESULTS_RECEIVED,
+	      searchResults: response.search_results,
+	      meta: response.meta
+	    };
+	    AppDispatcher.dispatch(action);
+	  }
+	};
+	
+	module.exports = SearchActions;
+
+/***/ },
+/* 227 */
+/***/ function(module, exports) {
+
+	SearchConstants = {
+	  RESULTS_RECEIVED: 'RESULTS_RECEIVED'
+	};
+	
+	module.exports = SearchConstants;
+
+/***/ },
+/* 228 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(229).Store;
 	var SessionConstants = __webpack_require__(225);
 	var AppDispatcher = __webpack_require__(220);
 	
@@ -25571,7 +25606,7 @@
 	module.exports = SessionStore;
 
 /***/ },
-/* 227 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25583,15 +25618,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(228);
-	module.exports.MapStore = __webpack_require__(231);
-	module.exports.Mixin = __webpack_require__(243);
-	module.exports.ReduceStore = __webpack_require__(232);
-	module.exports.Store = __webpack_require__(233);
+	module.exports.Container = __webpack_require__(230);
+	module.exports.MapStore = __webpack_require__(233);
+	module.exports.Mixin = __webpack_require__(245);
+	module.exports.ReduceStore = __webpack_require__(234);
+	module.exports.Store = __webpack_require__(235);
 
 
 /***/ },
-/* 228 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25613,10 +25648,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(229);
+	var FluxStoreGroup = __webpack_require__(231);
 	
 	var invariant = __webpack_require__(223);
-	var shallowEqual = __webpack_require__(230);
+	var shallowEqual = __webpack_require__(232);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -25774,7 +25809,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 229 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25855,7 +25890,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 230 */
+/* 232 */
 /***/ function(module, exports) {
 
 	/**
@@ -25910,7 +25945,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 231 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25931,8 +25966,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(232);
-	var Immutable = __webpack_require__(242);
+	var FluxReduceStore = __webpack_require__(234);
+	var Immutable = __webpack_require__(244);
 	
 	var invariant = __webpack_require__(223);
 	
@@ -26060,7 +26095,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 232 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26081,9 +26116,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(233);
+	var FluxStore = __webpack_require__(235);
 	
-	var abstractMethod = __webpack_require__(241);
+	var abstractMethod = __webpack_require__(243);
 	var invariant = __webpack_require__(223);
 	
 	var FluxReduceStore = (function (_FluxStore) {
@@ -26167,7 +26202,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 233 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26186,7 +26221,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(234);
+	var _require = __webpack_require__(236);
 	
 	var EventEmitter = _require.EventEmitter;
 	
@@ -26350,7 +26385,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 234 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26363,14 +26398,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(235)
+	  EventEmitter: __webpack_require__(237)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 235 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26389,11 +26424,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(236);
-	var EventSubscriptionVendor = __webpack_require__(238);
+	var EmitterSubscription = __webpack_require__(238);
+	var EventSubscriptionVendor = __webpack_require__(240);
 	
-	var emptyFunction = __webpack_require__(240);
-	var invariant = __webpack_require__(239);
+	var emptyFunction = __webpack_require__(242);
+	var invariant = __webpack_require__(241);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -26567,7 +26602,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 236 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26588,7 +26623,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(237);
+	var EventSubscription = __webpack_require__(239);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -26620,7 +26655,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 237 */
+/* 239 */
 /***/ function(module, exports) {
 
 	/**
@@ -26674,7 +26709,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 238 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26693,7 +26728,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(239);
+	var invariant = __webpack_require__(241);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -26783,7 +26818,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 239 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26838,7 +26873,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 240 */
+/* 242 */
 /***/ function(module, exports) {
 
 	/**
@@ -26880,7 +26915,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 241 */
+/* 243 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26907,7 +26942,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 242 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31894,7 +31929,7 @@
 	}));
 
 /***/ },
-/* 243 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31911,7 +31946,7 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(229);
+	var FluxStoreGroup = __webpack_require__(231);
 	
 	var invariant = __webpack_require__(223);
 	
@@ -32017,12 +32052,42 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 244 */
+/* 246 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(229).Store;
+	var ClickConstants = __webpack_require__(247);
+	var AppDispatcher = __webpack_require__(220);
+	
+	var ClickStore = new Store(AppDispatcher);
+	
+	ClickStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case ClickConstants.APP_CLICKED:
+	      ClickStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = ClickStore;
+
+/***/ },
+/* 247 */
+/***/ function(module, exports) {
+
+	ClickConstants = {
+	  APP_CLICKED: 'APP_CLICKED'
+	};
+	
+	module.exports = ClickConstants;
+
+/***/ },
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var SearchStore = __webpack_require__(260);
-	var ClickStore = __webpack_require__(259);
+	var SearchStore = __webpack_require__(249);
+	var ClickStore = __webpack_require__(246);
 	var ApiUtil = __webpack_require__(218);
 	var Link = __webpack_require__(159).Link;
 	
@@ -32144,11 +32209,43 @@
 	module.exports = Search;
 
 /***/ },
-/* 245 */
+/* 249 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(229).Store;
+	var AppDispatcher = __webpack_require__(220);
+	var SearchConstants = __webpack_require__(227);
+	var SearchStore = new Store(AppDispatcher);
+	
+	var _searchResults = [];
+	var _meta = {};
+	
+	SearchStore.all = function () {
+	  return _searchResults.slice();
+	};
+	
+	SearchStore.meta = function () {
+	  return $.extend(true, {}, _meta);
+	};
+	
+	SearchStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case SearchConstants.RESULTS_RECEIVED:
+	      _searchResults = payload.searchResults;
+	      _meta = payload.meta;
+	      SearchStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = SearchStore;
+
+/***/ },
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ComposeForm = __webpack_require__(246);
+	var ComposeForm = __webpack_require__(251);
 	
 	var SideNav = React.createClass({
 	  displayName: 'SideNav',
@@ -32177,52 +32274,32 @@
 	        'Compose'
 	      ),
 	      React.createElement(
-	        'ul',
+	        'div',
 	        { className: 'sidenav-links' },
 	        React.createElement(
-	          'li',
-	          null,
-	          React.createElement(
-	            'a',
-	            { href: '#/inbox/' },
-	            'Inbox'
-	          )
+	          'a',
+	          { href: '#/inbox/' },
+	          'Inbox'
 	        ),
 	        React.createElement(
-	          'li',
-	          null,
-	          React.createElement(
-	            'a',
-	            { href: '#/starred/' },
-	            'Starred'
-	          )
+	          'a',
+	          { href: '#/starred/' },
+	          'Starred'
 	        ),
 	        React.createElement(
-	          'li',
-	          null,
-	          React.createElement(
-	            'a',
-	            { href: '#/important/' },
-	            'Important'
-	          )
+	          'a',
+	          { href: '#/important/' },
+	          'Important'
 	        ),
 	        React.createElement(
-	          'li',
-	          null,
-	          React.createElement(
-	            'a',
-	            { href: '#/outbox/' },
-	            'Sent Mail'
-	          )
+	          'a',
+	          { href: '#/outbox/' },
+	          'Sent Mail'
 	        ),
 	        React.createElement(
-	          'li',
-	          null,
-	          React.createElement(
-	            'a',
-	            { href: '#' },
-	            'Drafts'
-	          )
+	          'a',
+	          { href: '#' },
+	          'Drafts'
 	        )
 	      ),
 	      this.state.formOpen ? React.createElement(ComposeForm, { onClose: this._composeForm }) : ''
@@ -32234,13 +32311,13 @@
 	module.exports = SideNav;
 
 /***/ },
-/* 246 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
-	var SessionStore = __webpack_require__(226);
-	var LinkedStateMixin = __webpack_require__(247);
+	var SessionStore = __webpack_require__(228);
+	var LinkedStateMixin = __webpack_require__(252);
 	
 	var ComposeForm = React.createClass({
 	  displayName: 'ComposeForm',
@@ -32388,13 +32465,13 @@
 	module.exports = ComposeForm;
 
 /***/ },
-/* 247 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(248);
+	module.exports = __webpack_require__(253);
 
 /***/ },
-/* 248 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32411,8 +32488,8 @@
 	
 	'use strict';
 	
-	var ReactLink = __webpack_require__(249);
-	var ReactStateSetters = __webpack_require__(250);
+	var ReactLink = __webpack_require__(254);
+	var ReactStateSetters = __webpack_require__(255);
 	
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -32435,7 +32512,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 249 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32509,7 +32586,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 250 */
+/* 255 */
 /***/ function(module, exports) {
 
 	/**
@@ -32618,14 +32695,32 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 251 */
+/* 256 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(220);
+	var ClickConstants = __webpack_require__(247);
+	
+	ClickActions = {
+	  receiveClick: function () {
+	    var action = {
+	      actionType: ClickConstants.APP_CLICKED
+	    };
+	    AppDispatcher.dispatch(action);
+	  }
+	};
+	
+	module.exports = ClickActions;
+
+/***/ },
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EmailStore = __webpack_require__(252);
-	var SessionStore = __webpack_require__(226);
+	var EmailStore = __webpack_require__(258);
+	var SessionStore = __webpack_require__(228);
 	var ApiUtil = __webpack_require__(218);
-	var Checkboxes = __webpack_require__(256);
+	var Checkboxes = __webpack_require__(259);
 	var Link = __webpack_require__(159).Link;
 	
 	var EmailPreviewTable = React.createClass({
@@ -32670,7 +32765,7 @@
 	    var emailPreviews = this.state.emails.map(function (email, i) {
 	      return React.createElement(
 	        'div',
-	        { key: i, className: 'email-preview-item group' + (email.read ? ' email-read' : ' email-unread') },
+	        { key: i, className: 'email-preview-item group' + (email.marked ? ' email-marked' : ' email-unmarked') + (email.read ? ' email-read' : ' email-unread') },
 	        React.createElement(Checkboxes, { email: email }),
 	        React.createElement(
 	          Link,
@@ -32707,7 +32802,7 @@
 	    }
 	
 	    var meta = EmailStore.meta();
-	    var firstOnPage = (meta.page - 1) * 50 + 1;
+	    var firstOnPage = meta.total_count > 0 ? (meta.page - 1) * 50 + 1 : 0;
 	    var emailsOnPage = meta.total_count > meta.page * 50 ? meta.page * 50 : meta.total_count;
 	    var prevDisabled = meta.page === 1;
 	    var nextDisabled = meta.page * 50 >= meta.total_count;
@@ -32730,12 +32825,12 @@
 	          { className: 'page-count navbar-right-buttons group' },
 	          React.createElement(
 	            'button',
-	            { className: 'next-page-button', onClick: this.nextPage, disabled: nextDisabled },
+	            { className: 'nav-button next-page-button', onClick: this.nextPage, disabled: nextDisabled },
 	            'N'
 	          ),
 	          React.createElement(
 	            'button',
-	            { className: 'previous-page-button', onClick: this.previousPage, disabled: prevDisabled },
+	            { className: 'nav-button previous-page-button', onClick: this.previousPage, disabled: prevDisabled },
 	            'P'
 	          ),
 	          React.createElement(
@@ -32786,10 +32881,10 @@
 	module.exports = EmailPreviewTable;
 
 /***/ },
-/* 252 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(227).Store;
+	var Store = __webpack_require__(229).Store;
 	var AppDispatcher = __webpack_require__(220);
 	var EmailConstants = __webpack_require__(224);
 	
@@ -32844,11 +32939,75 @@
 	module.exports = EmailStore;
 
 /***/ },
-/* 253 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EmailStore = __webpack_require__(252);
+	
+	var Checkboxes = React.createClass({
+	  displayName: 'Checkboxes',
+	
+	
+	  // componentWillReceiveProps: function (newProps) {
+	  //
+	  // },
+	
+	  _marked: function (e) {
+	    e.preventDefault();
+	    ApiUtil.toggleMarked(this.props.email);
+	  },
+	
+	  _starred: function (e) {
+	    e.preventDefault();
+	    ApiUtil.toggleStarred(this.props.email);
+	  },
+	
+	  _important: function (e) {
+	    e.preventDefault();
+	    ApiUtil.toggleImportant(this.props.email);
+	  },
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      null,
+	      React.createElement(
+	        'span',
+	        { className: 'marked-box' },
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          onChange: this._marked,
+	          checked: this.props.email.marked })
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'starred-box' },
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          onChange: this._starred,
+	          checked: this.props.email.starred })
+	      ),
+	      React.createElement(
+	        'span',
+	        { className: 'important-box' },
+	        React.createElement('input', {
+	          type: 'checkbox',
+	          onChange: this._important,
+	          checked: this.props.email.important })
+	      )
+	    );
+	  }
+	
+	});
+	
+	module.exports = Checkboxes;
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var EmailStore = __webpack_require__(258);
 	var ApiUtil = __webpack_require__(218);
 	var History = __webpack_require__(159).History;
 	
@@ -32870,7 +33029,7 @@
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
 	    // ApiUtil.fetchEmails(this.props.route.path.slice(0, -4), 1, this.props.location.query);
 	    // fetching all emails kind of hacky, fix later
-	    ApiUtil.fetchEmail(this.props.route.path.slice(0, -4), this.props.params.id); //Experiment
+	    ApiUtil.fetchEmail(this.props.route.path.slice(0, -4), parseInt(this.props.params.id)); //Experiment
 	  },
 	
 	  componentWillUnmount: function () {
@@ -32934,12 +33093,12 @@
 	module.exports = EmailDetails;
 
 /***/ },
-/* 254 */
+/* 261 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
-	var SessionStore = __webpack_require__(226);
+	var SessionStore = __webpack_require__(228);
 	var Link = __webpack_require__(159).Link;
 	
 	var LoginForm = React.createClass({
@@ -32962,7 +33121,7 @@
 	    e.preventDefault();
 	    var router = this.context.router;
 	    ApiUtil.login(this.state, function () {
-	      router.push('/inbox');
+	      router.push('/inbox/');
 	    });
 	  },
 	
@@ -33019,6 +33178,11 @@
 	            'button',
 	            { className: 'login-submit' },
 	            'Log In'
+	          ),
+	          React.createElement(
+	            'a',
+	            { href: 'auth/facebook' },
+	            'Sign In With Facebook'
 	          )
 	        ),
 	        React.createElement(
@@ -33045,12 +33209,12 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 255 */
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
-	var SessionStore = __webpack_require__(226);
+	var SessionStore = __webpack_require__(228);
 	var Link = __webpack_require__(159).Link;
 	
 	var LoginForm = React.createClass({
@@ -33080,7 +33244,7 @@
 	    e.preventDefault();
 	    var router = this.context.router;
 	    ApiUtil.signin(this.state, function () {
-	      router.push('/inbox');
+	      router.push('/inbox/');
 	    });
 	  },
 	
@@ -33348,180 +33512,6 @@
 	});
 	
 	module.exports = LoginForm;
-
-/***/ },
-/* 256 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var Checkboxes = React.createClass({
-	  displayName: 'Checkboxes',
-	
-	
-	  // componentWillReceiveProps: function (newProps) {
-	  //
-	  // },
-	
-	  _marked: function (e) {
-	    e.preventDefault();
-	    ApiUtil.toggleMarked(this.props.email);
-	  },
-	
-	  _starred: function (e) {
-	    e.preventDefault();
-	    ApiUtil.toggleStarred(this.props.email);
-	  },
-	
-	  _important: function (e) {
-	    e.preventDefault();
-	    ApiUtil.toggleImportant(this.props.email);
-	  },
-	
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'span',
-	        { className: 'marked-box' },
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          onChange: this._marked,
-	          checked: this.props.email.marked })
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: 'starred-box' },
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          onChange: this._starred,
-	          checked: this.props.email.starred })
-	      ),
-	      React.createElement(
-	        'span',
-	        { className: 'important-box' },
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          onChange: this._important,
-	          checked: this.props.email.important })
-	      )
-	    );
-	  }
-	
-	});
-	
-	module.exports = Checkboxes;
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(220);
-	var ClickConstants = __webpack_require__(258);
-	
-	ClickActions = {
-	  receiveClick: function () {
-	    var action = {
-	      actionType: ClickConstants.APP_CLICKED
-	    };
-	    AppDispatcher.dispatch(action);
-	  }
-	};
-	
-	module.exports = ClickActions;
-
-/***/ },
-/* 258 */
-/***/ function(module, exports) {
-
-	ClickConstants = {
-	  APP_CLICKED: 'APP_CLICKED'
-	};
-	
-	module.exports = ClickConstants;
-
-/***/ },
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(227).Store;
-	var ClickConstants = __webpack_require__(258);
-	var AppDispatcher = __webpack_require__(220);
-	
-	var ClickStore = new Store(AppDispatcher);
-	
-	ClickStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case ClickConstants.APP_CLICKED:
-	      ClickStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = ClickStore;
-
-/***/ },
-/* 260 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(227).Store;
-	var AppDispatcher = __webpack_require__(220);
-	var SearchConstants = __webpack_require__(261);
-	var SearchStore = new Store(AppDispatcher);
-	
-	var _searchResults = [];
-	var _meta = {};
-	
-	SearchStore.all = function () {
-	  return _searchResults.slice();
-	};
-	
-	SearchStore.meta = function () {
-	  return $.extend(true, {}, _meta);
-	};
-	
-	SearchStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case SearchConstants.RESULTS_RECEIVED:
-	      _searchResults = payload.searchResults;
-	      _meta = payload.meta;
-	      SearchStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	module.exports = SearchStore;
-
-/***/ },
-/* 261 */
-/***/ function(module, exports) {
-
-	SearchConstants = {
-	  RESULTS_RECEIVED: 'RESULTS_RECEIVED'
-	};
-	
-	module.exports = SearchConstants;
-
-/***/ },
-/* 262 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(220);
-	var SearchConstants = __webpack_require__(261);
-	
-	SearchActions = {
-	  receiveResults: function (response) {
-	    var action = {
-	      actionType: SearchConstants.RESULTS_RECEIVED,
-	      searchResults: response.search_results,
-	      meta: response.meta
-	    };
-	    AppDispatcher.dispatch(action);
-	  }
-	};
-	
-	module.exports = SearchActions;
 
 /***/ }
 /******/ ]);
