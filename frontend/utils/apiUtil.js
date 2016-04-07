@@ -3,12 +3,18 @@ var SearchActions = require('../actions/searchActions');
 
 ApiUtil = {
 
-  fetchEmails: function (path, page) {
+  fetchEmails: function (path, page, query) {
+    var searchParam;
+    if (query) {
+      searchParam = query.query;
+    } else {
+      query = null;
+    }
     $.ajax({
       type: 'GET',
       url: 'api/emails',
       dataType: 'json',
-      data: {path: path, page: page},
+      data: {path: path, page: page, query: searchParam},
       success: function (response) {
         ApiActions.receiveEmails(response);
       },

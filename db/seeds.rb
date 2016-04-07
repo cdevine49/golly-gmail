@@ -65,8 +65,8 @@ User.create(
 
 
 (1..200).each do |i|
-   a = Email.new(subject: 'Lorem Ipsum #{i}', body: '')
-   b = Email.new(subject: 'Lorem Ipsum #{i}', body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+   a = Email.new(subject: "a email", body: '')
+   b = Email.new(subject: "b email", body: "This is a seed email")
    if i % 2 == 0
      a.from_email = "brenda@gollygmail.com"
      a.from_name = "brenda"
@@ -76,6 +76,7 @@ User.create(
      b.to = "drummy@gollygmail.com"
     if i % 6 == 0
       a.starred = true
+      b.important = true unless i % 40 == 0
     end
 
     if i % 10 == 0
@@ -86,18 +87,27 @@ User.create(
       b.important = true
       b.starred = true
     end
-   elsif i % 3 || i % 7 === 0
-     a.from_email = "simon@gollygmail.com"
-     a.from_name = "simon"
-     a.to = "conor@gollygmail.com"
-     a.starred = true unless i % 21 == 0
-   else
-     a.from_email = "conor@gollygmail.com"
-     a.from_name = "conor"
-     a.to = "conor@gollygmail.com"
-     b.from_email = "drummy@gollygmail.com"
-     b.from_name = "drummy"
-     b.to = "conor@gollygmail.com"
+  elsif i % 5 == 0
+    a.from_email = "drummy@gollygmail.com"
+    a.from_name = "drummy"
+    a.to = "conor@gollygmail.com"
+    a.body = "Lets do this now"
+    b.from_email = "conor@gollygmail.com"
+    b.from_name = "conor"
+    b.to = "drummy@gollygmail.com"
+  elsif i % 3 || i % 7 === 0
+    a.from_email = "simon@gollygmail.com"
+    a.from_name = "simon"
+    a.to = "dane@gollygmail.com"
+    a.starred = true unless i % 21 == 0
+  else
+    a.from_email = "conor@gollygmail.com"
+    a.from_name = "conor"
+    a.to = "brenda@gollygmail.com"
+    a.important = true
+    b.from_email = "drummy@gollygmail.com"
+    b.from_name = "drummy"
+    b.to = "conor@gollygmail.com"
    end
    a.save
    b.save

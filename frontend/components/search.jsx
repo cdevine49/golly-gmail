@@ -1,5 +1,6 @@
 var React = require('react');
 var SearchStore = require('../stores/searchStore');
+var ClickStore = require('../stores/clickStore');
 var ApiUtil = require('../utils/apiUtil');
 var Link = require('react-router').Link;
 
@@ -8,25 +9,39 @@ var Search = React.createClass({
   getInitialState: function() {
     return {
       query: "",
-      result: ""
+      result: "",
+      searchBox: false
     };
   },
 
   componentDidMount: function() {
     this.searchStoreToken = SearchStore.addListener(this._onChange);
+    this.clickStoreToken = ClickStore.addListener(this._handleAppClick);
   },
 
   componentWillUnmount: function () {
     this.searchStoreToken.remove();
+    this.clickStoreToken.remove();
   },
 
   _onChange: function () {
     this.setState({ result: SearchStore.all() });
   },
 
+  _handleAppClick: function (e) {
+    this.setState({searchBox: false});
+  },
+
+  _handleSearchBoxClick: function (e) {
+    e.stopPropagation();
+    if (e.target.type === "text") {
+      this.setState({ searchBox: true });
+    }
+  },
+
   handleInput: function (e) {
     var query = e.currentTarget.value;
-   this.setState({ query: query }, function () {
+   this.setState({ query: query, searchBox: true }, function () {
      if (query.length > 2) {
        this.search();
      }
@@ -60,14 +75,17 @@ var Search = React.createClass({
     });
   },
 
+
   render: function() {
     return (
       <article>
-        <form className='searchbar group'>
-          <input type='text' onChange={this.handleInput} value={this.state.query}></input>
-          <button className='search-button'>B</button>
+        <form onClick={this._handleSearchBoxClick} className='searchbar group'>
+          <input type='text'
+            onChange={this.handleInput}
+            value={this.state.query}></input>
         </form>
-        <ul className='search-results-fixed'>
+        <Link to={ {pathname:'/search-results/', query: {query: this.state.query} }}  className='search-button'>B</Link>
+        <ul className={ this.state.searchBox ? 'search-results-fixed' : 'search-results-fixed hidden' }>
           { this.results() }
         </ul>
       </article>
