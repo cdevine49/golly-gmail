@@ -16,6 +16,7 @@ ApiUtil = {
       dataType: 'json',
       data: {path: path, page: page, query: searchParam},
       success: function (response) {
+        debugger
         ApiActions.receiveEmails(response);
       },
       error: function () {
