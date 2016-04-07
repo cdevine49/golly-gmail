@@ -27,11 +27,13 @@ var EmailDetails = React.createClass({
   },
 
   _onChange: function () {
-    if (EmailStore.find(this.props.params.id)) {
-      this.setState({ email: EmailStore.find(this.props.params.id) });
-    }
     if (EmailStore.find(this.props.params.id) && !EmailStore.find(this.props.params.id).read) {
       ApiUtil.toggleRead(EmailStore.find(this.props.params.id));    }
+    if (EmailStore.find(this.props.params.id)) {
+      this.setState({ email: EmailStore.find(this.props.params.id) });
+    } else {
+      this.context.router.push(this.props.route.path.slice(0, -4));
+    }
   },
 
   componentWillReceiveProps: function (newProps) {

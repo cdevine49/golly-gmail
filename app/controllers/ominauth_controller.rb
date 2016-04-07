@@ -1,9 +1,9 @@
 class OmniauthController < ApplicationController
 
   def facebook
-    user = User.find_or_create_by_auth_hash(auth_hash)
-    log_in!(user) if user
-    redirect_to root_url + "#/posts"
+    user = User.update_with_auth_hash(auth_hash)
+    # log_in!(user) if user
+    redirect_to root_url
   end
 
   private

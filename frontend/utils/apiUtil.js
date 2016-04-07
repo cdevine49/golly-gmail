@@ -37,7 +37,7 @@ ApiUtil = {
       dataType: 'json',
       data: {path: path, id: id},
       success: function (email) {
-        ApiActions.receiveEmail(email);
+        email && ApiActions.receiveEmail(email);
       },
       error: function () {
         console.log('ApiUtil#fetchEmails error');
