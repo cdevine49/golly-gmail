@@ -341,20 +341,28 @@ button, article, footer, small {
 .searchbar > input {
   float: left;
   background: white;
-  width: 588px;
+  width: 580px;
+  padding-left: 8px;
   height: 28px;
-  border: 1px solid lightblue;
+  border: 1px solid #c5c5c5;
 }
+
+.searchbar > input:focus {
+  border: 1px solid #4285F4;
+}
+
 
 .search-button {
   background: #488BF9;
   color: #FFFFFF;
   float: left;
   text-align: center;
+  margin-top: 15px;
   width: 60px;
   height: 30px;
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
+  line-height: 1.8;
 }
 
 .search-results-fixed {
@@ -362,13 +370,17 @@ button, article, footer, small {
   background: #ffffff;
   width: 588px;
   top: 45px;
-  left: 215px;
+  left: 212px;
   border: 1px solid #e5e5e5;
 }
 
 .search-result-fixed-li {
   height: 45px;
   width: 588px;
+}
+
+.search-result-fixed-li:hover {
+  background: #e5e5e5;
 }
 
 .search-result-fixed-link {

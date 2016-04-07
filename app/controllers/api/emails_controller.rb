@@ -2,21 +2,30 @@ class Api::EmailsController < ApplicationController
   def index
     case params[:path]
     when 'starred'
-      @emails = Email.where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
+      @emails = Email
+      .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(starred: true)
       .order(created_at: :desc)
       .page(params[:page]).per(50)
     when 'important'
-      @emails = Email.where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
+      @emails = Email
+      .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(important: true)
       .order(created_at: :desc)
       .page(params[:page]).per(50)
-    when 'sent'
-      @emails = Email.where("emails.from_email = ?", current_user.gollygmail)
+    when 'outbox'
+      @emails = Email
+      .where("emails.from_email = ?", current_user.gollygmail)
       .order(created_at: :desc)
       .page(params[:page]).per(50)
+    when 'search-results'
+      @emails = Email
+      .search_emails(params[:query])
+      .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
+      .page(params[:page]).per(50)
     else
-      @emails = Email.where("emails.to = ?", current_user.gollygmail)
+      @emails = Email
+      .where("emails.to = ?", current_user.gollygmail)
       .order(created_at: :desc)
       .page(params[:page]).per(50)
     end
@@ -45,7 +54,10 @@ class Api::EmailsController < ApplicationController
 
   private
   def email_params
-    params.require(:email).permit(:subject, :body, :to, :image, :marked, :starred, :important, :read, :page)
+    params.require(:email).permit(
+      :subject, :body, :to, :image,
+      :marked, :starred, :important,
+      :read, :page, :query)
   end
 
 end

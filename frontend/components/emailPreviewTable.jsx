@@ -13,11 +13,11 @@ var EmailPreviewTable = React.createClass({
 
   componentDidMount: function () {
     this.emailStoreToken = EmailStore.addListener(this._onChange);
-    ApiUtil.fetchEmails(this.props.route.path, 1);
+    ApiUtil.fetchEmails(this.props.route.path, 1, this.props.location.query);
   },
 
   componentWillReceiveProps: function (newProps) {
-    ApiUtil.fetchEmails(newProps.route.path, 1);
+    ApiUtil.fetchEmails(newProps.route.path, 1, newProps.location.query);
   },
 
   componentWillUnmount: function () {
@@ -26,12 +26,12 @@ var EmailPreviewTable = React.createClass({
 
   nextPage: function () {
     var meta = EmailStore.meta();
-    ApiUtil.fetchEmails(this.props.route.path, meta.page + 1);
+    ApiUtil.fetchEmails(this.props.route.path, meta.page + 1, this.props.location.query);
   },
 
   previousPage: function () {
     var meta = EmailStore.meta();
-    ApiUtil.fetchEmails(this.props.route.path, meta.page - 1);
+    ApiUtil.fetchEmails(this.props.route.path, meta.page - 1, this.props.location.query);
   },
 
   _onChange: function () {
@@ -47,16 +47,16 @@ var EmailPreviewTable = React.createClass({
       return (
         <div key={ i } className={'email-preview-item group' + (email.read ? ' email-read' : ' email-unread')}>
           <Checkboxes email={email}/>
-          <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={"/inbox/" + email.id}>{ SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name }</Link>
+          <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={this.props.location.pathname + email.id}>{ SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name }</Link>
           <Link
             className={'email-preview-subject email-preview-link'  + (email.read ? ' normal' : ' bold')}
-            to={"/inbox/" + email.id}>{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</Link>
+            to={this.props.location.pathname + email.id}>{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</Link>
           <span className={ (email.body) ? 'subject-dash-body' : 'hidden' }>-</span>
-          <Link className='email-preview-body email-preview-link' to={"/inbox/" + email.id}>{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (100 - email.subject.length)) }</Link>
-          <Link className='email-preview-link end-content' to={"/inbox/" + email.id}></Link>
+          <Link className='email-preview-body email-preview-link' to={this.props.location.pathname + email.id}>{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (100 - email.subject.length)) }</Link>
+          <Link className='email-preview-link end-content' to={this.props.location.pathname + email.id}></Link>
         </div>
       );
-    });
+    }.bind(this));
 
     if (emailPreviews.length === 0) {
       emailPreviews = <p>Loading emails...</p>;

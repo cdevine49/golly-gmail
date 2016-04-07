@@ -73,7 +73,9 @@
 	      React.createElement(Route, { path: 'inbox', component: EmailPreviewTable }),
 	      React.createElement(Route, { path: 'inbox/:id', component: EmailDetails }),
 	      React.createElement(Route, { path: 'starred', component: EmailPreviewTable }),
+	      React.createElement(Route, { path: 'starred/:id', component: EmailDetails }),
 	      React.createElement(Route, { path: 'important', component: EmailPreviewTable }),
+	      React.createElement(Route, { path: 'important/:id', component: EmailDetails }),
 	      React.createElement(Route, { path: 'outbox', component: EmailPreviewTable }),
 	      React.createElement(Route, { path: 'outbox/:id', component: EmailDetails }),
 	      React.createElement(Route, { path: 'search-results', component: EmailPreviewTable })
@@ -24927,12 +24929,18 @@
 	
 	ApiUtil = {
 	
-	  fetchEmails: function (path, page) {
+	  fetchEmails: function (path, page, query) {
+	    var searchParam;
+	    if (query) {
+	      searchParam = query.query;
+	    } else {
+	      query = null;
+	    }
 	    $.ajax({
 	      type: 'GET',
 	      url: 'api/emails',
 	      dataType: 'json',
-	      data: { path: path, page: page },
+	      data: { path: path, page: page, query: searchParam },
 	      success: function (response) {
 	        ApiActions.receiveEmails(response);
 	      },
@@ -31987,6 +31995,7 @@
 
 	var React = __webpack_require__(1);
 	var SearchStore = __webpack_require__(260);
+	var ClickStore = __webpack_require__(259);
 	var ApiUtil = __webpack_require__(218);
 	var Link = __webpack_require__(159).Link;
 	
@@ -31997,25 +32006,39 @@
 	  getInitialState: function () {
 	    return {
 	      query: "",
-	      result: ""
+	      result: "",
+	      searchBox: false
 	    };
 	  },
 	
 	  componentDidMount: function () {
 	    this.searchStoreToken = SearchStore.addListener(this._onChange);
+	    this.clickStoreToken = ClickStore.addListener(this._handleAppClick);
 	  },
 	
 	  componentWillUnmount: function () {
 	    this.searchStoreToken.remove();
+	    this.clickStoreToken.remove();
 	  },
 	
 	  _onChange: function () {
 	    this.setState({ result: SearchStore.all() });
 	  },
 	
+	  _handleAppClick: function (e) {
+	    this.setState({ searchBox: false });
+	  },
+	
+	  _handleSearchBoxClick: function (e) {
+	    e.stopPropagation();
+	    if (e.target.type === "text") {
+	      this.setState({ searchBox: true });
+	    }
+	  },
+	
 	  handleInput: function (e) {
 	    var query = e.currentTarget.value;
-	    this.setState({ query: query }, function () {
+	    this.setState({ query: query, searchBox: true }, function () {
 	      if (query.length > 2) {
 	        this.search();
 	      }
@@ -32067,17 +32090,19 @@
 	      null,
 	      React.createElement(
 	        'form',
-	        { className: 'searchbar group' },
-	        React.createElement('input', { type: 'text', onChange: this.handleInput, value: this.state.query }),
-	        React.createElement(
-	          'button',
-	          { className: 'search-button' },
-	          'B'
-	        )
+	        { onClick: this._handleSearchBoxClick, className: 'searchbar group' },
+	        React.createElement('input', { type: 'text',
+	          onChange: this.handleInput,
+	          value: this.state.query })
+	      ),
+	      React.createElement(
+	        Link,
+	        { to: { pathname: '/search-results/', query: { query: this.state.query } }, className: 'search-button' },
+	        'B'
 	      ),
 	      React.createElement(
 	        'ul',
-	        { className: 'search-results-fixed' },
+	        { className: this.state.searchBox ? 'search-results-fixed' : 'search-results-fixed hidden' },
 	        this.results()
 	      )
 	    );
@@ -32582,11 +32607,11 @@
 	
 	  componentDidMount: function () {
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
-	    ApiUtil.fetchEmails(this.props.route.path, 1);
+	    ApiUtil.fetchEmails(this.props.route.path, 1, this.props.location.query);
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
-	    ApiUtil.fetchEmails(newProps.route.path, 1);
+	    ApiUtil.fetchEmails(newProps.route.path, 1, newProps.location.query);
 	  },
 	
 	  componentWillUnmount: function () {
@@ -32595,12 +32620,12 @@
 	
 	  nextPage: function () {
 	    var meta = EmailStore.meta();
-	    ApiUtil.fetchEmails(this.props.route.path, meta.page + 1);
+	    ApiUtil.fetchEmails(this.props.route.path, meta.page + 1, this.props.location.query);
 	  },
 	
 	  previousPage: function () {
 	    var meta = EmailStore.meta();
-	    ApiUtil.fetchEmails(this.props.route.path, meta.page - 1);
+	    ApiUtil.fetchEmails(this.props.route.path, meta.page - 1, this.props.location.query);
 	  },
 	
 	  _onChange: function () {
@@ -32618,14 +32643,14 @@
 	        React.createElement(Checkboxes, { email: email }),
 	        React.createElement(
 	          Link,
-	          { className: 'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold'), to: "/inbox/" + email.id },
+	          { className: 'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold'), to: this.props.location.pathname + email.id },
 	          SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name
 	        ),
 	        React.createElement(
 	          Link,
 	          {
 	            className: 'email-preview-subject email-preview-link' + (email.read ? ' normal' : ' bold'),
-	            to: "/inbox/" + email.id },
+	            to: this.props.location.pathname + email.id },
 	          email.subject ? email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject : '(no subject)'
 	        ),
 	        React.createElement(
@@ -32635,12 +32660,12 @@
 	        ),
 	        React.createElement(
 	          Link,
-	          { className: 'email-preview-body email-preview-link', to: "/inbox/" + email.id },
+	          { className: 'email-preview-body email-preview-link', to: this.props.location.pathname + email.id },
 	          email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, 100 - email.subject.length)
 	        ),
-	        React.createElement(Link, { className: 'email-preview-link end-content', to: "/inbox/" + email.id })
+	        React.createElement(Link, { className: 'email-preview-link end-content', to: this.props.location.pathname + email.id })
 	      );
-	    });
+	    }.bind(this));
 	
 	    if (emailPreviews.length === 0) {
 	      emailPreviews = React.createElement(
