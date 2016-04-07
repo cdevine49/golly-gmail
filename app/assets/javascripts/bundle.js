@@ -24943,8 +24943,28 @@
 	      dataType: 'json',
 	      data: { path: path, page: page, query: searchParam },
 	      success: function (response) {
-	        debugger;
 	        ApiActions.receiveEmails(response);
+	      },
+	      error: function () {
+	        console.log('ApiUtil#fetchEmails error');
+	      }
+	    });
+	  },
+	
+	  fetchEmail: function (path, id) {
+	    // var searchParam;
+	    // if (query) {
+	    //   searchParam = query.query;
+	    // } else {
+	    //   query = null;
+	    // }
+	    $.ajax({
+	      type: 'GET',
+	      url: 'api/emails/' + id,
+	      dataType: 'json',
+	      data: { path: path, id: id },
+	      success: function (email) {
+	        ApiActions.receiveEmail(email);
 	      },
 	      error: function () {
 	        console.log('ApiUtil#fetchEmails error');
@@ -32792,7 +32812,6 @@
 	EmailStore.__onDispatch = function (payload) {
 	  switch (payload.actionType) {
 	    case EmailConstants.EMAILS_RECEIVED:
-	      debugger;
 	      resetEmails(payload.emails);
 	      _meta = payload.meta;
 	      EmailStore.__emitChange();
@@ -32844,8 +32863,9 @@
 	
 	  componentDidMount: function () {
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
-	    ApiUtil.fetchEmails(this.props.route.path.slice(0, -4), 1, this.props.location.query);
+	    // ApiUtil.fetchEmails(this.props.route.path.slice(0, -4), 1, this.props.location.query);
 	    // fetching all emails kind of hacky, fix later
+	    ApiUtil.fetchEmail(this.props.route.path.slice(0, -4), this.props.params.id); //Experiment
 	  },
 	
 	  componentWillUnmount: function () {
@@ -32853,7 +32873,6 @@
 	  },
 	
 	  _onChange: function () {
-	    debugger;
 	    if (EmailStore.find(this.props.params.id)) {
 	      this.setState({ email: EmailStore.find(this.props.params.id) });
 	    }
@@ -32863,17 +32882,17 @@
 	  },
 	
 	  componentWillReceiveProps: function (newProps) {
-	    if (EmailStore.find(newProps.params.id)) {
-	      this.setState({ email: EmailStore.find(newProps.params.id) });
-	      // won't work for older emails because of hacky fetch all emails
-	    }
-	    if (EmailStore.find(newProps.params.id) && !EmailStore.find(newProps.params.id).read) {
-	      ApiUtil.toggleRead(EmailStore.find(newProps.params.id));
-	    }
+	    ApiUtil.fetchEmail(this.props.route.path.slice(0, -4), newProps.params.id);
+	    // if (EmailStore.find(newProps.params.id)) {
+	    // this.setState({ email: EmailStore.find(newProps.params.id) });
+	    // won't work for older emails because of hacky fetch all emails
+	    // }
+	    // if (EmailStore.find(newProps.params.id) && !EmailStore.find(newProps.params.id).read) {
+	    // ApiUtil.toggleRead(EmailStore.find(newProps.params.id));
+	    // }
 	  },
 	
 	  render: function () {
-	    debugger;
 	    if (!this.state.email) {
 	      return React.createElement(
 	        'p',

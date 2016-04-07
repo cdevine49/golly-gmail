@@ -19,7 +19,6 @@ class Api::EmailsController < ApplicationController
       .order(created_at: :desc)
       .page(params[:page]).per(50)
     when 'search-results'
-      debugger
       @emails = Email
       .search_emails(params[:query])
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
@@ -29,6 +28,45 @@ class Api::EmailsController < ApplicationController
       .where("emails.to = ?", current_user.gollygmail)
       .order(created_at: :desc)
       .page(params[:page]).per(50)
+    end
+  end
+
+  def show
+    case params[:path]
+    when 'starred'
+      @email = Email
+      .where("emails.id = ?", params[:id])
+      .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
+      .where(starred: true)
+      .order(created_at: :desc)
+    when 'important'
+      @email = Email
+      .where("emails.id = ?", params[:id])
+      .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
+      .where(important: true)
+      .order(created_at: :desc)
+    when 'outbox'
+      @email = Email
+      .where("emails.id = ?", params[:id])
+      .where("emails.from_email = ?", current_user.gollygmail)
+      .order(created_at: :desc)
+    when 'search-results'
+      @email = Email
+      .where("emails.id = ?", params[:id])
+      .search_emails(params[:query])
+      .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
+    else
+      @email = Email
+      .where("emails.id = ?", params[:id])
+      .where("emails.to = ?", current_user.gollygmail)
+      .order(created_at: :desc)
+    end
+    @email = @email.first
+    if @email
+      render :show
+    else
+      debugger
+      redirect_to '/#' + params[:path]
     end
   end
 

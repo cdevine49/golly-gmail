@@ -26,7 +26,6 @@ EmailStore.meta = function () {
 EmailStore.__onDispatch = function (payload) {
   switch (payload.actionType) {
     case EmailConstants.EMAILS_RECEIVED:
-    debugger
       resetEmails(payload.emails);
       _meta = payload.meta;
       EmailStore.__emitChange();

@@ -17,8 +17,9 @@ var EmailDetails = React.createClass({
 
   componentDidMount: function() {
     this.emailStoreToken = EmailStore.addListener(this._onChange);
-    ApiUtil.fetchEmails(this.props.route.path.slice(0, -4), 1, this.props.location.query);
+    // ApiUtil.fetchEmails(this.props.route.path.slice(0, -4), 1, this.props.location.query);
     // fetching all emails kind of hacky, fix later
+    ApiUtil.fetchEmail(this.props.route.path.slice(0, -4), this.props.params.id); //Experiment
   },
 
   componentWillUnmount: function () {
@@ -26,7 +27,6 @@ var EmailDetails = React.createClass({
   },
 
   _onChange: function () {
-    debugger
     if (EmailStore.find(this.props.params.id)) {
       this.setState({ email: EmailStore.find(this.props.params.id) });
     }
@@ -35,17 +35,17 @@ var EmailDetails = React.createClass({
   },
 
   componentWillReceiveProps: function (newProps) {
-    if (EmailStore.find(newProps.params.id)) {
-      this.setState({ email: EmailStore.find(newProps.params.id) });
+    ApiUtil.fetchEmail(this.props.route.path.slice(0, -4),newProps.params.id);
+    // if (EmailStore.find(newProps.params.id)) {
+      // this.setState({ email: EmailStore.find(newProps.params.id) });
       // won't work for older emails because of hacky fetch all emails
-    }
-    if (EmailStore.find(newProps.params.id) && !EmailStore.find(newProps.params.id).read) {
-      ApiUtil.toggleRead(EmailStore.find(newProps.params.id));
-    }
+    // }
+    // if (EmailStore.find(newProps.params.id) && !EmailStore.find(newProps.params.id).read) {
+      // ApiUtil.toggleRead(EmailStore.find(newProps.params.id));
+    // }
   },
 
   render: function() {
-    debugger
     if (!this.state.email) {
       return <p>Loading the email...</p>;
     }
