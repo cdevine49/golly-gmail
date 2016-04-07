@@ -65,8 +65,7 @@ class Api::EmailsController < ApplicationController
     if @email
       render :show
     else
-      debugger
-      redirect_to '/#' + params[:path]
+      render json: {}
     end
   end
 

@@ -24895,6 +24895,11 @@
 	              'span',
 	              { className: 'email' },
 	              SessionStore.currentUser().gollygmail
+	            ),
+	            React.createElement(
+	              'a',
+	              { href: 'auth/facebook' },
+	              'Connect Facebook'
 	            )
 	          )
 	        ),
@@ -24964,7 +24969,7 @@
 	      dataType: 'json',
 	      data: { path: path, id: id },
 	      success: function (email) {
-	        ApiActions.receiveEmail(email);
+	        email && ApiActions.receiveEmail(email);
 	      },
 	      error: function () {
 	        console.log('ApiUtil#fetchEmails error');
@@ -32873,11 +32878,13 @@
 	  },
 	
 	  _onChange: function () {
-	    if (EmailStore.find(this.props.params.id)) {
-	      this.setState({ email: EmailStore.find(this.props.params.id) });
-	    }
 	    if (EmailStore.find(this.props.params.id) && !EmailStore.find(this.props.params.id).read) {
 	      ApiUtil.toggleRead(EmailStore.find(this.props.params.id));
+	    }
+	    if (EmailStore.find(this.props.params.id)) {
+	      this.setState({ email: EmailStore.find(this.props.params.id) });
+	    } else {
+	      this.context.router.push(this.props.route.path.slice(0, -4));
 	    }
 	  },
 	
