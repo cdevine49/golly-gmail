@@ -16,8 +16,28 @@ ApiUtil = {
       dataType: 'json',
       data: {path: path, page: page, query: searchParam},
       success: function (response) {
-        debugger
         ApiActions.receiveEmails(response);
+      },
+      error: function () {
+        console.log('ApiUtil#fetchEmails error');
+      }
+    });
+  },
+
+  fetchEmail: function (path, id) {
+    // var searchParam;
+    // if (query) {
+    //   searchParam = query.query;
+    // } else {
+    //   query = null;
+    // }
+    $.ajax({
+      type: 'GET',
+      url: 'api/emails/' + id,
+      dataType: 'json',
+      data: {path: path, id: id},
+      success: function (email) {
+        ApiActions.receiveEmail(email);
       },
       error: function () {
         console.log('ApiUtil#fetchEmails error');
