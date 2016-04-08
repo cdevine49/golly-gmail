@@ -33259,6 +33259,11 @@
 	            'a',
 	            { className: 'signin-with-facebook', href: 'auth/facebook' },
 	            'Sign In With Facebook'
+	          ),
+	          React.createElement(
+	            'p',
+	            { className: 'signin-with-facebook-disclaimer' },
+	            '(You have to create and connect and account first)'
 	          )
 	        ),
 	        React.createElement(

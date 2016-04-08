@@ -68,6 +68,7 @@ var LoginForm = React.createClass({
                 value={this.state.password} />
               <button className='login-submit'>Log In</button>
               <a className='signin-with-facebook' href="auth/facebook">Sign In With Facebook</a>
+              <p className='signin-with-facebook-disclaimer'>(You have to create and connect and account first)</p>
           </form>
           <div className='signin-link-and-logo'>
             <Link className='signup-from-signin-link' to={'/signup/'}>Create account</Link>

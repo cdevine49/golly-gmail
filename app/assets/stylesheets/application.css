@@ -293,6 +293,10 @@ button, article, footer, small {
   padding: 10px 55px;
 }
 
+.signin-with-facebook-disclaimer {
+  margin-top: 20px;
+}
+
 .demo-signin {
   width: 250px;
   height: 25px;
