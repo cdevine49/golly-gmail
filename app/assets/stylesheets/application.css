@@ -303,6 +303,7 @@ button, article, footer, small {
   padding: 8px 12px;
   border-radius: 3px;
   margin-top: 20px;
+  cursor: default;
 }
 
 .login-submit {
