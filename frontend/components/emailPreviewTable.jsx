@@ -14,7 +14,7 @@ var EmailPreviewTable = React.createClass({
   },
 
   getInitialState: function () {
-    return { emails: [] };
+    return { emails: null };
   },
 
   componentDidMount: function () {
@@ -55,7 +55,8 @@ var EmailPreviewTable = React.createClass({
   },
 
   render: function () {
-    var emailPreviews = this.state.emails.map(function (email, i) {
+    var emails = this.state.emails || [];
+    var emailPreviews = emails.map(function (email, i) {
       var path = (this.props.location.pathname = "/" ? '/inbox/' : this.props.location.pathname ) + email.id;
       return (
         <div key={ i } className={'email-preview-item group' + (MarkStore.includes(email.id) ? ' email-marked' : ' email-unmarked') + (email.read ? ' email-read' : ' email-unread')}>
@@ -71,9 +72,11 @@ var EmailPreviewTable = React.createClass({
       );
     }.bind(this));
 
-    if (emailPreviews.length === 0) {
+    if (!this.state.emails) {
       emailPreviews = <p>Loading emails...</p>;
-    } 
+    } else if (emailPreviews.length === 0) {
+      emailPreviews = <p>This mailbox is empty</p>;
+    }
 
     var meta = EmailStore.meta();
     var firstOnPage = (meta.total_count > 0) ? (((meta.page - 1) * 50) + 1) : 0;

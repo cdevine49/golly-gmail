@@ -11,7 +11,9 @@ var EmailDetails = React.createClass({
 
   getInitialState: function() {
     return {
-      email: null
+      email: null,
+      imageUrl: null,
+      imageFile: null
     };
   },
 
@@ -75,7 +77,7 @@ var EmailDetails = React.createClass({
           <h2 className='email-detail-subject'>{ this.state.email.subject }</h2>
           <p className='email-detail-from-email'>{ this.state.email.from_email }</p>
           <h2 className='email-detail-body'>{ this.state.email.body }</h2>
-          <a className={this.state.email.image_url ? 'email-attachment-download' : 'hidden'} href={this.state.email.image_url }>attachment</a>
+          <a href={this.state.email.image_url}><img className={this.state.email.image_url ? 'email-attachment-preview' : 'hidden'} src = {this.state.email.image_url}/></a>
         </section>
       </section>
     );

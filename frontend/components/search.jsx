@@ -63,7 +63,7 @@ var Search = React.createClass({
             <li className='search-result-fixed-li'>
               <Link className='search-result-fixed-link search-result-subject'
                 to={ {pathname: '/search-results/' + result.id, query: {query: this.state.query} }}>
-                { result.subject }</Link>
+                { result.subject.slice(0, 40) }</Link>
               <Link className='search-result-fixed-link search-result-name'
                 to={ {pathname:'/search-results/' + result.id, query: {query: this.state.query} }}>
                 { result.from_name }</Link>
