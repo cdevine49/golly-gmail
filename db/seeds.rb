@@ -59,7 +59,7 @@ User.create(
   gollygmail: "dane@gollygmail.com",
   birthday: Date.new(1995,1,1),
   gender: "other",
-  secondary_email: "danes@hotmail.com"
+  secondary_email: "dane@hotmail.com"
 )
 
 
@@ -67,6 +67,8 @@ User.create(
 (1..200).each do |i|
    a = Email.new(subject: "a email", body: '')
    b = Email.new(subject: "b email", body: "This is a seed email")
+   c = Email.new(subject: "", body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
+   d = Email.new(subject: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
    if i % 2 == 0
      a.from_email = "brenda@gollygmail.com"
      a.from_name = "brenda"
@@ -75,6 +77,12 @@ User.create(
      b.from_email = "conor@gollygmail.com"
      b.from_name = "conor"
      b.to = "drummy@gollygmail.com"
+     c.from_email = "conor@gollygmail.com"
+     c.from_name = "conor"
+     c.to = "brenda@gollygmail.com"
+     d.from_email = "conor@gollygmail.com"
+     d.from_name = "conor"
+     d.to = "drummy@gollygmail.com"
     if i % 6 == 0
       a.starred = true
       b.important = true unless i % 40 == 0
@@ -112,4 +120,6 @@ User.create(
    end
    a.save
    b.save
+   c.save
+   d.save
 end
