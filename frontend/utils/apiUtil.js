@@ -139,7 +139,7 @@ ApiUtil = {
     });
   },
 
-  signin: function (credentials, callback) {
+  signup: function (credentials, callback) {
     $.ajax({
       type: "POST",
       url: "/api/users",

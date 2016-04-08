@@ -47,26 +47,26 @@ var EmailDetails = React.createClass({
     // }
   },
 
+
+  // <div className='navbar-left-buttons'>
+  //   <div className='select'></div>
+  //   <div className='refresh'></div>
+  //   <div className='more-options'></div>
+  // </div>
+  // <div className='page-count navbar-right-buttons group'>
+  //   <button className={'nav-button next-page-button'} onClick={this.nextPage} disabled={nextDisabled}>N</button>
+  //   <button className={'nav-button previous-page-button'} onClick={this.previousPage} disabled={prevDisabled}>P</button>
+  //   <span className='pages-and-emails group'>
+  //     <p className='first-on-page'>{ firstOnPage }</p>
+  //     <p className='dash-between'>-</p>
+  //     <p className='total-on-page'>{ emailsOnPage }</p>
+  //     <p className='just-of'>of</p>
+  //     <p className='total-emails-in-database'>{meta.total_count}</p></span>
+  //   </div>
   render: function() {
     if (!this.state.email) {
       return <p>Loading the email...</p>;
     }
-
-    // <div className='navbar-left-buttons'>
-    //   <div className='select'></div>
-    //   <div className='refresh'></div>
-    //   <div className='more-options'></div>
-    // </div>
-    // <div className='page-count navbar-right-buttons group'>
-    //   <button className={'nav-button next-page-button'} onClick={this.nextPage} disabled={nextDisabled}>N</button>
-    //   <button className={'nav-button previous-page-button'} onClick={this.previousPage} disabled={prevDisabled}>P</button>
-    //   <span className='pages-and-emails group'>
-    //     <p className='first-on-page'>{ firstOnPage }</p>
-    //     <p className='dash-between'>-</p>
-    //     <p className='total-on-page'>{ emailsOnPage }</p>
-    //     <p className='just-of'>of</p>
-    //     <p className='total-emails-in-database'>{meta.total_count}</p></span>
-    //   </div>
     return (
       <section className="email-details-container">
         <nav className='header-navbar group'>

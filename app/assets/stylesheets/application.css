@@ -41,7 +41,7 @@ button, article, footer, small {
    color: #000;
    font-size: 16px;
    font-family: sans-serif;
-   overflow: hidden;
+   /*overflow: hidden;*/
  }
 
  .group:after {
@@ -66,11 +66,14 @@ button, article, footer, small {
 
  /* Sign Up Header */
 
+ .sign-up-page {
+   overflow: scroll;
+ }
+
  .sign-up-header {
    height: 71px;
    background: #f1f1f1;
    border-bottom: 1px solid #e5e5e5;
-   overflow: hidden;
    font-size: 81.25%;
    color: #333;
    line-height: 1;
@@ -598,6 +601,10 @@ button, article, footer, small {
 
 /* Email Previews Table */
 
+.email-previews-table-container {
+  overflow: hidden;
+}
+
 .email-previews-table {
   margin-top: 10px;
   margin-left: 208px;
@@ -669,20 +676,34 @@ button, article, footer, small {
 .email-details-container {
 }
 
+/*.email-detail-view {
+  margin-left: 200px;
+  margin-top: 200px;
+}*/
+
 .email-detail-view {
   font-size: 14px;
   color: #222222;
-  margin-right: 300px;
+  margin-left: 208px;
+  width: 1048px;
+  width: auto;
+  height: 500px;
+  overflow: scroll;
 }
 
 .email-detail-subject {
   padding: 10px 5px;
   border-bottom: 1px solid #e5e5e5;
-  margin-top: -200px;
+  margin: 0;
+}
+
+.email-detail-from-email {
+  padding: 10px 0;
 }
 
 .email-detail-body {
-  font-size: 12px;
+  padding-right: 300px;
+  font-size: 13px;
 }
 
 /* Compose Form */
@@ -770,10 +791,6 @@ button, article, footer, small {
 /* Email Detail Page */
 
 
-.email-detail-view {
-  margin-left: 200px;
-  margin-top: 200px;
-}
 
    /*.sign-in {
      display: block;

@@ -82,9 +82,9 @@ class Api::EmailsController < ApplicationController
   end
 
   def update
-    email = Email.find_by(id: params[:id])
-    if email.update(email_params)
-      render json: email
+    @email = Email.find_by(id: params[:id])
+    if @email.update(email_params)
+      render :show
     else
       render json: { message: "Couldn't update"}
     end

@@ -118,12 +118,6 @@ var ComposeForm = React.createClass({
     );
   }
 
-  // render: function () {
-  //   return(
-  //     <li></li>
-  //   );
-  // }
-
 });
 
 module.exports = ComposeForm;

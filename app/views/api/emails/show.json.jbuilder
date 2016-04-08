@@ -7,5 +7,5 @@ json.extract!(
 )
 
 if @email.image.exists?
-  json.image_url asset_path(email.image.url)
+  json.image_url asset_path(@email.image.url)
 end
