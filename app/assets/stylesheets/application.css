@@ -282,7 +282,27 @@ button, article, footer, small {
 }
 
 .login-username-input {
-  margin: 120px auto 5px;
+  margin: 20px auto 5px;
+}
+
+.signin-with-facebook {
+  color: #ffffff;
+  background: #4267B2;
+  border-radius: 2px;
+  border: 1px solid blue;
+  padding: 10px 55px;
+}
+
+.demo-signin {
+  width: 250px;
+  height: 25px;
+  margin: 5px auto 0;
+  line-height: 1;
+  color: #F8FFFF;
+  background: #488BF9;
+  padding: 8px 12px;
+  border-radius: 3px;
+  margin-top: 20px;
 }
 
 .login-submit {
@@ -294,6 +314,7 @@ button, article, footer, small {
   background: #488BF9;
   padding: 8px 12px;
   border-radius: 3px;
+  margin-bottom: 20px;
 }
 
 .signup-from-signin-link {
@@ -453,6 +474,16 @@ button, article, footer, small {
   font-weight: 300;
   display: block;
   color: #666;
+  margin-bottom: 15px;
+}
+
+.user-info > .connect-with-facebook {
+  margin-top: 10px;
+  color: #ffffff;
+  background: #4267B2;
+  border-radius: 2px;
+  border: 1px solid blue;
+  padding: 5px;
 }
 
 .signin-signup-links {

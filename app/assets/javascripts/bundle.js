@@ -24903,7 +24903,7 @@
 	            ),
 	            React.createElement(
 	              'a',
-	              { href: 'auth/facebook' },
+	              { className: 'connect-with-facebook', href: 'auth/facebook' },
 	              'Connect Facebook'
 	            )
 	          )
@@ -33193,6 +33193,14 @@
 	    });
 	  },
 	
+	  _handleDemo: function (e) {
+	    e.preventDefault();
+	    var router = this.context.router;
+	    ApiUtil.login({ username: 'conor', password: 'password' }, function () {
+	      router.push('/inbox/');
+	    });
+	  },
+	
 	  _updateUsername: function (e) {
 	    this.setState({ username: e.currentTarget.value });
 	  },
@@ -33249,8 +33257,13 @@
 	          ),
 	          React.createElement(
 	            'a',
-	            { href: 'auth/facebook' },
+	            { className: 'signin-with-facebook', href: 'auth/facebook' },
 	            'Sign In With Facebook'
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'demo-signin', onClick: this._handleDemo },
+	            'Sign In as Conor'
 	          )
 	        ),
 	        React.createElement(

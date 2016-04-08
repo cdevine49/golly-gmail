@@ -62,7 +62,7 @@ var TopNav = React.createClass({
             <div className='user-info'>
               <span className='name'>{SessionStore.currentUser().first_name + ' ' + SessionStore.currentUser().last_name}</span>
               <span className='email'>{SessionStore.currentUser().gollygmail}</span>
-              <a href="auth/facebook">Connect Facebook</a>
+              <a className='connect-with-facebook' href="auth/facebook">Connect Facebook</a>
             </div>
           </div>
           <div className='signin-signup-links group'>
