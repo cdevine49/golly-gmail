@@ -1,18 +1,29 @@
 var React = require('react');
 var EmailStore = require('../stores/emailStore');
+var MarkStore = require('../stores/markStore');
 var SessionStore = require('../stores/sessionStore');
 var ApiUtil = require('../utils/apiUtil');
 var Checkboxes = require('./checkbox');
 var Link = require('react-router').Link;
+var History = require('react-router').History;
 
 var EmailPreviewTable = React.createClass({
+
+  contextTypes: {
+    router: React.PropTypes.object.isRequired
+  },
 
   getInitialState: function () {
     return { emails: [] };
   },
 
   componentDidMount: function () {
+    // if (!this.props.route.path) {
+    //   this.context.router.push('inbox/');
+    // }
+
     this.emailStoreToken = EmailStore.addListener(this._onChange);
+    this.markStoreToken = MarkStore.addListener(this._onChange);
     ApiUtil.fetchEmails(this.props.route.path, 1, this.props.location.query);
   },
 
@@ -22,6 +33,7 @@ var EmailPreviewTable = React.createClass({
 
   componentWillUnmount: function () {
     this.emailStoreToken.remove();
+    this.markStoreToken.remove();
   },
 
   nextPage: function () {
@@ -44,23 +56,24 @@ var EmailPreviewTable = React.createClass({
 
   render: function () {
     var emailPreviews = this.state.emails.map(function (email, i) {
+      var path = (this.props.location.pathname = "/" ? '/inbox/' : this.props.location.pathname ) + email.id;
       return (
-        <div key={ i } className={'email-preview-item group' + (email.marked ? ' email-marked' : ' email-unmarked') + (email.read ? ' email-read' : ' email-unread')}>
+        <div key={ i } className={'email-preview-item group' + (MarkStore.includes(email.id) ? ' email-marked' : ' email-unmarked') + (email.read ? ' email-read' : ' email-unread')}>
           <Checkboxes email={email}/>
-          <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={this.props.location.pathname + email.id}>{ SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name }</Link>
+          <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={path}>{ SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name }</Link>
           <Link
             className={'email-preview-subject email-preview-link'  + (email.read ? ' normal' : ' bold')}
-            to={this.props.location.pathname + email.id}>{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</Link>
+            to={path}>{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</Link>
           <span className={ (email.body) ? 'subject-dash-body' : 'hidden' }>-</span>
-          <Link className='email-preview-body email-preview-link' to={this.props.location.pathname + email.id}>{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (100 - email.subject.length)) }</Link>
-          <Link className='email-preview-link end-content' to={this.props.location.pathname + email.id}></Link>
+          <Link className='email-preview-body email-preview-link' to={path}>{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (100 - email.subject.length)) }</Link>
+          <Link className='email-preview-link end-content' to={path}></Link>
         </div>
       );
     }.bind(this));
 
     if (emailPreviews.length === 0) {
       emailPreviews = <p>Loading emails...</p>;
-    }
+    } 
 
     var meta = EmailStore.meta();
     var firstOnPage = (meta.total_count > 0) ? (((meta.page - 1) * 50) + 1) : 0;

@@ -25076,7 +25076,7 @@
 	    });
 	  },
 	
-	  signin: function (credentials, callback) {
+	  signup: function (credentials, callback) {
 	    $.ajax({
 	      type: "POST",
 	      url: "/api/users",
@@ -32454,12 +32454,6 @@
 	    );
 	  }
 	
-	  // render: function () {
-	  //   return(
-	  //     <li></li>
-	  //   );
-	  // }
-	
 	});
 	
 	module.exports = ComposeForm;
@@ -32718,21 +32712,32 @@
 
 	var React = __webpack_require__(1);
 	var EmailStore = __webpack_require__(258);
+	var MarkStore = __webpack_require__(265);
 	var SessionStore = __webpack_require__(228);
 	var ApiUtil = __webpack_require__(218);
 	var Checkboxes = __webpack_require__(259);
 	var Link = __webpack_require__(159).Link;
+	var History = __webpack_require__(159).History;
 	
 	var EmailPreviewTable = React.createClass({
 	  displayName: 'EmailPreviewTable',
 	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
 	
 	  getInitialState: function () {
 	    return { emails: [] };
 	  },
 	
 	  componentDidMount: function () {
+	    // if (!this.props.route.path) {
+	    //   this.context.router.push('inbox/');
+	    // }
+	
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
+	    this.markStoreToken = MarkStore.addListener(this._onChange);
 	    ApiUtil.fetchEmails(this.props.route.path, 1, this.props.location.query);
 	  },
 	
@@ -32742,6 +32747,7 @@
 	
 	  componentWillUnmount: function () {
 	    this.emailStoreToken.remove();
+	    this.markStoreToken.remove();
 	  },
 	
 	  nextPage: function () {
@@ -32763,20 +32769,21 @@
 	
 	  render: function () {
 	    var emailPreviews = this.state.emails.map(function (email, i) {
+	      var path = (this.props.location.pathname = "/" ? '/inbox/' : this.props.location.pathname) + email.id;
 	      return React.createElement(
 	        'div',
-	        { key: i, className: 'email-preview-item group' + (email.marked ? ' email-marked' : ' email-unmarked') + (email.read ? ' email-read' : ' email-unread') },
+	        { key: i, className: 'email-preview-item group' + (MarkStore.includes(email.id) ? ' email-marked' : ' email-unmarked') + (email.read ? ' email-read' : ' email-unread') },
 	        React.createElement(Checkboxes, { email: email }),
 	        React.createElement(
 	          Link,
-	          { className: 'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold'), to: this.props.location.pathname + email.id },
+	          { className: 'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold'), to: path },
 	          SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name
 	        ),
 	        React.createElement(
 	          Link,
 	          {
 	            className: 'email-preview-subject email-preview-link' + (email.read ? ' normal' : ' bold'),
-	            to: this.props.location.pathname + email.id },
+	            to: path },
 	          email.subject ? email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject : '(no subject)'
 	        ),
 	        React.createElement(
@@ -32786,10 +32793,10 @@
 	        ),
 	        React.createElement(
 	          Link,
-	          { className: 'email-preview-body email-preview-link', to: this.props.location.pathname + email.id },
+	          { className: 'email-preview-body email-preview-link', to: path },
 	          email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, 100 - email.subject.length)
 	        ),
-	        React.createElement(Link, { className: 'email-preview-link end-content', to: this.props.location.pathname + email.id })
+	        React.createElement(Link, { className: 'email-preview-link end-content', to: path })
 	      );
 	    }.bind(this));
 	
@@ -33086,6 +33093,21 @@
 	    // }
 	  },
 	
+	  // <div className='navbar-left-buttons'>
+	  //   <div className='select'></div>
+	  //   <div className='refresh'></div>
+	  //   <div className='more-options'></div>
+	  // </div>
+	  // <div className='page-count navbar-right-buttons group'>
+	  //   <button className={'nav-button next-page-button'} onClick={this.nextPage} disabled={nextDisabled}>N</button>
+	  //   <button className={'nav-button previous-page-button'} onClick={this.previousPage} disabled={prevDisabled}>P</button>
+	  //   <span className='pages-and-emails group'>
+	  //     <p className='first-on-page'>{ firstOnPage }</p>
+	  //     <p className='dash-between'>-</p>
+	  //     <p className='total-on-page'>{ emailsOnPage }</p>
+	  //     <p className='just-of'>of</p>
+	  //     <p className='total-emails-in-database'>{meta.total_count}</p></span>
+	  //   </div>
 	  render: function () {
 	    if (!this.state.email) {
 	      return React.createElement(
@@ -33094,22 +33116,6 @@
 	        'Loading the email...'
 	      );
 	    }
-	
-	    // <div className='navbar-left-buttons'>
-	    //   <div className='select'></div>
-	    //   <div className='refresh'></div>
-	    //   <div className='more-options'></div>
-	    // </div>
-	    // <div className='page-count navbar-right-buttons group'>
-	    //   <button className={'nav-button next-page-button'} onClick={this.nextPage} disabled={nextDisabled}>N</button>
-	    //   <button className={'nav-button previous-page-button'} onClick={this.previousPage} disabled={prevDisabled}>P</button>
-	    //   <span className='pages-and-emails group'>
-	    //     <p className='first-on-page'>{ firstOnPage }</p>
-	    //     <p className='dash-between'>-</p>
-	    //     <p className='total-on-page'>{ emailsOnPage }</p>
-	    //     <p className='just-of'>of</p>
-	    //     <p className='total-emails-in-database'>{meta.total_count}</p></span>
-	    //   </div>
 	    return React.createElement(
 	      'section',
 	      { className: 'email-details-container' },
@@ -33286,8 +33292,8 @@
 	      password: '',
 	      password_confirmation: '',
 	      birthday_month: '01', //Make sure this works with no number hard coded
-	      birthday_day: '30',
-	      birthday_year: '1991',
+	      birthday_day: '',
+	      birthday_year: '',
 	      gender: 'Male'
 	
 	    };
@@ -33296,9 +33302,13 @@
 	  _handleSubmit: function (e) {
 	    e.preventDefault();
 	    var router = this.context.router;
-	    ApiUtil.signin(this.state, function () {
-	      router.push('/inbox/');
-	    });
+	    if (this.state.password !== this.state.password_confirmation) {
+	      alert("Passwords have to match");
+	    } else {
+	      ApiUtil.signup(this.state, function () {
+	        router.push('/inbox/');
+	      });
+	    }
 	  },
 	
 	  _updateFirstname: function (e) {
@@ -33322,6 +33332,7 @@
 	  },
 	
 	  _updateBirthdayMonth: function (e) {
+	    debugger;
 	    this.setState({ birthday_month: e.currentTarget.value });
 	  },
 	

@@ -17,8 +17,8 @@ var LoginForm = React.createClass({
       password: '',
       password_confirmation: '',
       birthday_month: '01', //Make sure this works with no number hard coded
-      birthday_day: '30',
-      birthday_year: '1991',
+      birthday_day: '',
+      birthday_year: '',
       gender: 'Male'
 
     };
@@ -27,9 +27,13 @@ var LoginForm = React.createClass({
   _handleSubmit: function (e) {
     e.preventDefault();
     var router = this.context.router;
-    ApiUtil.signin(this.state, function () {
-      router.push('/inbox/');
-    });
+    if (this.state.password !== this.state.password_confirmation) {
+      alert("Passwords have to match");
+    } else {
+      ApiUtil.signup(this.state, function () {
+        router.push('/inbox/');
+      });
+    }
   },
 
   _updateFirstname: function (e) {
@@ -53,6 +57,7 @@ var LoginForm = React.createClass({
   },
 
   _updateBirthdayMonth: function (e) {
+    debugger
     this.setState({ birthday_month: e.currentTarget.value });
   },
 
