@@ -33259,11 +33259,6 @@
 	            'a',
 	            { className: 'signin-with-facebook', href: 'auth/facebook' },
 	            'Sign In With Facebook'
-	          ),
-	          React.createElement(
-	            'div',
-	            { className: 'demo-signin', onClick: this._handleDemo },
-	            'Sign In as Conor'
 	          )
 	        ),
 	        React.createElement(
@@ -33286,6 +33281,8 @@
 	  }
 	
 	});
+	
+	// <div className='demo-signin' onClick={this._handleDemo}>Sign In as Conor</div>;
 	
 	module.exports = LoginForm;
 

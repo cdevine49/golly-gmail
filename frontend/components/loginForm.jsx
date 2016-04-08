@@ -68,7 +68,6 @@ var LoginForm = React.createClass({
                 value={this.state.password} />
               <button className='login-submit'>Log In</button>
               <a className='signin-with-facebook' href="auth/facebook">Sign In With Facebook</a>
-              <div className='demo-signin' onClick={this._handleDemo}>Sign In as Conor</div>
           </form>
           <div className='signin-link-and-logo'>
             <Link className='signup-from-signin-link' to={'/signup/'}>Create account</Link>
@@ -82,6 +81,7 @@ var LoginForm = React.createClass({
 
 });
 
+// <div className='demo-signin' onClick={this._handleDemo}>Sign In as Conor</div>;
 
 
 
