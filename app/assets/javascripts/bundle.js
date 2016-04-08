@@ -32157,7 +32157,7 @@
 	              Link,
 	              { className: 'search-result-fixed-link search-result-subject',
 	                to: { pathname: '/search-results/' + result.id, query: { query: this.state.query } } },
-	              result.subject
+	              result.subject.slice(0, 40)
 	            ),
 	            React.createElement(
 	              Link,
@@ -32728,7 +32728,7 @@
 	  },
 	
 	  getInitialState: function () {
-	    return { emails: [] };
+	    return { emails: null };
 	  },
 	
 	  componentDidMount: function () {
@@ -32768,7 +32768,8 @@
 	  },
 	
 	  render: function () {
-	    var emailPreviews = this.state.emails.map(function (email, i) {
+	    var emails = this.state.emails || [];
+	    var emailPreviews = emails.map(function (email, i) {
 	      var path = (this.props.location.pathname = "/" ? '/inbox/' : this.props.location.pathname) + email.id;
 	      return React.createElement(
 	        'div',
@@ -32800,11 +32801,17 @@
 	      );
 	    }.bind(this));
 	
-	    if (emailPreviews.length === 0) {
+	    if (!this.state.emails) {
 	      emailPreviews = React.createElement(
 	        'p',
 	        null,
 	        'Loading emails...'
+	      );
+	    } else if (emailPreviews.length === 0) {
+	      emailPreviews = React.createElement(
+	        'p',
+	        null,
+	        'This mailbox is empty'
 	      );
 	    }
 	
@@ -33056,7 +33063,9 @@
 	
 	  getInitialState: function () {
 	    return {
-	      email: null
+	      email: null,
+	      imageUrl: null,
+	      imageFile: null
 	    };
 	  },
 	
@@ -33140,8 +33149,8 @@
 	        ),
 	        React.createElement(
 	          'a',
-	          { className: this.state.email.image_url ? 'email-attachment-download' : 'hidden', href: this.state.email.image_url },
-	          'attachment'
+	          { href: this.state.email.image_url },
+	          React.createElement('img', { className: this.state.email.image_url ? 'email-attachment-preview' : 'hidden', src: this.state.email.image_url })
 	        )
 	      )
 	    );
