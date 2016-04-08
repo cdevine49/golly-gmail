@@ -511,6 +511,7 @@ button, article, footer, small {
    margin-top: 10px;
    font-size: 14px;
    height: 75%;
+   justify-content: center;
  }
 
  .sidenav-links > a {
@@ -595,17 +596,7 @@ button, article, footer, small {
   border-right: none;
 }
 
-/*.previous-page-button:focus,
-.next-page-button:focus {
-  border: 1px solid #4285F4;
-}*/
-
-
-
-
 /* Email Previews Table */
-
-
 
 .email-previews-table {
   margin-top: 10px;
@@ -630,7 +621,7 @@ button, article, footer, small {
 }
 
 .email-unread {
-  /*font-weight: bold;*/
+
 }
 
 .email-marked {
@@ -661,6 +652,7 @@ button, article, footer, small {
 }
 
 .email-preview-subject {
+
 }
 
 .subject-dash-body {
@@ -669,12 +661,29 @@ button, article, footer, small {
 }
 
 .email-preview-body {
+
 }
 
-/*.end-content {
-  height: auto;
-  width: auto;
-}*/
+/* Email Details */
+
+.email-details-container {
+}
+
+.email-detail-view {
+  font-size: 14px;
+  color: #222222
+  margin-right: 300px;
+}
+
+.email-detail-subject {
+  padding: 10px 5px;
+  border-bottom: 1px solid #e5e5e5;
+  margin-top: -200px;
+}
+
+.email-detail-body {
+  font-size: 12px;
+}
 
 /* Compose Form */
 
