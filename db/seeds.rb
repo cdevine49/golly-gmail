@@ -8,7 +8,7 @@
 User.destroy_all
 Email.destroy_all
 
-User.create(
+User.create!(
   first_name: "Conor",
   last_name: "Devine",
   username: "conor",
@@ -19,7 +19,7 @@ User.create(
   secondary_email: "conordevine@yahoo.com"
 )
 
-User.create(
+User.create!(
   first_name: "Michael",
   last_name: "Drumm",
   username: "drummy",
@@ -30,7 +30,7 @@ User.create(
   secondary_email: "drummy@yahoo.com"
 )
 
-User.create(
+User.create!(
   first_name: "Simon",
   last_name: "Denis",
   username: "simon",
@@ -40,7 +40,7 @@ User.create(
   gender: "male",
 )
 
-User.create(
+User.create!(
   first_name: "Brenda",
   last_name: "VanDzura",
   username: "brenda",
@@ -51,7 +51,7 @@ User.create(
   secondary_email: "brendavd@yahoo.com"
 )
 
-User.create(
+User.create!(
   first_name: "Dane",
   last_name: "S",
   username: "dane",
