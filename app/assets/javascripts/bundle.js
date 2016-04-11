@@ -33261,9 +33261,9 @@
 	            'Sign In With Facebook'
 	          ),
 	          React.createElement(
-	            'p',
-	            { className: 'signin-with-facebook-disclaimer' },
-	            '(You have to create and connect and account first)'
+	            'div',
+	            { className: 'demo-signin', onClick: this._handleDemo },
+	            'Sign In as Conor'
 	          )
 	        ),
 	        React.createElement(
@@ -33287,7 +33287,7 @@
 	
 	});
 	
-	// <div className='demo-signin' onClick={this._handleDemo}>Sign In as Conor</div>;
+	// <p className='signin-with-facebook-disclaimer'>(You have to create and connect and account first)</p>
 	
 	module.exports = LoginForm;
 
