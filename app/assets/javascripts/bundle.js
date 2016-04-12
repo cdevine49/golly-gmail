@@ -33633,7 +33633,12 @@
 	              ),
 	              React.createElement(
 	                'select',
-	                { id: 'birthday', className: 'sign-up-birthday-month-dropdown', onChange: this._updateBirthdayMonth },
+	                { id: 'birthday', className: 'sign-up-birthday-month-dropdown', defaultValue: 'Month', onChange: this._updateBirthdayMonth },
+	                React.createElement(
+	                  'option',
+	                  { className: 'hidden' },
+	                  'Month'
+	                ),
 	                React.createElement(
 	                  'option',
 	                  { value: '01' },

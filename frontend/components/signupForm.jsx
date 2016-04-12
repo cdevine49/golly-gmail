@@ -220,7 +220,8 @@ var SignupForm = React.createClass({
 
               <div className='sign-up-set'>
                 <label htmlFor='birthday'>Birthday</label>
-                <select id='birthday' className='sign-up-birthday-month-dropdown' onChange={this._updateBirthdayMonth}>
+                <select id='birthday' className='sign-up-birthday-month-dropdown' defaultValue='Month' onChange={this._updateBirthdayMonth}>
+                  <option className='hidden'>Month</option>
                   <option value='01'>January</option>
                   <option value='02'>February</option>
                   <option value='03'>March</option>
