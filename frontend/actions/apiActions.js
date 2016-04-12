@@ -1,6 +1,7 @@
 var AppDispatcher = require('../dispatcher/dispatcher');
 var EmailConstants = require('../constants/emailConstants');
 var SessionConstants = require('../constants/sessionConstants');
+var UserConstants = require('../constants/userConstants');
 
 ApiActions = {
   receiveEmails: function(response) {
@@ -20,14 +21,6 @@ ApiActions = {
     AppDispatcher.dispatch(action);
   },
 
-  // updateEmail: function (email) {
-  //   var action = {
-  //     actionType: EmailConstants.EMAIL_UPDATED,
-  //     email: email
-  //   };
-  //   AppDispatcher.dispatch(action);
-  // },
-
   currentUserReceived: function(currentUser) {
       var action = {
         actionType: SessionConstants.CURRENT_USER_RECEIVED,
@@ -36,11 +29,19 @@ ApiActions = {
       AppDispatcher.dispatch(action);
     },
 
-    logout: function() {
-      AppDispatcher.dispatch({
-        actionType: SessionConstants.LOGOUT
-      });
-    }
+  logout: function() {
+    AppDispatcher.dispatch({
+      actionType: SessionConstants.LOGOUT
+    });
+  },
+
+  users: function(users) {
+    var action = {
+      actionType: UserConstants.USERS,
+      users: users.users
+    };
+    AppDispatcher.dispatch(action);
+  }
 
 };
 

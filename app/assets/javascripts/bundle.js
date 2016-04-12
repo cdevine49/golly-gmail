@@ -25092,6 +25092,20 @@
 	    });
 	  },
 	
+	  usernames: function () {
+	    $.ajax({
+	      type: "GET",
+	      url: "/api/users",
+	      dataType: "json",
+	      success: function (usernames) {
+	        ApiActions.users(usernames);
+	      },
+	      error: function () {
+	        console.log('ApiUtil#usernameExists error');
+	      }
+	    });
+	  },
+	
 	  logout: function () {
 	    $.ajax({
 	      type: "DELETE",
@@ -25150,6 +25164,7 @@
 	var AppDispatcher = __webpack_require__(220);
 	var EmailConstants = __webpack_require__(224);
 	var SessionConstants = __webpack_require__(225);
+	var UserConstants = __webpack_require__(266);
 	
 	ApiActions = {
 	  receiveEmails: function (response) {
@@ -25169,14 +25184,6 @@
 	    AppDispatcher.dispatch(action);
 	  },
 	
-	  // updateEmail: function (email) {
-	  //   var action = {
-	  //     actionType: EmailConstants.EMAIL_UPDATED,
-	  //     email: email
-	  //   };
-	  //   AppDispatcher.dispatch(action);
-	  // },
-	
 	  currentUserReceived: function (currentUser) {
 	    var action = {
 	      actionType: SessionConstants.CURRENT_USER_RECEIVED,
@@ -25189,6 +25196,14 @@
 	    AppDispatcher.dispatch({
 	      actionType: SessionConstants.LOGOUT
 	    });
+	  },
+	
+	  users: function (users) {
+	    var action = {
+	      actionType: UserConstants.USERS,
+	      users: users.users
+	    };
+	    AppDispatcher.dispatch(action);
 	  }
 	
 	};
@@ -33298,10 +33313,11 @@
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
 	var SessionStore = __webpack_require__(228);
+	var UserStore = __webpack_require__(267);
 	var Link = __webpack_require__(159).Link;
 	
-	var LoginForm = React.createClass({
-	  displayName: 'LoginForm',
+	var SignupForm = React.createClass({
+	  displayName: 'SignupForm',
 	
 	
 	  contextTypes: {
@@ -33310,23 +33326,32 @@
 	
 	  getInitialState: function () {
 	    return {
-	      first_name: '',
-	      last_name: '',
+	      firstName: '',
+	      lastName: '',
 	      username: '',
 	      password: '',
-	      password_confirmation: '',
-	      birthday_month: '01', //Make sure this works with no number hard coded
-	      birthday_day: '',
-	      birthday_year: '',
-	      gender: 'Male'
-	
+	      passwordConfirmation: '',
+	      birthdayMonth: '01', //Make sure this works with no number hard coded
+	      birthdayDay: '',
+	      birthdayYear: '',
+	      gender: 'Male',
+	      firstNameEntered: false,
+	      lastNameEntered: false,
+	      usernameEntered: false,
+	      usernameExists: false,
+	      passwordEntered: false,
+	      passwordConfirmationEntered: false
 	    };
+	  },
+	
+	  componentDidMount: function () {
+	    ApiUtil.usernames();
 	  },
 	
 	  _handleSubmit: function (e) {
 	    e.preventDefault();
 	    var router = this.context.router;
-	    if (this.state.password !== this.state.password_confirmation) {
+	    if (this.state.password !== this.state.passwordConfirmation) {
 	      alert("Passwords have to match");
 	    } else {
 	      ApiUtil.signup(this.state, function () {
@@ -33336,11 +33361,11 @@
 	  },
 	
 	  _updateFirstname: function (e) {
-	    this.setState({ first_name: e.currentTarget.value });
+	    this.setState({ firstName: e.currentTarget.value });
 	  },
 	
 	  _updateLastname: function (e) {
-	    this.setState({ last_name: e.currentTarget.value });
+	    this.setState({ lastName: e.currentTarget.value });
 	  },
 	
 	  _updateUsername: function (e) {
@@ -33348,28 +33373,69 @@
 	  },
 	
 	  _updatePassword: function (e) {
-	    this.setState({ password: e.currentTarget.value });
+	    this.setState({ password: e.currentTarget.value, passwordConfirmation: '', passwordConfirmationEntered: false });
 	  },
 	
 	  _updatePasswordConfirmation: function (e) {
-	    this.setState({ password_confirmation: e.currentTarget.value });
+	    this.setState({ passwordConfirmation: e.currentTarget.value });
 	  },
 	
 	  _updateBirthdayMonth: function (e) {
-	    debugger;
-	    this.setState({ birthday_month: e.currentTarget.value });
+	    this.setState({ birthdayMonth: e.currentTarget.value });
 	  },
 	
 	  _updateBirthday_day: function (e) {
-	    this.setState({ birthday_day: e.currentTarget.value });
+	    this.setState({ birthdayDay: e.currentTarget.value });
 	  },
 	
 	  _updateBirthday_year: function (e) {
-	    this.setState({ birthday_year: e.currentTarget.value });
+	    this.setState({ birthdayYear: e.currentTarget.value });
 	  },
 	
 	  _updateGender: function (e) {
 	    this.setState({ gender: e.currentTarget.value });
+	  },
+	
+	  // Error message display
+	
+	  _focusFirstName: function () {
+	    this.setState({ firstNameEntered: false });
+	  },
+	
+	  _blurFirstName: function () {
+	    this.setState({ firstNameEntered: true });
+	  },
+	
+	  _focusLastName: function () {
+	    this.setState({ lastNameEntered: false });
+	  },
+	
+	  _blurLastName: function () {
+	    this.setState({ lastNameEntered: true });
+	  },
+	
+	  _focusUsername: function () {
+	    this.setState({ usernameEntered: false });
+	  },
+	
+	  _blurUsername: function () {
+	    this.setState({ usernameEntered: true });
+	  },
+	
+	  _focusPassword: function () {
+	    this.setState({ passwordEntered: false });
+	  },
+	
+	  _blurPassword: function () {
+	    this.setState({ passwordEntered: true });
+	  },
+	
+	  _focusPasswordConfirmation: function () {
+	    this.setState({ passwordConfirmationEntered: false });
+	  },
+	
+	  _blurPasswordConfirmation: function () {
+	    this.setState({ passwordConfirmationEntered: true });
 	  },
 	
 	  render: function () {
@@ -33430,160 +33496,244 @@
 	            'form',
 	            { className: 'sign-up-form', onSubmit: this._handleSubmit },
 	            React.createElement(
-	              'label',
-	              { htmlFor: 'first_name', className: 'sign-up-name-box-label' },
-	              'Name'
-	            ),
-	            React.createElement('input', {
-	              type: 'text',
-	              id: 'first_name',
-	              placeholder: 'First',
-	              className: 'sign-up-first-name',
-	              onChange: this._updateFirstname,
-	              value: this.state.first_name }),
-	            React.createElement('input', {
-	              type: 'text',
-	              id: 'last_name',
-	              placeholder: 'Last',
-	              className: 'sign-up-last-name',
-	              onChange: this._updateLastname,
-	              value: this.state.last_name }),
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'username' },
-	              'Choose your username'
-	            ),
-	            React.createElement('input', {
-	              type: 'text',
-	              id: 'username',
-	              className: 'sign-up-username',
-	              onChange: this._updateUsername,
-	              value: this.state.username }),
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'password' },
-	              'Create a password'
-	            ),
-	            React.createElement('input', {
-	              type: 'password',
-	              id: 'password',
-	              className: 'sign-up-password',
-	              onChange: this._updatePassword,
-	              value: this.state.password }),
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'confirm-password' },
-	              'Confirm your password'
-	            ),
-	            React.createElement('input', {
-	              type: 'password',
-	              id: 'confirm_password',
-	              className: 'sign-up-password-confirm',
-	              onChange: this._updatePasswordConfirmation,
-	              value: this.state.password_confirmation }),
-	            React.createElement(
-	              'label',
-	              { htmlFor: 'birthday' },
-	              'Birthday'
-	            ),
-	            React.createElement(
-	              'select',
-	              { id: 'birthday', className: 'sign-up-birthday-month-dropdown', onChange: this._updateBirthdayMonth },
+	              'div',
+	              { className: 'sign-up-set' },
 	              React.createElement(
-	                'option',
-	                { value: '01' },
-	                'January'
+	                'label',
+	                { htmlFor: 'firstName', className: 'sign-up-name-box-label' },
+	                'Name'
 	              ),
+	              React.createElement('input', {
+	                type: 'text',
+	                id: 'firstName',
+	                placeholder: 'First',
+	                className: 'sign-up-first-name' + (this.state.firstNameEntered && this.state.firstName === '' ? ' sign-up-errors' : ''),
+	                onChange: this._updateFirstname,
+	                onFocus: this._focusFirstName,
+	                onBlur: this._blurFirstName,
+	                value: this.state.firstName }),
+	              React.createElement('input', {
+	                type: 'text',
+	                id: 'lastName',
+	                placeholder: 'Last',
+	                className: 'sign-up-last-name' + (this.state.lastNameEntered && this.state.lastName === '' ? ' sign-up-errors' : ''),
+	                onChange: this._updateLastname,
+	                onFocus: this._focusLastName,
+	                onBlur: this._blurLastName,
+	                value: this.state.lastName }),
 	              React.createElement(
-	                'option',
-	                { value: '02' },
-	                'February'
-	              ),
-	              React.createElement(
-	                'option',
-	                { value: '03' },
-	                'March'
-	              ),
-	              React.createElement(
-	                'option',
-	                { value: '04' },
-	                'April'
-	              ),
-	              React.createElement(
-	                'option',
-	                { value: '05' },
-	                'May'
-	              ),
-	              React.createElement(
-	                'option',
-	                { value: '06' },
-	                'June'
-	              ),
-	              React.createElement(
-	                'option',
-	                { value: '07' },
-	                'July'
-	              ),
-	              React.createElement(
-	                'option',
-	                { value: '08' },
-	                'August'
-	              ),
-	              React.createElement(
-	                'option',
-	                { value: '09' },
-	                'September'
-	              ),
-	              React.createElement(
-	                'option',
-	                { value: '10' },
-	                'October'
-	              ),
-	              React.createElement(
-	                'option',
-	                { value: '11' },
-	                'November'
-	              ),
-	              React.createElement(
-	                'option',
-	                { value: '12' },
-	                'December'
+	                'span',
+	                { className: 'error-message' + (this.state.firstNameEntered && this.state.firstName === '' || this.state.lastNameEntered && this.state.lastName === '' ? '' : ' hidden') },
+	                'You can\'t leave this empty.'
 	              )
 	            ),
-	            React.createElement('input', {
-	              type: 'text',
-	              placeholder: 'Day',
-	              className: 'sign-up-birthday-day',
-	              onChange: this._updateBirthday_day,
-	              value: this.state.birthday_day }),
-	            React.createElement('input', {
-	              type: 'text',
-	              placeholder: 'Year',
-	              className: 'sign-up-birthday-year',
-	              onChange: this._updateBirthday_year,
-	              value: this.state.birthday_year }),
 	            React.createElement(
-	              'label',
-	              { htmlFor: 'gender' },
-	              'Gender'
+	              'div',
+	              { className: 'sign-up-set' },
+	              React.createElement(
+	                'label',
+	                { htmlFor: 'username' },
+	                'Choose your username'
+	              ),
+	              React.createElement('input', {
+	                type: 'text',
+	                id: 'username',
+	                className: 'sign-up-username' + (this.state.usernameEntered && this.state.username === '' ? ' sign-up-errors' : ''),
+	                onChange: this._updateUsername,
+	                onFocus: this._focusUsername,
+	                onBlur: this._blurUsername,
+	                value: this.state.username }),
+	              React.createElement(
+	                'span',
+	                { className: 'atgollygmail' },
+	                '@gollygmail.com'
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'error-message' + (this.state.usernameEntered && this.state.username === '' ? '' : ' hidden') },
+	                'You can\'t leave this empty.'
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'error-message' + (this.state.usernameEntered && this.state.username !== '' && (this.state.username.length > 30 || this.state.username.length < 6) ? '' : ' hidden') },
+	                'Please use between 6 and 30 characters.'
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'error-message' + (this.state.usernameEntered && UserStore.usernameExists(this.state.username) ? '' : ' hidden') },
+	                'Someone already has that username. Try another?'
+	              )
 	            ),
 	            React.createElement(
-	              'select',
-	              { id: 'gender', className: 'sign-up-gender', onChange: this._updateGender },
+	              'div',
+	              { className: 'sign-up-set' },
 	              React.createElement(
-	                'option',
-	                { value: 'Male' },
-	                'Male'
+	                'label',
+	                { htmlFor: 'password' },
+	                'Create a password'
+	              ),
+	              React.createElement('input', {
+	                type: 'password',
+	                id: 'password',
+	                className: 'sign-up-password',
+	                onChange: this._updatePassword,
+	                onFocus: this._focusPassword,
+	                onBlur: this._blurPassword,
+	                value: this.state.password }),
+	              React.createElement(
+	                'span',
+	                { className: 'error-message' + (this.state.passwordEntered && this.state.password === '' ? '' : ' hidden') },
+	                'You can\'t leave this empty.'
 	              ),
 	              React.createElement(
-	                'option',
-	                { value: 'Female' },
-	                'Female'
+	                'span',
+	                { className: 'error-message' + (this.state.passwordEntered && this.state.password !== '' && this.state.password.length <= 8 ? '' : ' hidden') },
+	                'Short passwords are easy to guess. Try one with at least 8 characters.'
 	              ),
 	              React.createElement(
-	                'option',
-	                { value: 'Other' },
-	                'Other'
+	                'span',
+	                { className: 'error-message' + (this.state.passwordEntered && this.state.password.length > 100 ? '' : ' hidden') },
+	                'Must have at most 100 characters'
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'sign-up-set' },
+	              React.createElement(
+	                'label',
+	                { htmlFor: 'confirm-password' },
+	                'Confirm your password'
+	              ),
+	              React.createElement('input', {
+	                type: 'password',
+	                id: 'confirm_password',
+	                className: 'sign-up-password-confirm',
+	                onChange: this._updatePasswordConfirmation,
+	                onFocus: this._focusPasswordConfirmation,
+	                onBlur: this._blurPasswordConfirmation,
+	                value: this.state.passwordConfirmation }),
+	              React.createElement(
+	                'span',
+	                { className: 'error-message' + (this.state.passwordConfirmationEntered && this.state.password === '' && this.state.passwordConfirmation === '' ? '' : ' hidden') },
+	                'You can\'t leave this empty.'
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'error-message' + (this.state.passwordConfirmationEntered && this.state.passwordConfirmation !== this.state.password ? '' : ' hidden') },
+	                'These passwords don\'t match. Try again?'
+	              )
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'sign-up-set' },
+	              React.createElement(
+	                'label',
+	                { htmlFor: 'birthday' },
+	                'Birthday'
+	              ),
+	              React.createElement(
+	                'select',
+	                { id: 'birthday', className: 'sign-up-birthday-month-dropdown', onChange: this._updateBirthdayMonth },
+	                React.createElement(
+	                  'option',
+	                  { value: '01' },
+	                  'January'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '02' },
+	                  'February'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '03' },
+	                  'March'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '04' },
+	                  'April'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '05' },
+	                  'May'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '06' },
+	                  'June'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '07' },
+	                  'July'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '08' },
+	                  'August'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '09' },
+	                  'September'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '10' },
+	                  'October'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '11' },
+	                  'November'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: '12' },
+	                  'December'
+	                )
+	              ),
+	              React.createElement('input', {
+	                type: 'text',
+	                placeholder: 'Day',
+	                className: 'sign-up-birthday-day',
+	                onChange: this._updateBirthday_day,
+	                value: this.state.birthdayDay }),
+	              React.createElement('input', {
+	                type: 'text',
+	                placeholder: 'Year',
+	                className: 'sign-up-birthday-year',
+	                onChange: this._updateBirthday_year,
+	                value: this.state.birthdayYear })
+	            ),
+	            React.createElement(
+	              'div',
+	              { className: 'sign-up-set' },
+	              React.createElement(
+	                'label',
+	                { htmlFor: 'gender' },
+	                'Gender'
+	              ),
+	              React.createElement(
+	                'select',
+	                { id: 'gender', className: 'sign-up-gender', onChange: this._updateGender },
+	                React.createElement(
+	                  'option',
+	                  { value: 'Male' },
+	                  'Male'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: 'Female' },
+	                  'Female'
+	                ),
+	                React.createElement(
+	                  'option',
+	                  { value: 'Other' },
+	                  'Other'
+	                )
 	              )
 	            ),
 	            React.createElement(
@@ -33599,7 +33749,7 @@
 	
 	});
 	
-	module.exports = LoginForm;
+	module.exports = SignupForm;
 
 /***/ },
 /* 263 */
@@ -33676,6 +33826,45 @@
 	};
 	
 	module.exports = MarkStore;
+
+/***/ },
+/* 266 */
+/***/ function(module, exports) {
+
+	UserConstants = {
+	  USERS: 'USERS'
+	};
+	
+	module.exports = UserConstants;
+
+/***/ },
+/* 267 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(229).Store;
+	var UserConstants = __webpack_require__(266);
+	var AppDispatcher = __webpack_require__(220);
+	
+	var UserStore = new Store(AppDispatcher);
+	
+	var _users = [];
+	
+	UserStore.usernameExists = function (username) {
+	  return _users.indexOf(username) !== -1;
+	};
+	
+	UserStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case UserConstants.USERS:
+	      payload.users.forEach(function (user) {
+	        _users.push(user.username);
+	      });
+	      UserStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	module.exports = UserStore;
 
 /***/ }
 /******/ ]);

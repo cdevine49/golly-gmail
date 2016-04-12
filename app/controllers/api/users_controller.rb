@@ -36,13 +36,10 @@ class Api::UsersController < ApplicationController
     end
   end
 
-  # def index
-  #   if params[:username]
-  #     redirect_to '/#password'
-  #   else
-  #     redirect_to '/#identifier'
-  #   end
-  # end
+
+  def index
+    @users = User.all
+  end
 
   private
 
