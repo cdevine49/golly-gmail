@@ -155,6 +155,20 @@ ApiUtil = {
     });
   },
 
+  usernames: function () {
+    $.ajax({
+      type: "GET",
+      url: "/api/users",
+      dataType: "json",
+      success: function (usernames) {
+        ApiActions.users(usernames);
+      },
+      error: function () {
+        console.log('ApiUtil#usernameExists error');
+      },
+    });
+  },
+
   logout: function () {
     $.ajax({
       type: "DELETE",
