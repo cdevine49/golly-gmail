@@ -6,62 +6,67 @@ class Api::EmailsController < ApplicationController
       @emails = Email
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(starred: true)
-      .order(created_at: :desc)
-      .page(params[:page]).per(50)
+      .where(sent: true)
     when 'important'
       @emails = Email
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(important: true)
-      .order(created_at: :desc)
-      .page(params[:page]).per(50)
+      .where(sent: true)
     when 'outbox'
       @emails = Email
       .where("emails.from_email = ?", current_user.gollygmail)
-      .order(created_at: :desc)
-      .page(params[:page]).per(50)
+      .where(sent: true)
     when 'search-results'
       @emails = Email
       .search_emails(params[:query])
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
-      .page(params[:page]).per(50)
-    else
+      .where(sent: true)
+    when 'inbox'
       @emails = Email
       .where("emails.to = ?", current_user.gollygmail)
-      .order(created_at: :desc)
-      .page(params[:page]).per(50)
+      .where(sent: true)
+    when 'drafts'
+      @emails = Email
+      .where("emails.from_email = ?", current_user.gollygmail)
+      .where(sent: false)
     end
+    @emails = @emails
+    .order(created_at: :desc)
+    .page(params[:page]).per(50)
   end
 
   def show
+    @email = Email
+    .where("emails.id = ?", params[:id])
     case params[:path]
     when 'starred'
-      @email = Email
-      .where("emails.id = ?", params[:id])
+      @email
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(starred: true)
-      .order(created_at: :desc)
+      .where(sent: true)
     when 'important'
-      @email = Email
-      .where("emails.id = ?", params[:id])
+      @email
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(important: true)
-      .order(created_at: :desc)
+      .where(sent: true)
     when 'outbox'
-      @email = Email
-      .where("emails.id = ?", params[:id])
+      @email
       .where("emails.from_email = ?", current_user.gollygmail)
-      .order(created_at: :desc)
+      .where(sent: true)
     when 'search-results'
-      @email = Email
-      .where("emails.id = ?", params[:id])
+      @email
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
-    else
-      @email = Email
-      .where("emails.id = ?", params[:id])
+      .where(sent: true)
+    when 'inbox'
+      @email
       .where("emails.to = ?", current_user.gollygmail)
-      .order(created_at: :desc)
+      .where(sent: true)
+    when 'drafts'
+      @email
+      .where("emails.from_email", current_user.gollygmail)
+      .where(sent: false)
     end
-    @email = @email.first
+    @email = @email.order(created_at: :desc).first
     if @email
       render :show
     else

@@ -66,7 +66,6 @@ ApiUtil = {
       datatype: 'json',
       data: formData,
       success: function (email) {
-        debugger
         ApiActions.receiveEmail(email);
         email.sent && callback && callback();
       },

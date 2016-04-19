@@ -27,7 +27,7 @@ var SideNav = React.createClass({
           <a href='#/starred/'>Starred</a>
           <a href='#/important/'>Important</a>
           <a href='#/outbox/'>Sent Mail</a>
-          <a href='#'>Drafts</a>
+          <a href='#/drafts/'>Drafts</a>
         </div>
       </nav>
     );

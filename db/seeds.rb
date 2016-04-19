@@ -118,6 +118,9 @@ User.create!(
     b.from_name = "drummy"
     b.to = "conor@gollygmail.com"
    end
+   [a, b, c, d].each do |email|
+     email.sent = true
+   end
    a.save
    b.save
    c.save
