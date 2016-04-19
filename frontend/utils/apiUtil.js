@@ -25,12 +25,6 @@ ApiUtil = {
   },
 
   fetchEmail: function (path, id) {
-    // var searchParam;
-    // if (query) {
-    //   searchParam = query.query;
-    // } else {
-    //   query = null;
-    // }
     $.ajax({
       type: 'GET',
       url: 'api/emails/' + id,
@@ -53,28 +47,32 @@ ApiUtil = {
       contentType: false,
       datatype: 'json',
       data: formData,
-      success: function (email) {
-        ApiActions.receiveEmail(email);
+      success: function (draft) {
+        ApiActions.receiveDraft(draft);
         callback && callback();
       },
       error: function () {
-        console.log('ApiUtil#fetchEmails error');
+        console.log('ApiUtil#createEmails error');
       },
     });
   },
 
-  toggleMarked: function (email) {
+  updateEmail: function (formData, id, sent, callback) {
     $.ajax({
       type: 'PATCH',
-      url: 'api/emails/' + email.id,
+      url: 'api/emails/' + id,
+      processData: false,
+      contentType: false,
       datatype: 'json',
-      data: {email: {marked: !email.marked}},
+      data: formData,
       success: function (email) {
+        debugger
         ApiActions.receiveEmail(email);
+        email.sent && callback && callback();
       },
       error: function () {
-        console.log('ApiUtil#fetchEmails error');
-      }
+        console.log('ApiUtil#createEmails error');
+      },
     });
   },
 
@@ -107,6 +105,8 @@ ApiUtil = {
       }
     });
   },
+
+  // Can probably delete
 
   toggleRead: function (email) {
     $.ajax({

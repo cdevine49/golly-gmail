@@ -73,8 +73,7 @@ class Api::EmailsController < ApplicationController
     email = Email.new(email_params)
     email.from_name = current_user.first_name + ' ' + current_user.last_name
     email.from_email = current_user.gollygmail
-    if User.find_by(gollygmail: email.to)
-      email.save
+    if email.save
       render json: email
     else
       render json: { message: "No such user" }
@@ -83,7 +82,7 @@ class Api::EmailsController < ApplicationController
 
   def update
     @email = Email.find_by(id: params[:id])
-    if @email.update(email_params)
+    if (!params[:sent] || User.find_by(gollygmail: email.to)) && @email.update(email_params)
       render :show
     else
       render json: { message: "Couldn't update"}
@@ -94,7 +93,7 @@ class Api::EmailsController < ApplicationController
   def email_params
     params.require(:email).permit(
       :subject, :body, :to, :image,
-      :marked, :starred, :important,
+      :starred, :important, :sent,
       :read, :page, :query)
   end
 
