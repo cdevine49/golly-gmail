@@ -3,6 +3,7 @@ var AppDispatcher = require('../dispatcher/dispatcher');
 var EmailConstants = require('../constants/emailConstants');
 
 var _emails = {};
+var _newDraft = null;
 var _meta = {};
 
 var EmailStore = new Store(AppDispatcher);
@@ -17,6 +18,10 @@ EmailStore.all = function () {
 
 EmailStore.find = function (id) {
   return _emails[id];
+};
+
+EmailStore.newDraft = function () {
+  return _newDraft;
 };
 
 EmailStore.meta = function () {
@@ -34,7 +39,15 @@ EmailStore.__onDispatch = function (payload) {
       resetEmail(payload.email);
       EmailStore.__emitChange();
       break;
+    case EmailConstants.EMAIL_CREATED:
+      newEmail(payload.draft);
+      EmailStore.__emitChange();
+      break;
   }
+};
+
+var newEmail = function (draft) {
+  _newDraft = draft;
 };
 
 var resetEmails = function (emails) {

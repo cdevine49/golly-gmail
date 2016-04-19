@@ -1,6 +1,6 @@
 # GollyGmail
 
-[Heroku link][http://gollygmail.herokuapp.com/]
+[Heroku link][http://ggmail.herokuapp.com/]
 
 [heroku]: http://www.herokuapp.com
 

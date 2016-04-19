@@ -21,6 +21,14 @@ ApiActions = {
     AppDispatcher.dispatch(action);
   },
 
+  receiveDraft: function(draft) {
+    var action = {
+      actionType: EmailConstants.EMAIL_CREATED,
+      draft: draft
+    };
+    AppDispatcher.dispatch(action);
+  },
+
   currentUserReceived: function(currentUser) {
       var action = {
         actionType: SessionConstants.CURRENT_USER_RECEIVED,

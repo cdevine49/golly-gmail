@@ -7,16 +7,16 @@ class Api::UsersController < ApplicationController
 
   def create
     user = User.new(
-      first_name: user_params[:first_name],
-      last_name: user_params[:last_name],
+      first_name: user_params[:firstName],
+      last_name: user_params[:lastName],
       username: user_params[:username],
       password: user_params[:password],
       gender: user_params[:gender],
     )
     user.birthday = Date.new(
-      user_params[:birthday_year].to_i,
-      user_params[:birthday_month].to_i,
-      user_params[:birthday_day].to_i
+      user_params[:birthdayYear].to_i,
+      user_params[:birthdayMonth].to_i,
+      user_params[:birthdayDay].to_i
     )
     user.gollygmail = user.username + '@gollygmail.com'
     if user.save
@@ -44,7 +44,7 @@ class Api::UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:first_name, :last_name, :birthday_day, :birthday_month,
-    :birthday_year, :username, :gollygmail, :password, :gender, :provider, :uid)
+    params.require(:user).permit(:firstName, :lastName, :birthdayDay, :birthdayMonth,
+    :birthdayYear, :username, :gollygmail, :password, :gender, :provider, :uid)
   end
 end

@@ -10,7 +10,7 @@ json.emails do
       email,
       :id, :subject, :body, :to, :from_name,
       :from_email, :created_at, :updated_at,
-      :marked, :starred, :important, :read
+      :starred, :important, :read, :sent
     )
 
     if email.image.exists?

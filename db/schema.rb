@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160408144329) do
+ActiveRecord::Schema.define(version: 20160419141314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,10 +28,10 @@ ActiveRecord::Schema.define(version: 20160408144329) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "from_email",                         null: false
-    t.boolean  "marked",             default: false
     t.boolean  "starred",            default: false
     t.boolean  "important",          default: false
     t.boolean  "read",               default: false
+    t.boolean  "sent",               default: false
   end
 
   add_index "emails", ["from_name"], name: "sender_index", using: :btree

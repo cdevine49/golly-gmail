@@ -5,46 +5,29 @@ var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 var ComposeForm = React.createClass({
 
+
+  // Opening a new form creates a draft
+  // That draft goes to a store
+  //
+
   getInitialState: function() {
     return {
       minimized: false,
       subject: "",
       body: "",
       to: "",
+      sent: false,
       imageUrl: null,
       imageFile: null
     };
   },
 
-  handleSubjectChange: function (e) {
-    this.setState({subject: e.currentTarget.value});
-  },
-
-  handleBodyChange: function (e) {
-    this.setState({body: e.currentTarget.value});
-  },
-
-  handleToChange: function (e) {
-    this.setState({to: e.currentTarget.value});
+  componentWillUnmount: function () {
+    clearInterval(this.draftTimer);
   },
 
   _handleMinimize: function () {
     this.setState({minimized: !this.state.minimized});
-  },
-
-  handleFileChange: function (e) {
-    var file = e.currentTarget.files[0];
-    var reader = new FileReader();
-
-    reader.onloadend = function () {
-      this.setState({ imageUrl: reader.result, imageFile: file });
-    }.bind(this);
-
-    if (file) {
-      reader.readAsDataURL(file);
-    } else {
-      this.resetFile();
-    }
   },
 
   resetForm: function () {
@@ -53,13 +36,14 @@ var ComposeForm = React.createClass({
       body: "",
       to: "",
       imageUrl: null,
-      imageFile: null
+      imageFile: null,
+      draftId: null
     });
   },
 
-  createEmail: function (e) {
-    e.preventDefault();
-    if (this.state.to.slice(-15) === "@gollygmail.com") {
+  updateEmail: function (id, sent, e) {
+    if (sent) { e.preventDefault(); }
+    if (this.state.to.slice(-15) === "@gollygmail.com" || !sent) {
       var formData = new FormData();
       formData.append("email[subject]", this.state.subject);
       formData.append("email[body]", this.state.body);
@@ -67,11 +51,42 @@ var ComposeForm = React.createClass({
       if (this.state.imageFile) {
         formData.append("email[image]", this.state.imageFile);
       }
-      ApiUtil.createEmail(formData, this.resetForm.bind(this));
-      this.props.onClose();
+      ApiUtil.updateEmail(formData, id, sent, this.resetForm);
     } else {
       console.log("Not a valid email");
     }
+    clearInterval(this.draftTimer);
+  },
+
+  _handleChange: function (option, e) {
+    switch (option) {
+      case "To":
+        this.setState({to: e.currentTarget.value});
+        break;
+      case "Subject":
+        this.setState({subject: e.currentTarget.value});
+        break;
+      case "Body":
+        this.setState({body: e.currentTarget.value});
+        break;
+      case "File":
+        var file = e.currentTarget.files[0];
+        var reader = new FileReader();
+
+        reader.onloadend = function () {
+          this.setState({ imageUrl: reader.result, imageFile: file });
+          ApiUtil.updateEmail(this.state.Draftid, { imageUrl: reader.result, imageFile: file });
+        }.bind(this);
+
+        if (file) {
+          reader.readAsDataURL(file);
+        } else {
+          this.resetFile();
+        }
+        break;
+    }
+    clearInterval(this.draftTimer);
+    this.draftTimer = setInterval(this.updateEmail.bind(null, this.props.draft.id, false), 3000);
   },
 
   render: function() {
@@ -81,12 +96,12 @@ var ComposeForm = React.createClass({
           <button className='compose-form-header-minimize' onClick={this._handleMinimize}>New Message</button>
           <button className='compose-form-header-close' onClick={this.props.onClose}>X</button>
         </div>
-        <form onSubmit={this.createEmail} className={!this.state.minimized ? 'compose-form' : 'hidden'}>
+        <form onSubmit={this.updateEmail.bind(null, this.props.draft.id, true)} className={!this.state.minimized ? 'compose-form' : 'hidden'}>
           <input
             type="textarea"
             placeholder="Recipient"
             className='compose-form-recipient'
-            onChange={this.handleToChange}
+            onChange={this._handleChange.bind(null, "To")}
             value={this.state.to}
             />
         <br/>
@@ -94,14 +109,14 @@ var ComposeForm = React.createClass({
             type="text"
             placeholder="Subject"
             className='compose-form-subject'
-            onChange={this.handleSubjectChange}
+            onChange={this._handleChange.bind(null, "Subject")}
             value={this.state.subject}
             />
         <br/>
         <label>
           <textarea
             className='compose-form-body'
-            onChange={this.handleBodyChange}
+            onChange={this._handleChange.bind(null, "Body")}
             value={this.state.body}></textarea>
         </label>
         <div className='compose-form-footer'>
@@ -109,7 +124,7 @@ var ComposeForm = React.createClass({
           <input
             type='file'
             className='compose-form-image-file'
-            onChange={this.handleFileChange}>
+            onChange={this.handleChange}>
           </input>
 
         </div>

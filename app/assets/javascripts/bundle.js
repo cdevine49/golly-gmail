@@ -49,12 +49,12 @@
 	var ReactRouter = __webpack_require__(159);
 	
 	var App = __webpack_require__(216);
-	var EmailPreviewTable = __webpack_require__(257);
-	var EmailDetails = __webpack_require__(260);
-	var LoginForm = __webpack_require__(261);
-	var SignupForm = __webpack_require__(262);
+	var EmailPreviewTable = __webpack_require__(258);
+	var EmailDetails = __webpack_require__(264);
+	var LoginForm = __webpack_require__(265);
+	var SignupForm = __webpack_require__(266);
 	
-	var SessionStore = __webpack_require__(228);
+	var SessionStore = __webpack_require__(229);
 	var ApiUtil = __webpack_require__(218);
 	
 	var Router = __webpack_require__(159).Router;
@@ -24777,23 +24777,63 @@
 
 	var React = __webpack_require__(1);
 	var TopNav = __webpack_require__(217);
-	var SideNav = __webpack_require__(250);
-	var ClickActions = __webpack_require__(256);
+	var SideNav = __webpack_require__(251);
+	var ComposeForm = __webpack_require__(252);
+	var EmailStore = __webpack_require__(259);
+	
+	var ClickActions = __webpack_require__(257);
 	
 	var App = React.createClass({
 	  displayName: 'App',
 	
+	
+	  getInitialState: function () {
+	    return {
+	      composeForm: false,
+	      draft: null
+	    };
+	  },
+	
+	  componentDidMount: function () {
+	    this.emailStoreToken = EmailStore.addListener(this._onCreate);
+	  },
+	
+	  componentWillUnMount: function () {
+	    this.emailStoreToken.remove();
+	  },
+	
+	  _onCreate: function () {
+	    this.setState({ draft: EmailStore.newDraft() });
+	  },
+	
+	  _createDraft: function () {
+	    if (!this.state.composeForm) {
+	      var formData = new FormData();
+	      formData.append("email[subject]", '');
+	      formData.append("email[body]", '');
+	      formData.append("email[to]", '');
+	      ApiUtil.createEmail(formData, this._openForm);
+	    } else {
+	      this._openForm();
+	    }
+	  },
+	
+	  _openForm: function () {
+	    this.setState({ composeForm: !this.state.composeForm });
+	  },
 	
 	  _click: function (e) {
 	    ClickActions.receiveClick();
 	  },
 	
 	  render: function () {
+	
 	    return React.createElement(
 	      'main',
 	      { onClick: this._click },
 	      React.createElement(TopNav, null),
-	      React.createElement(SideNav, null),
+	      React.createElement(SideNav, { onCompose: this._createDraft }),
+	      this.state.composeForm ? React.createElement(ComposeForm, { draft: this.state.draft }) : '',
 	      this.props.children
 	    );
 	  }
@@ -24808,9 +24848,9 @@
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
-	var SessionStore = __webpack_require__(228);
-	var ClickStore = __webpack_require__(246);
-	var Search = __webpack_require__(248);
+	var SessionStore = __webpack_require__(229);
+	var ClickStore = __webpack_require__(247);
+	var Search = __webpack_require__(249);
 	var Link = __webpack_require__(159).Link;
 	
 	var TopNav = React.createClass({
@@ -24936,7 +24976,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var ApiActions = __webpack_require__(219);
-	var SearchActions = __webpack_require__(226);
+	var SearchActions = __webpack_require__(227);
 	
 	ApiUtil = {
 	
@@ -24962,12 +25002,6 @@
 	  },
 	
 	  fetchEmail: function (path, id) {
-	    // var searchParam;
-	    // if (query) {
-	    //   searchParam = query.query;
-	    // } else {
-	    //   query = null;
-	    // }
 	    $.ajax({
 	      type: 'GET',
 	      url: 'api/emails/' + id,
@@ -24990,27 +25024,31 @@
 	      contentType: false,
 	      datatype: 'json',
 	      data: formData,
-	      success: function (email) {
-	        ApiActions.receiveEmail(email);
+	      success: function (draft) {
+	        ApiActions.receiveDraft(draft);
 	        callback && callback();
 	      },
 	      error: function () {
-	        console.log('ApiUtil#fetchEmails error');
+	        console.log('ApiUtil#createEmails error');
 	      }
 	    });
 	  },
 	
-	  toggleMarked: function (email) {
+	  updateEmail: function (formData, id, sent, callback) {
 	    $.ajax({
 	      type: 'PATCH',
-	      url: 'api/emails/' + email.id,
+	      url: 'api/emails/' + id,
+	      processData: false,
+	      contentType: false,
 	      datatype: 'json',
-	      data: { email: { marked: !email.marked } },
+	      data: formData,
 	      success: function (email) {
+	        debugger;
 	        ApiActions.receiveEmail(email);
+	        email.sent && callback && callback();
 	      },
 	      error: function () {
-	        console.log('ApiUtil#fetchEmails error');
+	        console.log('ApiUtil#createEmails error');
 	      }
 	    });
 	  },
@@ -25044,6 +25082,8 @@
 	      }
 	    });
 	  },
+	
+	  // Can probably delete
 	
 	  toggleRead: function (email) {
 	    $.ajax({
@@ -25164,7 +25204,7 @@
 	var AppDispatcher = __webpack_require__(220);
 	var EmailConstants = __webpack_require__(224);
 	var SessionConstants = __webpack_require__(225);
-	var UserConstants = __webpack_require__(266);
+	var UserConstants = __webpack_require__(226);
 	
 	ApiActions = {
 	  receiveEmails: function (response) {
@@ -25180,6 +25220,14 @@
 	    var action = {
 	      actionType: EmailConstants.EMAIL_RECEIVED,
 	      email: email
+	    };
+	    AppDispatcher.dispatch(action);
+	  },
+	
+	  receiveDraft: function (draft) {
+	    var action = {
+	      actionType: EmailConstants.EMAIL_CREATED,
+	      draft: draft
 	    };
 	    AppDispatcher.dispatch(action);
 	  },
@@ -25531,10 +25579,10 @@
 
 	EmailConstants = {
 	  EMAILS_RECEIVED: 'EMAILS_RECEIVED',
-	  EMAIL_RECEIVED: 'EMAIL_RECEIVED'
+	  EMAIL_RECEIVED: 'EMAIL_RECEIVED',
+	  EMAIL_CREATED: 'EMAIL_CREATED'
 	};
 	
-	// EMAIL_UPDATED: 'EMAIL_UPDATED'
 	module.exports = EmailConstants;
 
 /***/ },
@@ -25550,10 +25598,20 @@
 
 /***/ },
 /* 226 */
+/***/ function(module, exports) {
+
+	UserConstants = {
+	  USERS: 'USERS'
+	};
+	
+	module.exports = UserConstants;
+
+/***/ },
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(220);
-	var SearchConstants = __webpack_require__(227);
+	var SearchConstants = __webpack_require__(228);
 	
 	SearchActions = {
 	  receiveResults: function (response) {
@@ -25569,7 +25627,7 @@
 	module.exports = SearchActions;
 
 /***/ },
-/* 227 */
+/* 228 */
 /***/ function(module, exports) {
 
 	SearchConstants = {
@@ -25579,10 +25637,10 @@
 	module.exports = SearchConstants;
 
 /***/ },
-/* 228 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(229).Store;
+	var Store = __webpack_require__(230).Store;
 	var SessionConstants = __webpack_require__(225);
 	var AppDispatcher = __webpack_require__(220);
 	
@@ -25621,7 +25679,7 @@
 	module.exports = SessionStore;
 
 /***/ },
-/* 229 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -25633,15 +25691,15 @@
 	 * of patent rights can be found in the PATENTS file in the same directory.
 	 */
 	
-	module.exports.Container = __webpack_require__(230);
-	module.exports.MapStore = __webpack_require__(233);
-	module.exports.Mixin = __webpack_require__(245);
-	module.exports.ReduceStore = __webpack_require__(234);
-	module.exports.Store = __webpack_require__(235);
+	module.exports.Container = __webpack_require__(231);
+	module.exports.MapStore = __webpack_require__(234);
+	module.exports.Mixin = __webpack_require__(246);
+	module.exports.ReduceStore = __webpack_require__(235);
+	module.exports.Store = __webpack_require__(236);
 
 
 /***/ },
-/* 230 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25663,10 +25721,10 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStoreGroup = __webpack_require__(231);
+	var FluxStoreGroup = __webpack_require__(232);
 	
 	var invariant = __webpack_require__(223);
-	var shallowEqual = __webpack_require__(232);
+	var shallowEqual = __webpack_require__(233);
 	
 	var DEFAULT_OPTIONS = {
 	  pure: true,
@@ -25824,7 +25882,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 231 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25905,7 +25963,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 232 */
+/* 233 */
 /***/ function(module, exports) {
 
 	/**
@@ -25960,7 +26018,7 @@
 	module.exports = shallowEqual;
 
 /***/ },
-/* 233 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -25981,8 +26039,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxReduceStore = __webpack_require__(234);
-	var Immutable = __webpack_require__(244);
+	var FluxReduceStore = __webpack_require__(235);
+	var Immutable = __webpack_require__(245);
 	
 	var invariant = __webpack_require__(223);
 	
@@ -26110,7 +26168,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 234 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26131,9 +26189,9 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var FluxStore = __webpack_require__(235);
+	var FluxStore = __webpack_require__(236);
 	
-	var abstractMethod = __webpack_require__(243);
+	var abstractMethod = __webpack_require__(244);
 	var invariant = __webpack_require__(223);
 	
 	var FluxReduceStore = (function (_FluxStore) {
@@ -26217,7 +26275,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 235 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26236,7 +26294,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var _require = __webpack_require__(236);
+	var _require = __webpack_require__(237);
 	
 	var EventEmitter = _require.EventEmitter;
 	
@@ -26400,7 +26458,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 236 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26413,14 +26471,14 @@
 	 */
 	
 	var fbemitter = {
-	  EventEmitter: __webpack_require__(237)
+	  EventEmitter: __webpack_require__(238)
 	};
 	
 	module.exports = fbemitter;
 
 
 /***/ },
-/* 237 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26439,11 +26497,11 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var EmitterSubscription = __webpack_require__(238);
-	var EventSubscriptionVendor = __webpack_require__(240);
+	var EmitterSubscription = __webpack_require__(239);
+	var EventSubscriptionVendor = __webpack_require__(241);
 	
-	var emptyFunction = __webpack_require__(242);
-	var invariant = __webpack_require__(241);
+	var emptyFunction = __webpack_require__(243);
+	var invariant = __webpack_require__(242);
 	
 	/**
 	 * @class BaseEventEmitter
@@ -26617,7 +26675,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 238 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -26638,7 +26696,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var EventSubscription = __webpack_require__(239);
+	var EventSubscription = __webpack_require__(240);
 	
 	/**
 	 * EmitterSubscription represents a subscription with listener and context data.
@@ -26670,7 +26728,7 @@
 	module.exports = EmitterSubscription;
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports) {
 
 	/**
@@ -26724,7 +26782,7 @@
 	module.exports = EventSubscription;
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26743,7 +26801,7 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 	
-	var invariant = __webpack_require__(241);
+	var invariant = __webpack_require__(242);
 	
 	/**
 	 * EventSubscriptionVendor stores a set of EventSubscriptions that are
@@ -26833,7 +26891,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 241 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26888,7 +26946,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 242 */
+/* 243 */
 /***/ function(module, exports) {
 
 	/**
@@ -26930,7 +26988,7 @@
 	module.exports = emptyFunction;
 
 /***/ },
-/* 243 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -26957,7 +27015,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 244 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -31944,7 +32002,7 @@
 	}));
 
 /***/ },
-/* 245 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -31961,7 +32019,7 @@
 	
 	'use strict';
 	
-	var FluxStoreGroup = __webpack_require__(231);
+	var FluxStoreGroup = __webpack_require__(232);
 	
 	var invariant = __webpack_require__(223);
 	
@@ -32067,11 +32125,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 246 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(229).Store;
-	var ClickConstants = __webpack_require__(247);
+	var Store = __webpack_require__(230).Store;
+	var ClickConstants = __webpack_require__(248);
 	var AppDispatcher = __webpack_require__(220);
 	
 	var ClickStore = new Store(AppDispatcher);
@@ -32087,7 +32145,7 @@
 	module.exports = ClickStore;
 
 /***/ },
-/* 247 */
+/* 248 */
 /***/ function(module, exports) {
 
 	ClickConstants = {
@@ -32097,12 +32155,12 @@
 	module.exports = ClickConstants;
 
 /***/ },
-/* 248 */
+/* 249 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var SearchStore = __webpack_require__(249);
-	var ClickStore = __webpack_require__(246);
+	var SearchStore = __webpack_require__(250);
+	var ClickStore = __webpack_require__(247);
 	var ApiUtil = __webpack_require__(218);
 	var Link = __webpack_require__(159).Link;
 	
@@ -32224,12 +32282,12 @@
 	module.exports = Search;
 
 /***/ },
-/* 249 */
+/* 250 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(229).Store;
+	var Store = __webpack_require__(230).Store;
 	var AppDispatcher = __webpack_require__(220);
-	var SearchConstants = __webpack_require__(227);
+	var SearchConstants = __webpack_require__(228);
 	var SearchStore = new Store(AppDispatcher);
 	
 	var _searchResults = [];
@@ -32256,11 +32314,11 @@
 	module.exports = SearchStore;
 
 /***/ },
-/* 250 */
+/* 251 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ComposeForm = __webpack_require__(251);
+	var ComposeForm = __webpack_require__(252);
 	
 	var SideNav = React.createClass({
 	  displayName: 'SideNav',
@@ -32285,7 +32343,7 @@
 	      { className: 'sidenav' },
 	      React.createElement(
 	        'button',
-	        { className: 'compose-button', onClick: this._composeForm },
+	        { className: 'compose-button', onClick: this.props.onCompose },
 	        'Compose'
 	      ),
 	      React.createElement(
@@ -32316,27 +32374,31 @@
 	          { href: '#' },
 	          'Drafts'
 	        )
-	      ),
-	      this.state.formOpen ? React.createElement(ComposeForm, { onClose: this._composeForm }) : ''
+	      )
 	    );
 	  }
 	
 	});
+	// {this.state.formOpen ? <ComposeForm onClose={this._composeForm}/> : ''}
 	// className='compose-form' formOpen={this.state.formOpen}
 	module.exports = SideNav;
 
 /***/ },
-/* 251 */
+/* 252 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
-	var SessionStore = __webpack_require__(228);
-	var LinkedStateMixin = __webpack_require__(252);
+	var SessionStore = __webpack_require__(229);
+	var LinkedStateMixin = __webpack_require__(253);
 	
 	var ComposeForm = React.createClass({
 	  displayName: 'ComposeForm',
 	
+	
+	  // Opening a new form creates a draft
+	  // That draft goes to a store
+	  //
 	
 	  getInitialState: function () {
 	    return {
@@ -32344,40 +32406,18 @@
 	      subject: "",
 	      body: "",
 	      to: "",
+	      sent: false,
 	      imageUrl: null,
 	      imageFile: null
 	    };
 	  },
 	
-	  handleSubjectChange: function (e) {
-	    this.setState({ subject: e.currentTarget.value });
-	  },
-	
-	  handleBodyChange: function (e) {
-	    this.setState({ body: e.currentTarget.value });
-	  },
-	
-	  handleToChange: function (e) {
-	    this.setState({ to: e.currentTarget.value });
+	  componentWillUnmount: function () {
+	    clearInterval(this.draftTimer);
 	  },
 	
 	  _handleMinimize: function () {
 	    this.setState({ minimized: !this.state.minimized });
-	  },
-	
-	  handleFileChange: function (e) {
-	    var file = e.currentTarget.files[0];
-	    var reader = new FileReader();
-	
-	    reader.onloadend = function () {
-	      this.setState({ imageUrl: reader.result, imageFile: file });
-	    }.bind(this);
-	
-	    if (file) {
-	      reader.readAsDataURL(file);
-	    } else {
-	      this.resetFile();
-	    }
 	  },
 	
 	  resetForm: function () {
@@ -32386,13 +32426,16 @@
 	      body: "",
 	      to: "",
 	      imageUrl: null,
-	      imageFile: null
+	      imageFile: null,
+	      draftId: null
 	    });
 	  },
 	
-	  createEmail: function (e) {
-	    e.preventDefault();
-	    if (this.state.to.slice(-15) === "@gollygmail.com") {
+	  updateEmail: function (id, sent, e) {
+	    if (sent) {
+	      e.preventDefault();
+	    }
+	    if (this.state.to.slice(-15) === "@gollygmail.com" || !sent) {
 	      var formData = new FormData();
 	      formData.append("email[subject]", this.state.subject);
 	      formData.append("email[body]", this.state.body);
@@ -32400,11 +32443,42 @@
 	      if (this.state.imageFile) {
 	        formData.append("email[image]", this.state.imageFile);
 	      }
-	      ApiUtil.createEmail(formData, this.resetForm.bind(this));
-	      this.props.onClose();
+	      ApiUtil.updateEmail(formData, id, sent, this.resetForm);
 	    } else {
 	      console.log("Not a valid email");
 	    }
+	    clearInterval(this.draftTimer);
+	  },
+	
+	  _handleChange: function (option, e) {
+	    switch (option) {
+	      case "To":
+	        this.setState({ to: e.currentTarget.value });
+	        break;
+	      case "Subject":
+	        this.setState({ subject: e.currentTarget.value });
+	        break;
+	      case "Body":
+	        this.setState({ body: e.currentTarget.value });
+	        break;
+	      case "File":
+	        var file = e.currentTarget.files[0];
+	        var reader = new FileReader();
+	
+	        reader.onloadend = function () {
+	          this.setState({ imageUrl: reader.result, imageFile: file });
+	          ApiUtil.updateEmail(this.state.Draftid, { imageUrl: reader.result, imageFile: file });
+	        }.bind(this);
+	
+	        if (file) {
+	          reader.readAsDataURL(file);
+	        } else {
+	          this.resetFile();
+	        }
+	        break;
+	    }
+	    clearInterval(this.draftTimer);
+	    this.draftTimer = setInterval(this.updateEmail.bind(null, this.props.draft.id, false), 3000);
 	  },
 	
 	  render: function () {
@@ -32427,12 +32501,12 @@
 	      ),
 	      React.createElement(
 	        'form',
-	        { onSubmit: this.createEmail, className: !this.state.minimized ? 'compose-form' : 'hidden' },
+	        { onSubmit: this.updateEmail.bind(null, this.props.draft.id, true), className: !this.state.minimized ? 'compose-form' : 'hidden' },
 	        React.createElement('input', {
 	          type: 'textarea',
 	          placeholder: 'Recipient',
 	          className: 'compose-form-recipient',
-	          onChange: this.handleToChange,
+	          onChange: this._handleChange.bind(null, "To"),
 	          value: this.state.to
 	        }),
 	        React.createElement('br', null),
@@ -32440,7 +32514,7 @@
 	          type: 'text',
 	          placeholder: 'Subject',
 	          className: 'compose-form-subject',
-	          onChange: this.handleSubjectChange,
+	          onChange: this._handleChange.bind(null, "Subject"),
 	          value: this.state.subject
 	        }),
 	        React.createElement('br', null),
@@ -32449,7 +32523,7 @@
 	          null,
 	          React.createElement('textarea', {
 	            className: 'compose-form-body',
-	            onChange: this.handleBodyChange,
+	            onChange: this._handleChange.bind(null, "Body"),
 	            value: this.state.body })
 	        ),
 	        React.createElement(
@@ -32463,7 +32537,7 @@
 	          React.createElement('input', {
 	            type: 'file',
 	            className: 'compose-form-image-file',
-	            onChange: this.handleFileChange })
+	            onChange: this.handleChange })
 	        )
 	      )
 	    );
@@ -32474,13 +32548,13 @@
 	module.exports = ComposeForm;
 
 /***/ },
-/* 252 */
+/* 253 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(253);
+	module.exports = __webpack_require__(254);
 
 /***/ },
-/* 253 */
+/* 254 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32497,8 +32571,8 @@
 	
 	'use strict';
 	
-	var ReactLink = __webpack_require__(254);
-	var ReactStateSetters = __webpack_require__(255);
+	var ReactLink = __webpack_require__(255);
+	var ReactStateSetters = __webpack_require__(256);
 	
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -32521,7 +32595,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 254 */
+/* 255 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -32595,7 +32669,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 255 */
+/* 256 */
 /***/ function(module, exports) {
 
 	/**
@@ -32704,11 +32778,11 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 256 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var AppDispatcher = __webpack_require__(220);
-	var ClickConstants = __webpack_require__(247);
+	var ClickConstants = __webpack_require__(248);
 	
 	ClickActions = {
 	  receiveClick: function () {
@@ -32722,15 +32796,15 @@
 	module.exports = ClickActions;
 
 /***/ },
-/* 257 */
+/* 258 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EmailStore = __webpack_require__(258);
-	var MarkStore = __webpack_require__(265);
-	var SessionStore = __webpack_require__(228);
+	var EmailStore = __webpack_require__(259);
+	var MarkStore = __webpack_require__(260);
+	var SessionStore = __webpack_require__(229);
 	var ApiUtil = __webpack_require__(218);
-	var Checkboxes = __webpack_require__(259);
+	var Checkboxes = __webpack_require__(262);
 	var Link = __webpack_require__(159).Link;
 	var History = __webpack_require__(159).History;
 	
@@ -32910,14 +32984,15 @@
 	module.exports = EmailPreviewTable;
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(229).Store;
+	var Store = __webpack_require__(230).Store;
 	var AppDispatcher = __webpack_require__(220);
 	var EmailConstants = __webpack_require__(224);
 	
 	var _emails = {};
+	var _newDraft = null;
 	var _meta = {};
 	
 	var EmailStore = new Store(AppDispatcher);
@@ -32932,6 +33007,10 @@
 	
 	EmailStore.find = function (id) {
 	  return _emails[id];
+	};
+	
+	EmailStore.newDraft = function () {
+	  return _newDraft;
 	};
 	
 	EmailStore.meta = function () {
@@ -32949,7 +33028,15 @@
 	      resetEmail(payload.email);
 	      EmailStore.__emitChange();
 	      break;
+	    case EmailConstants.EMAIL_CREATED:
+	      newEmail(payload.draft);
+	      EmailStore.__emitChange();
+	      break;
 	  }
+	};
+	
+	var newEmail = function (draft) {
+	  _newDraft = draft;
 	};
 	
 	var resetEmails = function (emails) {
@@ -32968,13 +33055,70 @@
 	module.exports = EmailStore;
 
 /***/ },
-/* 259 */
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(230).Store;
+	var MarkConstants = __webpack_require__(261);
+	var AppDispatcher = __webpack_require__(220);
+	
+	var MarkStore = new Store(AppDispatcher);
+	
+	var _emails = {};
+	
+	MarkStore.all = function () {
+	  var emails = [];
+	  for (var id in _emails) {
+	    emails.push(_emails[id]);
+	  }
+	  return emails;
+	};
+	
+	MarkStore.includes = function (id) {
+	  if (_emails[id]) {
+	    return true;
+	  } else {
+	    return false;
+	  }
+	};
+	
+	MarkStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case MarkConstants.EMAIL_MARKED:
+	      resetEmail(payload.email);
+	      MarkStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	var resetEmail = function (email) {
+	  if (_emails[email.id]) {
+	    delete _emails[email.id];
+	  } else {
+	    _emails[email.id] = email;
+	  }
+	};
+	
+	module.exports = MarkStore;
+
+/***/ },
+/* 261 */
+/***/ function(module, exports) {
+
+	MarkConstants = {
+	  EMAIL_MARKED: 'EMAIL_MARKED'
+	};
+	
+	module.exports = MarkConstants;
+
+/***/ },
+/* 262 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var MarkActions = __webpack_require__(263);
-	var MarkStore = __webpack_require__(265);
-	var EmailStore = __webpack_require__(258);
+	var MarkStore = __webpack_require__(260);
+	var EmailStore = __webpack_require__(259);
 	
 	var Checkboxes = React.createClass({
 	  displayName: 'Checkboxes',
@@ -33060,11 +33204,30 @@
 	module.exports = Checkboxes;
 
 /***/ },
-/* 260 */
+/* 263 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var AppDispatcher = __webpack_require__(220);
+	var MarkConstants = __webpack_require__(261);
+	
+	MarkActions = {
+	  markEmail: function (email) {
+	    var action = {
+	      actionType: MarkConstants.EMAIL_MARKED,
+	      email: email
+	    };
+	    AppDispatcher.dispatch(action);
+	  }
+	};
+	
+	module.exports = MarkActions;
+
+/***/ },
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EmailStore = __webpack_require__(258);
+	var EmailStore = __webpack_require__(259);
 	var ApiUtil = __webpack_require__(218);
 	var History = __webpack_require__(159).History;
 	
@@ -33176,12 +33339,12 @@
 	module.exports = EmailDetails;
 
 /***/ },
-/* 261 */
+/* 265 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
-	var SessionStore = __webpack_require__(228);
+	var SessionStore = __webpack_require__(229);
 	var Link = __webpack_require__(159).Link;
 	
 	var LoginForm = React.createClass({
@@ -33307,12 +33470,12 @@
 	module.exports = LoginForm;
 
 /***/ },
-/* 262 */
+/* 266 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var ApiUtil = __webpack_require__(218);
-	var SessionStore = __webpack_require__(228);
+	var SessionStore = __webpack_require__(229);
 	var UserStore = __webpack_require__(267);
 	var Link = __webpack_require__(159).Link;
 	
@@ -33331,7 +33494,7 @@
 	      username: '',
 	      password: '',
 	      passwordConfirmation: '',
-	      birthdayMonth: '01', //Make sure this works with no number hard coded
+	      birthdayMonth: null, //Make sure this works with no number hard coded
 	      birthdayDay: '',
 	      birthdayYear: '',
 	      gender: 'Male',
@@ -33340,7 +33503,11 @@
 	      usernameEntered: false,
 	      usernameExists: false,
 	      passwordEntered: false,
-	      passwordConfirmationEntered: false
+	      passwordConfirmationEntered: false,
+	      birthdayDayEntered: false,
+	      birthdayMonthEntered: false,
+	      birthdayYearEntered: false,
+	      genderEntered: false
 	    };
 	  },
 	
@@ -33350,98 +33517,90 @@
 	
 	  _handleSubmit: function (e) {
 	    e.preventDefault();
-	    var router = this.context.router;
-	    if (this.state.password !== this.state.passwordConfirmation) {
-	      alert("Passwords have to match");
-	    } else {
-	      ApiUtil.signup(this.state, function () {
-	        router.push('/inbox/');
-	      });
+	    ['FirstName', 'LastName', 'Username', 'Password', 'PasswordConfirmation', 'BirthdayMonth', 'BirthdayDay', 'BirthdayYear', 'Gender'].forEach(function (option) {
+	      this._entered(option, true);
+	    }.bind(this));
+	    // var router = this.context.router;
+	    // if (this.state.password !== this.state.passwordConfirmation) {
+	    //   alert("Passwords have to match");
+	    // } else {
+	    //   ApiUtil.signup(this.state, function () {
+	    //     router.push('/inbox/');
+	    //   });
+	    // }
+	  },
+	
+	  _update: function (option, e) {
+	    switch (option) {
+	      case "FirstName":
+	        this.setState({ firstName: e.currentTarget.value });
+	        break;
+	      case "LastName":
+	        this.setState({ lastName: e.currentTarget.value });
+	        break;
+	      case "Username":
+	        this.setState({ username: e.currentTarget.value });
+	        break;
+	      case "Password":
+	        this.setState({ password: e.currentTarget.value, passwordConfirmation: '', passwordConfirmationEntered: false });
+	        break;
+	      case "PasswordConfirmation":
+	        this.setState({ passwordConfirmation: e.currentTarget.value });
+	        break;
+	      case "BirthdayDay":
+	        this.setState({ birthdayDay: e.currentTarget.value });
+	        break;
+	      case "BirthdayMonth":
+	        this.setState({ birthdayMonth: e.currentTarget.value });
+	        break;
+	      case "BirthdayYear":
+	        this.setState({ birthdayYear: e.currentTarget.value });
+	        break;
+	      case "Gender":
+	        this.setState({ gender: e.currentTarget.value });
+	        break;
 	    }
-	  },
-	
-	  _updateFirstname: function (e) {
-	    this.setState({ firstName: e.currentTarget.value });
-	  },
-	
-	  _updateLastname: function (e) {
-	    this.setState({ lastName: e.currentTarget.value });
-	  },
-	
-	  _updateUsername: function (e) {
-	    this.setState({ username: e.currentTarget.value });
-	  },
-	
-	  _updatePassword: function (e) {
-	    this.setState({ password: e.currentTarget.value, passwordConfirmation: '', passwordConfirmationEntered: false });
-	  },
-	
-	  _updatePasswordConfirmation: function (e) {
-	    this.setState({ passwordConfirmation: e.currentTarget.value });
-	  },
-	
-	  _updateBirthdayMonth: function (e) {
-	    this.setState({ birthdayMonth: e.currentTarget.value });
-	  },
-	
-	  _updateBirthday_day: function (e) {
-	    this.setState({ birthdayDay: e.currentTarget.value });
-	  },
-	
-	  _updateBirthday_year: function (e) {
-	    this.setState({ birthdayYear: e.currentTarget.value });
-	  },
-	
-	  _updateGender: function (e) {
-	    this.setState({ gender: e.currentTarget.value });
 	  },
 	
 	  // Error message display
 	
-	  _focusFirstName: function () {
-	    this.setState({ firstNameEntered: false });
-	  },
-	
-	  _blurFirstName: function () {
-	    this.setState({ firstNameEntered: true });
-	  },
-	
-	  _focusLastName: function () {
-	    this.setState({ lastNameEntered: false });
-	  },
-	
-	  _blurLastName: function () {
-	    this.setState({ lastNameEntered: true });
-	  },
-	
-	  _focusUsername: function () {
-	    this.setState({ usernameEntered: false });
-	  },
-	
-	  _blurUsername: function () {
-	    this.setState({ usernameEntered: true });
-	  },
-	
-	  _focusPassword: function () {
-	    this.setState({ passwordEntered: false });
-	  },
-	
-	  _blurPassword: function () {
-	    this.setState({ passwordEntered: true });
-	  },
-	
-	  _focusPasswordConfirmation: function () {
-	    this.setState({ passwordConfirmationEntered: false });
-	  },
-	
-	  _blurPasswordConfirmation: function () {
-	    this.setState({ passwordConfirmationEntered: true });
+	  _entered: function (option, boolean) {
+	    switch (option) {
+	      case "FirstName":
+	        this.setState({ firstNameEntered: boolean });
+	        break;
+	      case "LastName":
+	        this.setState({ lastNameEntered: boolean });
+	        break;
+	      case "Username":
+	        this.setState({ usernameEntered: boolean });
+	        break;
+	      case "Password":
+	        this.setState({ passwordEntered: boolean });
+	        break;
+	      case "PasswordConfirmation":
+	        this.setState({ passwordConfirmationEntered: boolean });
+	        break;
+	      case "BirthdayDay":
+	        this.setState({ birthdayDayEntered: boolean });
+	        break;
+	      case "BirthdayMonth":
+	        this.setState({ birthdayMonthEntered: boolean });
+	        break;
+	      case "BirthdayYear":
+	        this.setState({ birthdayYearEntered: boolean });
+	        break;
+	      case "Gender":
+	        this.setState({ genderEntered: boolean });
+	        break;
+	    }
 	  },
 	
 	  render: function () {
+	
 	    return React.createElement(
 	      'main',
-	      { className: 'sign-up-page' },
+	      { className: 'sign-up-page', onClick: this._handlePageClick },
 	      React.createElement(
 	        'header',
 	        { className: 'sign-up-header' },
@@ -33494,7 +33653,7 @@
 	          ),
 	          React.createElement(
 	            'form',
-	            { className: 'sign-up-form', onSubmit: this._handleSubmit },
+	            { className: 'sign-up-form' },
 	            React.createElement(
 	              'div',
 	              { className: 'sign-up-set' },
@@ -33508,18 +33667,18 @@
 	                id: 'firstName',
 	                placeholder: 'First',
 	                className: 'sign-up-first-name' + (this.state.firstNameEntered && this.state.firstName === '' ? ' sign-up-errors' : ''),
-	                onChange: this._updateFirstname,
-	                onFocus: this._focusFirstName,
-	                onBlur: this._blurFirstName,
+	                onChange: this._update.bind(null, "FirstName"),
+	                onFocus: this._entered.bind(null, "FirstName", false),
+	                onBlur: this._entered.bind(null, "FirstName", true),
 	                value: this.state.firstName }),
 	              React.createElement('input', {
 	                type: 'text',
 	                id: 'lastName',
 	                placeholder: 'Last',
 	                className: 'sign-up-last-name' + (this.state.lastNameEntered && this.state.lastName === '' ? ' sign-up-errors' : ''),
-	                onChange: this._updateLastname,
-	                onFocus: this._focusLastName,
-	                onBlur: this._blurLastName,
+	                onChange: this._update.bind(null, "LastName"),
+	                onFocus: this._entered.bind(null, "LastName", false),
+	                onBlur: this._entered.bind(null, "LastName", true),
 	                value: this.state.lastName }),
 	              React.createElement(
 	                'span',
@@ -33538,10 +33697,10 @@
 	              React.createElement('input', {
 	                type: 'text',
 	                id: 'username',
-	                className: 'sign-up-username' + (this.state.usernameEntered && this.state.username === '' ? ' sign-up-errors' : ''),
-	                onChange: this._updateUsername,
-	                onFocus: this._focusUsername,
-	                onBlur: this._blurUsername,
+	                className: 'sign-up-username' + (this.state.usernameEntered && (this.state.username.length > 30 || this.state.username.length < 6 || UserStore.usernameExists(this.state.username)) ? ' sign-up-errors' : ''),
+	                onChange: this._update.bind(null, "Username"),
+	                onFocus: this._entered.bind(null, "Username", false),
+	                onBlur: this._entered.bind(null, "Username", true),
 	                value: this.state.username }),
 	              React.createElement(
 	                'span',
@@ -33575,10 +33734,10 @@
 	              React.createElement('input', {
 	                type: 'password',
 	                id: 'password',
-	                className: 'sign-up-password',
-	                onChange: this._updatePassword,
-	                onFocus: this._focusPassword,
-	                onBlur: this._blurPassword,
+	                className: 'sign-up-password' + (this.state.passwordEntered && (this.state.password.length < 8 || this.state.password.length > 100) ? ' sign-up-errors' : ''),
+	                onChange: this._update.bind(null, "Password"),
+	                onFocus: this._entered.bind(null, "Password", false),
+	                onBlur: this._entered.bind(null, "Password", true),
 	                value: this.state.password }),
 	              React.createElement(
 	                'span',
@@ -33587,7 +33746,7 @@
 	              ),
 	              React.createElement(
 	                'span',
-	                { className: 'error-message' + (this.state.passwordEntered && this.state.password !== '' && this.state.password.length <= 8 ? '' : ' hidden') },
+	                { className: 'error-message' + (this.state.passwordEntered && this.state.password !== '' && this.state.password.length < 8 ? '' : ' hidden') },
 	                'Short passwords are easy to guess. Try one with at least 8 characters.'
 	              ),
 	              React.createElement(
@@ -33607,10 +33766,10 @@
 	              React.createElement('input', {
 	                type: 'password',
 	                id: 'confirm_password',
-	                className: 'sign-up-password-confirm',
-	                onChange: this._updatePasswordConfirmation,
-	                onFocus: this._focusPasswordConfirmation,
-	                onBlur: this._blurPasswordConfirmation,
+	                className: 'sign-up-password-confirm' + (this.state.passwordConfirmationEntered && (this.state.passwordConfirmation === '' || this.state.passwordConfirmation !== this.state.password) ? ' sign-up-errors' : ''),
+	                onChange: this._update.bind(null, "PasswordConfirmation"),
+	                onFocus: this._entered.bind(null, "PasswordConfirmation", false),
+	                onBlur: this._entered.bind(null, "PasswordConfirmation", true),
 	                value: this.state.passwordConfirmation }),
 	              React.createElement(
 	                'span',
@@ -33633,7 +33792,12 @@
 	              ),
 	              React.createElement(
 	                'select',
-	                { id: 'birthday', className: 'sign-up-birthday-month-dropdown', defaultValue: 'Month', onChange: this._updateBirthdayMonth },
+	                { id: 'birthday',
+	                  className: 'sign-up-birthday-month-dropdown' + (this.state.birthdayMonthEntered && this.state.birthdayMonth === null ? ' sign-up-errors' : ''),
+	                  defaultValue: 'Month',
+	                  onChange: this._update.bind(null, "BirthdayMonth"),
+	                  onFocus: this._entered.bind(null, "BirthdayMonth", false),
+	                  onBlur: this._entered.bind(null, "BirthdayMonth", true) },
 	                React.createElement(
 	                  'option',
 	                  { className: 'hidden' },
@@ -33703,15 +33867,39 @@
 	              React.createElement('input', {
 	                type: 'text',
 	                placeholder: 'Day',
-	                className: 'sign-up-birthday-day',
-	                onChange: this._updateBirthday_day,
+	                className: 'sign-up-birthday-day' + (this.state.birthdayDayEntered && this.state.birthdayDay === '' ? ' sign-up-errors' : ''),
+	                onChange: this._update.bind(null, "BirthdayDay"),
+	                onFocus: this._entered.bind(null, "BirthdayDay", false),
+	                onBlur: this._entered.bind(null, "BirthdayDay", true),
 	                value: this.state.birthdayDay }),
 	              React.createElement('input', {
 	                type: 'text',
 	                placeholder: 'Year',
-	                className: 'sign-up-birthday-year',
-	                onChange: this._updateBirthday_year,
-	                value: this.state.birthdayYear })
+	                className: 'sign-up-birthday-year' + (this.state.birthdayYearEntered && this.state.birthdayYear === '' ? ' sign-up-errors' : ''),
+	                onChange: this._update.bind(null, "BirthdayYear"),
+	                onFocus: this._entered.bind(null, "BirthdayYear", false),
+	                onBlur: this._entered.bind(null, "BirthdayYear", true),
+	                value: this.state.birthdayYear }),
+	              React.createElement(
+	                'span',
+	                { className: 'error-message' + (this.state.birthdayDayEntered && this.state.birthdayDay === '' || this.state.birthdayMonthEntered && this.state.birthdayMonth === null || this.state.birthdayYearEntered && this.state.birthdayYear === '' ? '' : ' hidden') },
+	                'You can\'t leave this empty.'
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'error-message' + (this.state.birthdayDayEntered && this.state.birthdayDay !== '' && (!parseInt(this.state.birthdayDay) || this.state.birthdayDay > 31 || this.state.birthdayDay < 1) ? '' : ' hidden') },
+	                'Hmm, the day doesn\'t look right. Be sure to use a number that is a day of the month.'
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'error-message' + (this.state.birthdayYearEntered && this.state.birthdayYear !== '' && (!parseInt(this.state.birthdayYear) || this.state.birthdayYear.length !== 4) ? '' : ' hidden') },
+	                'Hmm, the year doesn\'t look right. Be sure to use four digits.'
+	              ),
+	              React.createElement(
+	                'span',
+	                { className: 'error-message' + (this.state.birthdayYearEntered && this.state.birthdayYear !== '' && parseInt(this.state.birthdayYear) && (this.state.birthdayYear > new Date().getFullYear() || this.state.birthdayMonthEntered && this.state.birthdayMonth > new Date().getMonth() && this.state.birthdayYear == new Date().getFullYear()) ? '' : ' hidden') },
+	                'This is my sports almanac.  Get your own.'
+	              )
 	            ),
 	            React.createElement(
 	              'div',
@@ -33723,7 +33911,12 @@
 	              ),
 	              React.createElement(
 	                'select',
-	                { id: 'gender', className: 'sign-up-gender', onChange: this._updateGender },
+	                { id: 'gender',
+	                  className: 'sign-up-gender',
+	                  onChange: this._update.bind(null, "Gender"),
+	                  onFocus: this._entered.bind(null, "Gender", false),
+	                  onBlur: this._entered.bind(null, "Gender", true)
+	                },
 	                React.createElement(
 	                  'option',
 	                  { value: 'Male' },
@@ -33743,7 +33936,7 @@
 	            ),
 	            React.createElement(
 	              'button',
-	              { className: 'sign-up-submit' },
+	              { className: 'sign-up-submit', onMouseDown: this._handleSubmit },
 	              'Sign Up'
 	            )
 	          )
@@ -33755,99 +33948,16 @@
 	});
 	
 	module.exports = SignupForm;
-
-/***/ },
-/* 263 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var AppDispatcher = __webpack_require__(220);
-	var MarkConstants = __webpack_require__(264);
 	
-	MarkActions = {
-	  markEmail: function (email) {
-	    var action = {
-	      actionType: MarkConstants.EMAIL_MARKED,
-	      email: email
-	    };
-	    AppDispatcher.dispatch(action);
-	  }
-	};
-	
-	module.exports = MarkActions;
-
-/***/ },
-/* 264 */
-/***/ function(module, exports) {
-
-	MarkConstants = {
-	  EMAIL_MARKED: 'EMAIL_MARKED'
-	};
-	
-	module.exports = MarkConstants;
-
-/***/ },
-/* 265 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(229).Store;
-	var MarkConstants = __webpack_require__(264);
-	var AppDispatcher = __webpack_require__(220);
-	
-	var MarkStore = new Store(AppDispatcher);
-	
-	var _emails = {};
-	
-	MarkStore.all = function () {
-	  var emails = [];
-	  for (var id in _emails) {
-	    emails.push(_emails[id]);
-	  }
-	  return emails;
-	};
-	
-	MarkStore.includes = function (id) {
-	  if (_emails[id]) {
-	    return true;
-	  } else {
-	    return false;
-	  }
-	};
-	
-	MarkStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case MarkConstants.EMAIL_MARKED:
-	      resetEmail(payload.email);
-	      MarkStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	var resetEmail = function (email) {
-	  if (_emails[email.id]) {
-	    delete _emails[email.id];
-	  } else {
-	    _emails[email.id] = email;
-	  }
-	};
-	
-	module.exports = MarkStore;
-
-/***/ },
-/* 266 */
-/***/ function(module, exports) {
-
-	UserConstants = {
-	  USERS: 'USERS'
-	};
-	
-	module.exports = UserConstants;
+	// this.state.birthdayYear < (new Date()).getFullYear() - 125
+	// <span className={'error-message' + (this.state.passwordConfirmationEntered && this.state.passwordConfirmation !== this.state.password ? '' : ' hidden')}>These passwords don't match. Try again?</span>
 
 /***/ },
 /* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Store = __webpack_require__(229).Store;
-	var UserConstants = __webpack_require__(266);
+	var Store = __webpack_require__(230).Store;
+	var UserConstants = __webpack_require__(226);
 	var AppDispatcher = __webpack_require__(220);
 	
 	var UserStore = new Store(AppDispatcher);

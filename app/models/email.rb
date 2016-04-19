@@ -1,5 +1,5 @@
 class Email < ActiveRecord::Base
-  validates :to, presence: true
+  validates :to, presence: true, :if => :sent
 
   include PgSearch
   pg_search_scope :search_emails,
