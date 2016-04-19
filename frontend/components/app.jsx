@@ -33,13 +33,13 @@ var App = React.createClass({
       formData.append("email[subject]", '');
       formData.append("email[body]", '');
       formData.append("email[to]", '');
-      ApiUtil.createEmail(formData, this._openForm);
+      ApiUtil.createEmail(formData, this._toggleForm);
     } else {
-      this._openForm();
+      this._toggleForm();
     }
   },
 
-  _openForm: function () {
+  _toggleForm: function () {
     this.setState({ composeForm: !this.state.composeForm });
   },
 
@@ -53,7 +53,7 @@ var App = React.createClass({
       <main onClick={this._click}>
         <TopNav />
         <SideNav onCompose={this._createDraft} />
-        {this.state.composeForm ? <ComposeForm draft={this.state.draft}/> : ''}
+        {this.state.composeForm ? <ComposeForm draft={this.state.draft} close={this._toggleForm}/> : ''}
         {this.props.children}
       </main>
     );

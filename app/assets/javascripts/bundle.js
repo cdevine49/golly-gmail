@@ -79,7 +79,8 @@
 	      React.createElement(Route, { path: 'outbox', component: EmailPreviewTable }),
 	      React.createElement(Route, { path: 'outbox/:id', component: EmailDetails }),
 	      React.createElement(Route, { path: 'search-results', component: EmailPreviewTable }),
-	      React.createElement(Route, { path: 'search-results/:id', component: EmailDetails })
+	      React.createElement(Route, { path: 'search-results/:id', component: EmailDetails }),
+	      React.createElement(Route, { path: 'drafts', component: EmailPreviewTable })
 	    ),
 	    React.createElement(Route, { path: '/login', component: LoginForm }),
 	    React.createElement(Route, { path: '/signup', component: SignupForm })
@@ -24812,13 +24813,13 @@
 	      formData.append("email[subject]", '');
 	      formData.append("email[body]", '');
 	      formData.append("email[to]", '');
-	      ApiUtil.createEmail(formData, this._openForm);
+	      ApiUtil.createEmail(formData, this._toggleForm);
 	    } else {
-	      this._openForm();
+	      this._toggleForm();
 	    }
 	  },
 	
-	  _openForm: function () {
+	  _toggleForm: function () {
 	    this.setState({ composeForm: !this.state.composeForm });
 	  },
 	
@@ -24833,7 +24834,7 @@
 	      { onClick: this._click },
 	      React.createElement(TopNav, null),
 	      React.createElement(SideNav, { onCompose: this._createDraft }),
-	      this.state.composeForm ? React.createElement(ComposeForm, { draft: this.state.draft }) : '',
+	      this.state.composeForm ? React.createElement(ComposeForm, { draft: this.state.draft, close: this._toggleForm }) : '',
 	      this.props.children
 	    );
 	  }
@@ -25043,7 +25044,6 @@
 	      datatype: 'json',
 	      data: formData,
 	      success: function (email) {
-	        debugger;
 	        ApiActions.receiveEmail(email);
 	        email.sent && callback && callback();
 	      },
@@ -32371,7 +32371,7 @@
 	        ),
 	        React.createElement(
 	          'a',
-	          { href: '#' },
+	          { href: '#/drafts/' },
 	          'Drafts'
 	        )
 	      )
@@ -32420,17 +32420,6 @@
 	    this.setState({ minimized: !this.state.minimized });
 	  },
 	
-	  resetForm: function () {
-	    this.setState({
-	      subject: "",
-	      body: "",
-	      to: "",
-	      imageUrl: null,
-	      imageFile: null,
-	      draftId: null
-	    });
-	  },
-	
 	  updateEmail: function (id, sent, e) {
 	    if (sent) {
 	      e.preventDefault();
@@ -32440,14 +32429,20 @@
 	      formData.append("email[subject]", this.state.subject);
 	      formData.append("email[body]", this.state.body);
 	      formData.append("email[to]", this.state.to);
+	      formData.append("email[sent]", sent);
 	      if (this.state.imageFile) {
 	        formData.append("email[image]", this.state.imageFile);
 	      }
-	      ApiUtil.updateEmail(formData, id, sent, this.resetForm);
+	      ApiUtil.updateEmail(formData, id, sent, this.props.close);
 	    } else {
 	      console.log("Not a valid email");
 	    }
 	    clearInterval(this.draftTimer);
+	  },
+	
+	  _closeForm: function (e) {
+	    this.updateEmail(this.props.draft.id, false, e);
+	    this.props.close();
 	  },
 	
 	  _handleChange: function (option, e) {
@@ -32495,7 +32490,7 @@
 	        ),
 	        React.createElement(
 	          'button',
-	          { className: 'compose-form-header-close', onClick: this.props.onClose },
+	          { className: 'compose-form-header-close', onClick: this._closeForm },
 	          'X'
 	        )
 	      ),

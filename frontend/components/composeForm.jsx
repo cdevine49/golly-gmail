@@ -30,17 +30,6 @@ var ComposeForm = React.createClass({
     this.setState({minimized: !this.state.minimized});
   },
 
-  resetForm: function () {
-    this.setState({
-      subject: "",
-      body: "",
-      to: "",
-      imageUrl: null,
-      imageFile: null,
-      draftId: null
-    });
-  },
-
   updateEmail: function (id, sent, e) {
     if (sent) { e.preventDefault(); }
     if (this.state.to.slice(-15) === "@gollygmail.com" || !sent) {
@@ -48,14 +37,20 @@ var ComposeForm = React.createClass({
       formData.append("email[subject]", this.state.subject);
       formData.append("email[body]", this.state.body);
       formData.append("email[to]", this.state.to);
+      formData.append("email[sent]", sent);
       if (this.state.imageFile) {
         formData.append("email[image]", this.state.imageFile);
       }
-      ApiUtil.updateEmail(formData, id, sent, this.resetForm);
+      ApiUtil.updateEmail(formData, id, sent, this.props.close);
     } else {
       console.log("Not a valid email");
     }
     clearInterval(this.draftTimer);
+  },
+
+  _closeForm: function (e) {
+    this.updateEmail(this.props.draft.id, false, e);
+    this.props.close();
   },
 
   _handleChange: function (option, e) {
@@ -94,7 +89,7 @@ var ComposeForm = React.createClass({
       <section className='compose-form-container'>
         <div className='compose-form-header group'>
           <button className='compose-form-header-minimize' onClick={this._handleMinimize}>New Message</button>
-          <button className='compose-form-header-close' onClick={this.props.onClose}>X</button>
+          <button className='compose-form-header-close' onClick={this._closeForm}>X</button>
         </div>
         <form onSubmit={this.updateEmail.bind(null, this.props.draft.id, true)} className={!this.state.minimized ? 'compose-form' : 'hidden'}>
           <input
