@@ -21,14 +21,14 @@ class Api::EmailsController < ApplicationController
       .search_emails(params[:query])
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(sent: true)
-    when 'inbox'
-      @emails = Email
-      .where("emails.to = ?", current_user.gollygmail)
-      .where(sent: true)
     when 'drafts'
       @emails = Email
       .where("emails.from_email = ?", current_user.gollygmail)
       .where(sent: false)
+    else
+      @emails = Email
+      .where("emails.to = ?", current_user.gollygmail)
+      .where(sent: true)
     end
     @emails = @emails
     .order(created_at: :desc)
@@ -87,8 +87,13 @@ class Api::EmailsController < ApplicationController
 
   def update
     @email = Email.find_by(id: params[:id])
-    if (!params[:sent] || User.find_by(gollygmail: email.to)) && @email.update(email_params)
-      render :show
+    if @email.update(email_params)
+      if !params[:sent]
+        render :show
+      elsif user = User.find_by(gollygmail: email.to)
+        # sendEmail(user.id, "NEW_EMAIL")
+        render :show
+      end
     else
       render json: { message: "Couldn't update"}
     end

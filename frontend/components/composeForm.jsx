@@ -5,11 +5,6 @@ var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 var ComposeForm = React.createClass({
 
-
-  // Opening a new form creates a draft
-  // That draft goes to a store
-  //
-
   getInitialState: function() {
     return {
       minimized: false,
@@ -46,10 +41,13 @@ var ComposeForm = React.createClass({
       console.log("Not a valid email");
     }
     clearInterval(this.draftTimer);
+    this.draftTimer = 0;
   },
 
   _closeForm: function (e) {
-    this.updateEmail(this.props.draft.id, false, e);
+    if (this.draftTimer) {
+      this.updateEmail(this.props.draft.id, false, e);
+    }
     this.props.close();
   },
 
@@ -70,7 +68,7 @@ var ComposeForm = React.createClass({
 
         reader.onloadend = function () {
           this.setState({ imageUrl: reader.result, imageFile: file });
-          ApiUtil.updateEmail(this.state.Draftid, { imageUrl: reader.result, imageFile: file });
+          // ApiUtil.updateEmail(this.state.Draftid, { imageUrl: reader.result, imageFile: file });
         }.bind(this);
 
         if (file) {
@@ -80,6 +78,7 @@ var ComposeForm = React.createClass({
         }
         break;
     }
+
     clearInterval(this.draftTimer);
     this.draftTimer = setInterval(this.updateEmail.bind(null, this.props.draft.id, false), 3000);
   },

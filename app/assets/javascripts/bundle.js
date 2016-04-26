@@ -49,7 +49,8 @@
 	var ReactRouter = __webpack_require__(159);
 	
 	var App = __webpack_require__(216);
-	var EmailPreviewTable = __webpack_require__(258);
+	var EmailPreviewTable = __webpack_require__(259);
+	var DraftPreviewTable = __webpack_require__(268);
 	var EmailDetails = __webpack_require__(264);
 	var LoginForm = __webpack_require__(265);
 	var SignupForm = __webpack_require__(266);
@@ -80,7 +81,7 @@
 	      React.createElement(Route, { path: 'outbox/:id', component: EmailDetails }),
 	      React.createElement(Route, { path: 'search-results', component: EmailPreviewTable }),
 	      React.createElement(Route, { path: 'search-results/:id', component: EmailDetails }),
-	      React.createElement(Route, { path: 'drafts', component: EmailPreviewTable })
+	      React.createElement(Route, { path: 'drafts', component: DraftPreviewTable })
 	    ),
 	    React.createElement(Route, { path: '/login', component: LoginForm }),
 	    React.createElement(Route, { path: '/signup', component: SignupForm })
@@ -24780,9 +24781,9 @@
 	var TopNav = __webpack_require__(217);
 	var SideNav = __webpack_require__(251);
 	var ComposeForm = __webpack_require__(252);
-	var EmailStore = __webpack_require__(259);
+	var DraftStore = __webpack_require__(270);
 	
-	var ClickActions = __webpack_require__(257);
+	var ClickActions = __webpack_require__(258);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -24796,15 +24797,15 @@
 	  },
 	
 	  componentDidMount: function () {
-	    this.emailStoreToken = EmailStore.addListener(this._onCreate);
+	    this.draftStoreToken = DraftStore.addListener(this._onCreate);
 	  },
 	
 	  componentWillUnMount: function () {
-	    this.emailStoreToken.remove();
+	    this.draftStoreToken.remove();
 	  },
 	
 	  _onCreate: function () {
-	    this.setState({ draft: EmailStore.newDraft() });
+	    this.setState({ draft: DraftStore.newDraft() });
 	  },
 	
 	  _createDraft: function () {
@@ -25002,6 +25003,27 @@
 	    });
 	  },
 	
+	  fetchDrafts: function (path, page, query) {
+	    var searchParam;
+	    if (query) {
+	      searchParam = query.query;
+	    } else {
+	      query = null;
+	    }
+	    $.ajax({
+	      type: 'GET',
+	      url: 'api/emails',
+	      dataType: 'json',
+	      data: { path: path, page: page, query: searchParam },
+	      success: function (response) {
+	        ApiActions.receiveDrafts(response);
+	      },
+	      error: function () {
+	        console.log('ApiUtil#fetchDrafts error');
+	      }
+	    });
+	  },
+	
 	  fetchEmail: function (path, id) {
 	    $.ajax({
 	      type: 'GET',
@@ -25044,8 +25066,12 @@
 	      datatype: 'json',
 	      data: formData,
 	      success: function (email) {
-	        ApiActions.receiveEmail(email);
-	        email.sent && callback && callback();
+	        if (email.sent) {
+	          ApiActions.receiveEmail(email);
+	          callback && callback();
+	        } else {
+	          ApiActions.receiveDraft(email);
+	        }
 	      },
 	      error: function () {
 	        console.log('ApiUtil#createEmails error');
@@ -25082,8 +25108,6 @@
 	      }
 	    });
 	  },
-	
-	  // Can probably delete
 	
 	  toggleRead: function (email) {
 	    $.ajax({
@@ -25191,6 +25215,16 @@
 	      }
 	    });
 	  }
+	
+	  // subscribe: function (user) {
+	  //   url = 'http://' + window.location.host + '/faye';
+	  //   var pushClient = new Faye.Client(url);
+	  //   var subscription = pushClient.subscribe('/' + user, function(data) {
+	  //     if (data.text === 'NEW_EMAIL') {
+	  //       this.fetchEmails();
+	  //     }
+	  //   });
+	  // }
 	};
 	
 	window.ApiUtil = ApiUtil;
@@ -25203,6 +25237,7 @@
 
 	var AppDispatcher = __webpack_require__(220);
 	var EmailConstants = __webpack_require__(224);
+	var DraftConstants = __webpack_require__(269);
 	var SessionConstants = __webpack_require__(225);
 	var UserConstants = __webpack_require__(226);
 	
@@ -25211,6 +25246,15 @@
 	    var action = {
 	      actionType: EmailConstants.EMAILS_RECEIVED,
 	      emails: response.emails,
+	      meta: response.meta
+	    };
+	    AppDispatcher.dispatch(action);
+	  },
+	
+	  receiveDrafts: function (response) {
+	    var action = {
+	      actionType: DraftConstants.DRAFTS_RECEIVED,
+	      drafts: response.emails,
 	      meta: response.meta
 	    };
 	    AppDispatcher.dispatch(action);
@@ -25226,7 +25270,7 @@
 	
 	  receiveDraft: function (draft) {
 	    var action = {
-	      actionType: EmailConstants.EMAIL_CREATED,
+	      actionType: DraftConstants.DRAFT_RECEIVED,
 	      draft: draft
 	    };
 	    AppDispatcher.dispatch(action);
@@ -25645,6 +25689,7 @@
 	var AppDispatcher = __webpack_require__(220);
 	
 	var SessionStore = new Store(AppDispatcher);
+	var ApiUtil = __webpack_require__(218);
 	
 	var _currentUser;
 	var _currentUserFetched = false;
@@ -25666,6 +25711,7 @@
 	    case SessionConstants.CURRENT_USER_RECEIVED:
 	      _currentUser = payload.currentUser;
 	      _currentUserFetched = true;
+	      // ApiUtil.subscribe(currentUser.id);
 	      SessionStore.__emitChange();
 	      break;
 	    case SessionConstants.LOGOUT:
@@ -32396,10 +32442,6 @@
 	  displayName: 'ComposeForm',
 	
 	
-	  // Opening a new form creates a draft
-	  // That draft goes to a store
-	  //
-	
 	  getInitialState: function () {
 	    return {
 	      minimized: false,
@@ -32438,10 +32480,13 @@
 	      console.log("Not a valid email");
 	    }
 	    clearInterval(this.draftTimer);
+	    this.draftTimer = 0;
 	  },
 	
 	  _closeForm: function (e) {
-	    this.updateEmail(this.props.draft.id, false, e);
+	    if (this.draftTimer) {
+	      this.updateEmail(this.props.draft.id, false, e);
+	    }
 	    this.props.close();
 	  },
 	
@@ -32462,7 +32507,7 @@
 	
 	        reader.onloadend = function () {
 	          this.setState({ imageUrl: reader.result, imageFile: file });
-	          ApiUtil.updateEmail(this.state.Draftid, { imageUrl: reader.result, imageFile: file });
+	          // ApiUtil.updateEmail(this.state.Draftid, { imageUrl: reader.result, imageFile: file });
 	        }.bind(this);
 	
 	        if (file) {
@@ -32472,6 +32517,7 @@
 	        }
 	        break;
 	    }
+	
 	    clearInterval(this.draftTimer);
 	    this.draftTimer = setInterval(this.updateEmail.bind(null, this.props.draft.id, false), 3000);
 	  },
@@ -32776,6 +32822,73 @@
 /* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var Store = __webpack_require__(230).Store;
+	var AppDispatcher = __webpack_require__(220);
+	var EmailConstants = __webpack_require__(224);
+	
+	var _emails = {};
+	var _newDraft = null;
+	var _meta = {};
+	
+	var EmailStore = new Store(AppDispatcher);
+	
+	EmailStore.all = function () {
+	  var emails = [];
+	  for (var id in _emails) {
+	    emails.push(_emails[id]);
+	  }
+	  return emails;
+	};
+	
+	EmailStore.find = function (id) {
+	  return _emails[id];
+	};
+	
+	EmailStore.newDraft = function () {
+	  return _newDraft;
+	};
+	
+	EmailStore.meta = function () {
+	  return $.extend(true, {}, _meta);
+	};
+	
+	EmailStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case EmailConstants.EMAILS_RECEIVED:
+	      resetEmails(payload.emails);
+	      _meta = payload.meta;
+	      EmailStore.__emitChange();
+	      break;
+	    case EmailConstants.EMAIL_RECEIVED:
+	      resetEmail(payload.email);
+	      EmailStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	var newEmail = function (draft) {
+	  _newDraft = draft;
+	};
+	
+	var resetEmails = function (emails) {
+	  _emails = {};
+	  emails.forEach(function (email) {
+	    _emails[email.id] = email;
+	  });
+	};
+	
+	var resetEmail = function (email) {
+	  _emails[email.id] = email;
+	};
+	
+	window.EmailStore = EmailStore;
+	
+	module.exports = EmailStore;
+
+/***/ },
+/* 258 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var AppDispatcher = __webpack_require__(220);
 	var ClickConstants = __webpack_require__(248);
 	
@@ -32791,11 +32904,11 @@
 	module.exports = ClickActions;
 
 /***/ },
-/* 258 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EmailStore = __webpack_require__(259);
+	var EmailStore = __webpack_require__(257);
 	var MarkStore = __webpack_require__(260);
 	var SessionStore = __webpack_require__(229);
 	var ApiUtil = __webpack_require__(218);
@@ -32816,10 +32929,6 @@
 	  },
 	
 	  componentDidMount: function () {
-	    // if (!this.props.route.path) {
-	    //   this.context.router.push('inbox/');
-	    // }
-	
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
 	    this.markStoreToken = MarkStore.addListener(this._onChange);
 	    ApiUtil.fetchEmails(this.props.route.path, 1, this.props.location.query);
@@ -32979,77 +33088,6 @@
 	module.exports = EmailPreviewTable;
 
 /***/ },
-/* 259 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var Store = __webpack_require__(230).Store;
-	var AppDispatcher = __webpack_require__(220);
-	var EmailConstants = __webpack_require__(224);
-	
-	var _emails = {};
-	var _newDraft = null;
-	var _meta = {};
-	
-	var EmailStore = new Store(AppDispatcher);
-	
-	EmailStore.all = function () {
-	  var emails = [];
-	  for (var id in _emails) {
-	    emails.push(_emails[id]);
-	  }
-	  return emails;
-	};
-	
-	EmailStore.find = function (id) {
-	  return _emails[id];
-	};
-	
-	EmailStore.newDraft = function () {
-	  return _newDraft;
-	};
-	
-	EmailStore.meta = function () {
-	  return $.extend(true, {}, _meta);
-	};
-	
-	EmailStore.__onDispatch = function (payload) {
-	  switch (payload.actionType) {
-	    case EmailConstants.EMAILS_RECEIVED:
-	      resetEmails(payload.emails);
-	      _meta = payload.meta;
-	      EmailStore.__emitChange();
-	      break;
-	    case EmailConstants.EMAIL_RECEIVED:
-	      resetEmail(payload.email);
-	      EmailStore.__emitChange();
-	      break;
-	    case EmailConstants.EMAIL_CREATED:
-	      newEmail(payload.draft);
-	      EmailStore.__emitChange();
-	      break;
-	  }
-	};
-	
-	var newEmail = function (draft) {
-	  _newDraft = draft;
-	};
-	
-	var resetEmails = function (emails) {
-	  _emails = {};
-	  emails.forEach(function (email) {
-	    _emails[email.id] = email;
-	  });
-	};
-	
-	var resetEmail = function (email) {
-	  _emails[email.id] = email;
-	};
-	
-	window.EmailStore = EmailStore;
-	
-	module.exports = EmailStore;
-
-/***/ },
 /* 260 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -33113,7 +33151,7 @@
 	var React = __webpack_require__(1);
 	var MarkActions = __webpack_require__(263);
 	var MarkStore = __webpack_require__(260);
-	var EmailStore = __webpack_require__(259);
+	var EmailStore = __webpack_require__(257);
 	
 	var Checkboxes = React.createClass({
 	  displayName: 'Checkboxes',
@@ -33222,7 +33260,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var EmailStore = __webpack_require__(259);
+	var EmailStore = __webpack_require__(257);
 	var ApiUtil = __webpack_require__(218);
 	var History = __webpack_require__(159).History;
 	
@@ -33244,9 +33282,7 @@
 	
 	  componentDidMount: function () {
 	    this.emailStoreToken = EmailStore.addListener(this._onChange);
-	    // ApiUtil.fetchEmails(this.props.route.path.slice(0, -4), 1, this.props.location.query);
-	    // fetching all emails kind of hacky, fix later
-	    ApiUtil.fetchEmail(this.props.route.path.slice(0, -4), parseInt(this.props.params.id)); //Experiment
+	    ApiUtil.fetchEmail(this.props.route.path.slice(0, -4), parseInt(this.props.params.id));
 	  },
 	
 	  componentWillUnmount: function () {
@@ -33266,13 +33302,6 @@
 	
 	  componentWillReceiveProps: function (newProps) {
 	    ApiUtil.fetchEmail(this.props.route.path.slice(0, -4), newProps.params.id);
-	    // if (EmailStore.find(newProps.params.id)) {
-	    // this.setState({ email: EmailStore.find(newProps.params.id) });
-	    // won't work for older emails because of hacky fetch all emails
-	    // }
-	    // if (EmailStore.find(newProps.params.id) && !EmailStore.find(newProps.params.id).read) {
-	    // ApiUtil.toggleRead(EmailStore.find(newProps.params.id));
-	    // }
 	  },
 	
 	  // <div className='navbar-left-buttons'>
@@ -33975,6 +34004,269 @@
 	};
 	
 	module.exports = UserStore;
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var DraftStore = __webpack_require__(270);
+	var MarkStore = __webpack_require__(260);
+	var SessionStore = __webpack_require__(229);
+	var ApiUtil = __webpack_require__(218);
+	var Checkboxes = __webpack_require__(262);
+	var Link = __webpack_require__(159).Link;
+	var History = __webpack_require__(159).History;
+	
+	var DraftPreviewTable = React.createClass({
+	  displayName: 'DraftPreviewTable',
+	
+	
+	  contextTypes: {
+	    router: React.PropTypes.object.isRequired
+	  },
+	
+	  getInitialState: function () {
+	    return { drafts: null };
+	  },
+	
+	  componentDidMount: function () {
+	    this.draftStoreToken = DraftStore.addListener(this._onChange);
+	    this.markStoreToken = MarkStore.addListener(this._onChange);
+	    ApiUtil.fetchDrafts(this.props.route.path, 1, this.props.location.query);
+	  },
+	
+	  componentWillReceiveProps: function (newProps) {
+	    ApiUtil.fetchDrafts(newProps.route.path, 1, newProps.location.query);
+	  },
+	
+	  componentWillUnmount: function () {
+	    this.draftStoreToken.remove();
+	    this.markStoreToken.remove();
+	  },
+	
+	  nextPage: function () {
+	    var meta = DraftStore.meta();
+	    ApiUtil.fetchDrafts(this.props.route.path, meta.page + 1, this.props.location.query);
+	  },
+	
+	  previousPage: function () {
+	    var meta = DraftStore.meta();
+	    ApiUtil.fetchDrafts(this.props.route.path, meta.page - 1, this.props.location.query);
+	  },
+	
+	  _onChange: function () {
+	    this.setState({ drafts: DraftStore.all().sort(function (x, y) {
+	        return Date.parse(y.created_at) - Date.parse(x.created_at);
+	      })
+	    });
+	  },
+	
+	  render: function () {
+	    var drafts = this.state.drafts || [];
+	    var draftPreviews = drafts.map(function (email, i) {
+	      var path = (this.props.location.pathname = "/" ? '/inbox/' : this.props.location.pathname) + email.id;
+	      return React.createElement(
+	        'div',
+	        { key: i, className: 'email-preview-item group' + (MarkStore.includes(email.id) ? ' email-marked' : ' email-unmarked') + (email.read ? ' email-read' : ' email-unread') },
+	        React.createElement(Checkboxes, { email: email }),
+	        React.createElement(
+	          Link,
+	          { className: 'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold'), to: path },
+	          SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name
+	        ),
+	        React.createElement(
+	          Link,
+	          {
+	            className: 'email-preview-subject email-preview-link' + (email.read ? ' normal' : ' bold'),
+	            to: path },
+	          email.subject ? email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject : '(no subject)'
+	        ),
+	        React.createElement(
+	          'span',
+	          { className: email.body ? 'subject-dash-body' : 'hidden' },
+	          '-'
+	        ),
+	        React.createElement(
+	          Link,
+	          { className: 'email-preview-body email-preview-link', to: path },
+	          email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, 100 - email.subject.length)
+	        ),
+	        React.createElement(Link, { className: 'email-preview-link end-content', to: path })
+	      );
+	    }.bind(this));
+	
+	    if (!this.state.drafts) {
+	      emailPreviews = React.createElement(
+	        'p',
+	        null,
+	        'Loading drafts...'
+	      );
+	    } else if (emailPreviews.length === 0) {
+	      emailPreviews = React.createElement(
+	        'p',
+	        null,
+	        'This mailbox is empty'
+	      );
+	    }
+	
+	    var meta = DraftStore.meta();
+	    var firstOnPage = meta.total_count > 0 ? (meta.page - 1) * 50 + 1 : 0;
+	    var draftsOnPage = meta.total_count > meta.page * 50 ? meta.page * 50 : meta.total_count;
+	    var prevDisabled = meta.page === 1;
+	    var nextDisabled = meta.page * 50 >= meta.total_count;
+	    return React.createElement(
+	      'section',
+	      { className: 'email-previews-table-container' },
+	      this.props.children,
+	      React.createElement(
+	        'nav',
+	        { className: 'header-navbar group' },
+	        React.createElement(
+	          'div',
+	          { className: 'navbar-left-buttons' },
+	          React.createElement('div', { className: 'select' }),
+	          React.createElement('div', { className: 'refresh' }),
+	          React.createElement('div', { className: 'more-options' })
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'page-count navbar-right-buttons group' },
+	          React.createElement(
+	            'button',
+	            { className: 'nav-button next-page-button', onClick: this.nextPage, disabled: nextDisabled },
+	            'N'
+	          ),
+	          React.createElement(
+	            'button',
+	            { className: 'nav-button previous-page-button', onClick: this.previousPage, disabled: prevDisabled },
+	            'P'
+	          ),
+	          React.createElement(
+	            'span',
+	            { className: 'pages-and-emails group' },
+	            React.createElement(
+	              'p',
+	              { className: 'first-on-page' },
+	              firstOnPage
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'dash-between' },
+	              '-'
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'total-on-page' },
+	              draftsOnPage
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'just-of' },
+	              'of'
+	            ),
+	            React.createElement(
+	              'p',
+	              { className: 'total-emails-in-database' },
+	              meta.total_count
+	            )
+	          )
+	        )
+	      ),
+	      React.createElement(
+	        'div',
+	        { className: 'email-previews-table' },
+	        draftPreviews
+	      )
+	    );
+	  }
+	});
+	
+	// <p className='pages-and-drafts'>{ firstOnPage + '-' + draftsOnPage} + ' ' <p className='just-of'>of</p> ' ' + {meta.total_count}</p>
+	// <p className='pages-left'>{ firstOnPage + '-' + draftsOnPage}</p>
+	// <p className='just-of'>' of '</p>
+	// <p className='pages-right'>{meta.total_count}</p>
+	
+	module.exports = DraftPreviewTable;
+
+/***/ },
+/* 269 */
+/***/ function(module, exports) {
+
+	DraftConstants = {
+	  DRAFTS_RECEIVED: 'DRAFTS_RECEIVED',
+	  DRAFT_RECEIVED: 'DRAFT_RECEIVED'
+	};
+	
+	module.exports = DraftConstants;
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Store = __webpack_require__(230).Store;
+	var AppDispatcher = __webpack_require__(220);
+	var DraftConstants = __webpack_require__(269);
+	
+	var _drafts = {};
+	var _newDraft = null;
+	var _meta = {};
+	
+	var DraftStore = new Store(AppDispatcher);
+	
+	DraftStore.all = function () {
+	  var drafts = [];
+	  for (var id in _drafts) {
+	    drafts.push(_drafts[id]);
+	  }
+	  return drafts;
+	};
+	
+	DraftStore.find = function (id) {
+	  return _drafts[id];
+	};
+	
+	DraftStore.newDraft = function () {
+	  return _newDraft;
+	};
+	
+	DraftStore.meta = function () {
+	  return $.extend(true, {}, _meta);
+	};
+	
+	DraftStore.__onDispatch = function (payload) {
+	  switch (payload.actionType) {
+	    case DraftConstants.DRAFTS_RECEIVED:
+	      resetDrafts(payload.drafts);
+	      _meta = payload.meta;
+	      DraftStore.__emitChange();
+	      break;
+	    case DraftConstants.DRAFT_RECEIVED:
+	      resetDraft(payload.draft);
+	      DraftStore.__emitChange();
+	      break;
+	  }
+	};
+	
+	var newDraft = function (draft) {
+	  _newDraft = draft;
+	};
+	
+	var resetDrafts = function (drafts) {
+	  _drafts = {};
+	  drafts.forEach(function (draft) {
+	    _drafts[draft.id] = draft;
+	  });
+	};
+	
+	var resetDraft = function (draft) {
+	  _newDraft = draft;
+	  _drafts[draft.id] = draft;
+	};
+	
+	window.DraftStore = DraftStore;
+	
+	module.exports = DraftStore;
 
 /***/ }
 /******/ ]);

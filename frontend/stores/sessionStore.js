@@ -3,6 +3,7 @@ var SessionConstants = require('../constants/sessionConstants');
 var AppDispatcher = require('../dispatcher/dispatcher');
 
 var SessionStore = new Store(AppDispatcher);
+var ApiUtil = require('../utils/apiUtil');
 
 var _currentUser;
 var _currentUserFetched = false;
@@ -24,6 +25,7 @@ SessionStore.__onDispatch = function (payload) {
     case SessionConstants.CURRENT_USER_RECEIVED:
       _currentUser = payload.currentUser;
       _currentUserFetched = true;
+      // ApiUtil.subscribe(currentUser.id);
       SessionStore.__emitChange();
       break;
     case SessionConstants.LOGOUT:
