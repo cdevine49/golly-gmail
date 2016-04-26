@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 	helper_method :current_user, :current_user_name, :current_user_id, :logged_in?
 
-	private
+  private
 	def current_user
     @current_user ||= User.find_by(session_token: session[:session_token])
   end
@@ -21,8 +21,6 @@ class ApplicationController < ActionController::Base
 		session[:session_token] = nil
 	end
 
-
-
   def current_user_id
     current_user.id if current_user
   end
@@ -30,6 +28,18 @@ class ApplicationController < ActionController::Base
   def current_user_name
     current_user.username if current_user
   end
+
+  # def sendEmail(user, message)
+  #   EM.run {
+  #     client = Faye::Client.new("http://#{request.host_with_port}/faye")
+  #
+  #     client.subscribe("/#{user}") do |message|
+  #       puts message.inspect
+  #     end
+  #
+  #     client.publish("/#{user}", text: message)
+  #   }
+  # end
 
   # before actions
 

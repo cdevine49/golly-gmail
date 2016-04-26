@@ -2,7 +2,7 @@ var React = require('react');
 var TopNav = require('./topNav');
 var SideNav = require('./sideNav');
 var ComposeForm = require('./composeForm');
-var EmailStore = require('../stores/emailStore');
+var DraftStore = require('../stores/draftStore');
 
 var ClickActions = require('../actions/clickActions');
 
@@ -16,15 +16,15 @@ var App = React.createClass({
   },
 
   componentDidMount: function() {
-    this.emailStoreToken = EmailStore.addListener(this._onCreate);
+    this.draftStoreToken = DraftStore.addListener(this._onCreate);
   },
 
   componentWillUnMount: function () {
-    this.emailStoreToken.remove();
+    this.draftStoreToken.remove();
   },
 
   _onCreate: function () {
-    this.setState({draft: EmailStore.newDraft()});
+    this.setState({draft: DraftStore.newDraft()});
   },
 
   _createDraft: function () {

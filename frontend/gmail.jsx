@@ -4,6 +4,7 @@ var ReactRouter = require('react-router');
 
 var App = require('./components/app');
 var EmailPreviewTable = require('./components/emailPreviewTable');
+var DraftPreviewTable = require('./components/draftPreviewTable');
 var EmailDetails = require('./components/emailDetails');
 var LoginForm = require('./components/loginForm');
 var SignupForm = require('./components/signupForm');
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
           <Route path='outbox/:id' component={EmailDetails}/>
         <Route path='search-results' component={EmailPreviewTable}/>
           <Route path='search-results/:id' component={EmailDetails}/>
-        <Route path='drafts' component={EmailPreviewTable} />
+        <Route path='drafts' component={DraftPreviewTable} />
       </Route>
 
       <Route path='/login' component={LoginForm}/>

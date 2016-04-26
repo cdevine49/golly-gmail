@@ -24,6 +24,27 @@ ApiUtil = {
     });
   },
 
+  fetchDrafts: function (path, page, query) {
+    var searchParam;
+    if (query) {
+      searchParam = query.query;
+    } else {
+      query = null;
+    }
+    $.ajax({
+      type: 'GET',
+      url: 'api/emails',
+      dataType: 'json',
+      data: {path: path, page: page, query: searchParam},
+      success: function (response) {
+        ApiActions.receiveDrafts(response);
+      },
+      error: function () {
+        console.log('ApiUtil#fetchDrafts error');
+      }
+    });
+  },
+
   fetchEmail: function (path, id) {
     $.ajax({
       type: 'GET',
@@ -66,8 +87,13 @@ ApiUtil = {
       datatype: 'json',
       data: formData,
       success: function (email) {
-        ApiActions.receiveEmail(email);
-        email.sent && callback && callback();
+        if (email.sent) {
+          ApiActions.receiveEmail(email);
+          callback && callback();
+        } else {
+          ApiActions.receiveDraft(email);
+        }
+
       },
       error: function () {
         console.log('ApiUtil#createEmails error');
@@ -104,8 +130,6 @@ ApiUtil = {
       }
     });
   },
-
-  // Can probably delete
 
   toggleRead: function (email) {
     $.ajax({
@@ -213,6 +237,16 @@ ApiUtil = {
       }
     });
   }
+
+  // subscribe: function (user) {
+  //   url = 'http://' + window.location.host + '/faye';
+  //   var pushClient = new Faye.Client(url);
+  //   var subscription = pushClient.subscribe('/' + user, function(data) {
+  //     if (data.text === 'NEW_EMAIL') {
+  //       this.fetchEmails();
+  //     }
+  //   });
+  // }
 };
 
 window.ApiUtil = ApiUtil;

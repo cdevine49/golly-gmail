@@ -39,10 +39,6 @@ EmailStore.__onDispatch = function (payload) {
       resetEmail(payload.email);
       EmailStore.__emitChange();
       break;
-    case EmailConstants.EMAIL_CREATED:
-      newEmail(payload.draft);
-      EmailStore.__emitChange();
-      break;
   }
 };
 

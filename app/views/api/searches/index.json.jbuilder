@@ -13,7 +13,7 @@ json.search_results do
         search_result,
         :id, :subject, :body, :to, :from_name,
         :from_email, :created_at, :updated_at,
-        :marked, :starred, :important, :read
+        :starred, :important, :read
       )
 
       if search_result.image.exists?
