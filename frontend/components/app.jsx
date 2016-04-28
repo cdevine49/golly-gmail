@@ -28,7 +28,7 @@ var App = React.createClass({
   },
 
   _createDraft: function () {
-      this.setState({ composeForms: this.state.composeForms.concat([<ComposeForm key={this.state.composeForms.length} close={this._closeForm.bind(null, this.state.composeForms.length)} />]) });
+      this.setState({ composeForms: this.state.composeForms.concat([<ComposeForm key={this.state.composeForms.length} close={this._closeForm.bind(null, this.state.composeForms.length)} draft={null} />]) });
   },
 
   _closeForm: function (index) {
@@ -39,14 +39,22 @@ var App = React.createClass({
     ClickActions.receiveClick();
   },
 
+_updateDraft: function (email) {
+  this.setState({ composeForms: this.state.composeForms.concat([<ComposeForm key={this.state.composeForms.length} close={this._closeForm.bind(null, this.state.composeForms.length)} draft={email} />]) });
+},
+
   render: function() {
+    var children = React.Children.map(this.props.children, function(child) {
+    return React.cloneElement(child, {
+      updateDraft: this._updateDraft});
+    }.bind(this));
 
     return (
       <main onClick={this._click}>
         <TopNav />
         <SideNav onCompose={this._createDraft} />
         {this.state.composeForms}
-        {this.props.children}
+        <div>{children}</div>
       </main>
     );
   }

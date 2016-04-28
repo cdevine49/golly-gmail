@@ -7,10 +7,11 @@ var ComposeForm = React.createClass({
 
   getInitialState: function() {
     return {
+      id: this.props.draft && this.props.draft.id,
       minimized: false,
-      subject: "",
-      body: "",
-      to: "",
+      subject: (this.props.draft && this.props.draft.subject) || "",
+      body: (this.props.draft && this.props.draft.body) || "",
+      to: (this.props.draft && this.props.draft.to) || "",
       sent: false,
       imageUrl: null,
       imageFile: null

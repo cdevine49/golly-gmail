@@ -43,10 +43,12 @@ DraftStore.__onDispatch = function (payload) {
 };
 
 var newDraft = function (draft) {
+  debugger
   _newDraft = draft;
 };
 
 var resetDrafts = function (drafts) {
+  debugger
   _drafts = {};
   drafts.forEach(function (draft) {
     _drafts[draft.id] = draft;
