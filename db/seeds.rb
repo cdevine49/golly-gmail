@@ -66,6 +66,8 @@ User.create!(
 
 (1..200).each do |i|
    a = Email.new(subject: "Hey, how are you?", body: '')
+   e = Email.new(subject: "I'm going out tomorrow", body: 'You should come')
+   f = Email.new(subject: "How 'bout those mets?'", body: 'You think they have a shot this year?')
    b = Email.new(subject: "What's going on?", body: "Just checking in")
    c = Email.new(subject: "", body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
    d = Email.new(subject: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
@@ -83,6 +85,13 @@ User.create!(
      d.from_email = "danesr@gollygmail.com"
      d.from_name = "Dane S"
      d.to = "drummy@gollygmail.com"
+     e.from_email = "brenda@gollygmail.com"
+     e.from_name = "Brenda VanDzuras"
+     e.to = "conord@gollygmail.com"
+     f.from_email = "danesr@gollygmail.com"
+     f.from_name = "Dane S"
+     f.to = "conord@gollygmail.com"
+
     if i % 6 == 0
       a.starred = true
       b.important = true unless i % 40 == 0
@@ -118,14 +127,14 @@ User.create!(
     b.from_name = "Michael Drumm"
     b.to = "conord@gollygmail.com"
    end
-   [a, b, c, d].each do |email|
+   [a, b, c, d, e, f].each do |email|
      email.sent = true
    end
    a.save
    b.save
    c.save
    d.save
-   [a, b, c, d].each do |email|
+   [a, b, c, d, e ,f].each do |email|
      email.received = true
    end
    a.save
