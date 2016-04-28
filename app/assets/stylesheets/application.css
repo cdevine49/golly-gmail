@@ -706,6 +706,10 @@ button, article, footer, small {
   line-height: 2;
 }
 
+.email-preview-item:hover {
+  cursor: pointer;
+}
+
 .email-read {
   background-color: #F4F4F4;
   font-weight: normal;

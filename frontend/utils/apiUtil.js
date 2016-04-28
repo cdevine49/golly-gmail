@@ -1,20 +1,22 @@
 var ApiActions = require('../actions/apiActions');
 var SearchActions = require('../actions/searchActions');
+var Faye = require ('faye/browser/faye-browser.js');
 
 ApiUtil = {
 
-  fetchEmails: function (path, page, query) {
+  fetchEmails: function (path, query) {
     var searchParam;
     if (query) {
       searchParam = query.query;
     } else {
       query = null;
     }
+    path = path === '/' ? '/inbox/1' : path;
     $.ajax({
       type: 'GET',
       url: 'api/emails',
       dataType: 'json',
-      data: {path: path, page: page, query: searchParam},
+      data: {path: path.split('/')[1], page: parseInt(path.split('/')[2]), query: searchParam},
       success: function (response) {
         ApiActions.receiveEmails(response);
       },
@@ -70,7 +72,10 @@ ApiUtil = {
       data: formData,
       success: function (draft) {
         ApiActions.receiveDraft(draft);
-        callback && callback();
+        callback && callback(draft.id);
+        if (window.location.hash.split('/')[1] === 'drafts') {
+          ApiUtil.fetchEmails('/drafts/' + window.location.hash.split('/')[2].split('?')[0]);
+        }
       },
       error: function () {
         console.log('ApiUtil#createEmails error');
@@ -78,7 +83,7 @@ ApiUtil = {
     });
   },
 
-  updateEmail: function (formData, id, sent, callback) {
+  updateEmail: function (formData, id, callback) {
     $.ajax({
       type: 'PATCH',
       url: 'api/emails/' + id,
@@ -90,8 +95,12 @@ ApiUtil = {
         if (email.sent) {
           ApiActions.receiveEmail(email);
           callback && callback();
-        } else {
-          ApiActions.receiveDraft(email);
+          if (window.location.hash.split('/')[1] === 'outbox') {
+            ApiUtil.fetchEmails('/outbox/' + window.location.hash.split('/')[2].split('?')[0]);
+          }
+        } else if (window.location.hash.split('/')[1] === 'drafts') {
+          ApiUtil.fetchEmails('/drafts/' + window.location.hash.split('/')[2].split('?')[0]);
+          // ApiActions.receiveDraft(email);
         }
 
       },
@@ -236,17 +245,17 @@ ApiUtil = {
         console.log('ApiUtil#search error');
       }
     });
-  }
+  },
 
-  // subscribe: function (user) {
-  //   url = 'http://' + window.location.host + '/faye';
-  //   var pushClient = new Faye.Client(url);
-  //   var subscription = pushClient.subscribe('/' + user, function(data) {
-  //     if (data.text === 'NEW_EMAIL') {
-  //       this.fetchEmails();
-  //     }
-  //   });
-  // }
+  subscribe: function (userId) {
+    url = 'http://' + window.location.host + '/faye';
+    var pushClient = new Faye.Client(url);
+    var subscription = pushClient.subscribe('/' + userId, function(data) {
+      if (data.text === 'NEW_EMAIL' && window.location.hash.split('/')[1] === 'inbox') {
+        ApiUtil.fetchEmails('/inbox/' + window.location.hash.split('/')[2].split('?')[0]);
+      }
+    });
+  }
 };
 
 window.ApiUtil = ApiUtil;

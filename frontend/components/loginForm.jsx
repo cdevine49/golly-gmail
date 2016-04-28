@@ -21,15 +21,15 @@ var LoginForm = React.createClass({
     e.preventDefault();
     var router = this.context.router;
     ApiUtil.login(this.state, function () {
-      router.push('/inbox/');
+      router.push('/inbox/1');
     });
   },
 
   _handleDemo: function (e) {
     e.preventDefault();
     var router = this.context.router;
-    ApiUtil.login({username: 'conor', password: 'password'}, function () {
-      router.push('/inbox/');
+    ApiUtil.login({username: 'conord', password: 'password'}, function () {
+      router.push('/inbox/1');
     });
   },
 
@@ -68,7 +68,7 @@ var LoginForm = React.createClass({
                 value={this.state.password} />
               <button className='login-submit'>Log In</button>
               <a className='signin-with-facebook' href="auth/facebook">Sign In With Facebook</a>
-              <div className='demo-signin' onClick={this._handleDemo}>Sign In as Conor</div>
+              <div className='demo-signin' onClick={this._handleDemo}>Guest</div>
           </form>
           <div className='signin-link-and-logo'>
             <Link className='signup-from-signin-link' to={'/signup/'}>Create account</Link>

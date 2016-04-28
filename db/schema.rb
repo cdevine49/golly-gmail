@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160419141314) do
+ActiveRecord::Schema.define(version: 20160427202950) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20160419141314) do
     t.boolean  "important",          default: false
     t.boolean  "read",               default: false
     t.boolean  "sent",               default: false
+    t.boolean  "received",           default: false
   end
 
   add_index "emails", ["from_name"], name: "sender_index", using: :btree

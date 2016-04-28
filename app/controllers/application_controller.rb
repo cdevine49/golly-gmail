@@ -29,17 +29,16 @@ class ApplicationController < ActionController::Base
     current_user.username if current_user
   end
 
-  # def sendEmail(user, message)
-  #   EM.run {
-  #     client = Faye::Client.new("http://#{request.host_with_port}/faye")
-  #
-  #     client.subscribe("/#{user}") do |message|
-  #       puts message.inspect
-  #     end
-  #
-  #     client.publish("/#{user}", text: message)
-  #   }
-  # end
+  def sendEmail(user_id, message)
+    EM.run {
+      client = Faye::Client.new("http://#{request.host_with_port}/faye")
+      client.subscribe("/#{user_id}") do |message|
+        puts message.inspect
+      end
+
+      client.publish("/#{user_id}", text: message)
+    }
+  end
 
   # before actions
 

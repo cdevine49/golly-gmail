@@ -36,7 +36,19 @@ var ComposeForm = React.createClass({
       if (this.state.imageFile) {
         formData.append("email[image]", this.state.imageFile);
       }
-      ApiUtil.updateEmail(formData, id, sent, this.props.close);
+      if (id && sent) {
+        ApiUtil.updateEmail(formData, id, this.props.close);
+        formData.append("email[received]", true);
+        ApiUtil.createEmail(formData);
+      } else if (id) {
+        ApiUtil.updateEmail(formData, id);
+      } else if (sent) {
+        ApiUtil.createEmail(formData);
+        formData.append("email[received]", true);
+        ApiUtil.createEmail(formData, this.props.close);
+      } else {
+        ApiUtil.createEmail(formData, this._setId);
+      }
     } else {
       console.log("Not a valid email");
     }
@@ -44,9 +56,13 @@ var ComposeForm = React.createClass({
     this.draftTimer = 0;
   },
 
+  _setId: function (id) {
+    this.setState({ id: id});
+  },
+
   _closeForm: function (e) {
     if (this.draftTimer) {
-      this.updateEmail(this.props.draft.id, false, e);
+      this.updateEmail(this.state.id, false, e);
     }
     this.props.close();
   },
@@ -80,7 +96,7 @@ var ComposeForm = React.createClass({
     }
 
     clearInterval(this.draftTimer);
-    this.draftTimer = setInterval(this.updateEmail.bind(null, this.props.draft.id, false), 3000);
+    this.draftTimer = setInterval(this.updateEmail.bind(null, this.state.id, false), 3000);
   },
 
   render: function() {
@@ -90,7 +106,7 @@ var ComposeForm = React.createClass({
           <button className='compose-form-header-minimize' onClick={this._handleMinimize}>New Message</button>
           <button className='compose-form-header-close' onClick={this._closeForm}>X</button>
         </div>
-        <form onSubmit={this.updateEmail.bind(null, this.props.draft.id, true)} className={!this.state.minimized ? 'compose-form' : 'hidden'}>
+        <form onSubmit={this.updateEmail.bind(null, this.state.id, true)} className={!this.state.minimized ? 'compose-form' : 'hidden'}>
           <input
             type="textarea"
             placeholder="Recipient"
@@ -118,7 +134,7 @@ var ComposeForm = React.createClass({
           <input
             type='file'
             className='compose-form-image-file'
-            onChange={this.handleChange}>
+            onChange={this._handleChange.bind(null, "File")}>
           </input>
 
         </div>
