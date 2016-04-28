@@ -13,7 +13,7 @@ User.create!(
   last_name: "Devine",
   username: "conord",
   password: "password",
-  gollygmail: "conor@gollygmail.com",
+  gollygmail: "conord@gollygmail.com",
   birthday: Date.new(1990,1,1),
   gender: "male",
   secondary_email: "conordevine@yahoo.com"
@@ -35,7 +35,7 @@ User.create!(
   last_name: "Denis",
   username: "simond",
   password: "password",
-  gollygmail: "simon@gollygmail.com",
+  gollygmail: "simond@gollygmail.com",
   birthday: Date.new(1990,1,1),
   gender: "male",
 )
@@ -56,7 +56,7 @@ User.create!(
   last_name: "S",
   username: "danesr",
   password: "password",
-  gollygmail: "dane@gollygmail.com",
+  gollygmail: "danesr@gollygmail.com",
   birthday: Date.new(1995,1,1),
   gender: "other",
   secondary_email: "dane@hotmail.com"
@@ -65,23 +65,23 @@ User.create!(
 
 
 (1..200).each do |i|
-   a = Email.new(subject: "a email", body: '')
-   b = Email.new(subject: "b email", body: "This is a seed email")
+   a = Email.new(subject: "Hey, how are you?", body: '')
+   b = Email.new(subject: "What's going on?", body: "Just checking in")
    c = Email.new(subject: "", body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
    d = Email.new(subject: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.", body: "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
    if i % 2 == 0
-     a.from_email = "brenda@gollygmail.com"
-     a.from_name = "brenda"
-     a.to = "conor@gollygmail.com"
+     a.from_email = "simond@gollygmail.com"
+     a.from_name = "Simon Denis"
+     a.to = "conord@gollygmail.com"
      a.body = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-     b.from_email = "conor@gollygmail.com"
-     b.from_name = "conor"
+     b.from_email = "conord@gollygmail.com"
+     b.from_name = "Conor Devine"
      b.to = "drummy@gollygmail.com"
-     c.from_email = "conor@gollygmail.com"
-     c.from_name = "conor"
+     c.from_email = "conord@gollygmail.com"
+     c.from_name = "Conor Devine"
      c.to = "brenda@gollygmail.com"
-     d.from_email = "conor@gollygmail.com"
-     d.from_name = "conor"
+     d.from_email = "danesr@gollygmail.com"
+     d.from_name = "Dane S"
      d.to = "drummy@gollygmail.com"
     if i % 6 == 0
       a.starred = true
@@ -98,25 +98,25 @@ User.create!(
     end
   elsif i % 5 == 0
     a.from_email = "drummy@gollygmail.com"
-    a.from_name = "drummy"
-    a.to = "conor@gollygmail.com"
-    a.body = "Lets do this now"
-    b.from_email = "conor@gollygmail.com"
-    b.from_name = "conor"
+    a.from_name = "Michael Drumm"
+    a.to = "conord@gollygmail.com"
+    a.body = "Lets try this another way"
+    b.from_email = "conord@gollygmail.com"
+    b.from_name = "Conor Devine"
     b.to = "drummy@gollygmail.com"
   elsif i % 3 || i % 7 === 0
-    a.from_email = "simon@gollygmail.com"
-    a.from_name = "simon"
-    a.to = "dane@gollygmail.com"
+    a.from_email = "simond@gollygmail.com"
+    a.from_name = "Simon Denis"
+    a.to = "danesr@gollygmail.com"
     a.starred = true unless i % 21 == 0
   else
-    a.from_email = "conor@gollygmail.com"
-    a.from_name = "conor"
+    a.from_email = "conord@gollygmail.com"
+    a.from_name = "Conor Devine"
     a.to = "brenda@gollygmail.com"
     a.important = true
     b.from_email = "drummy@gollygmail.com"
-    b.from_name = "drummy"
-    b.to = "conor@gollygmail.com"
+    b.from_name = "Michael Drumm"
+    b.to = "conord@gollygmail.com"
    end
    [a, b, c, d].each do |email|
      email.sent = true

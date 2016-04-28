@@ -35888,7 +35888,7 @@
 	        React.createElement(
 	          'div',
 	          { className: 'email-preview-body email-preview-link' },
-	          email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, 100 - email.subject.length)
+	          email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, 125 - email.subject.length)
 	        ),
 	        React.createElement('div', { className: 'email-preview-link end-content' })
 	      );
@@ -36153,12 +36153,12 @@
 	  },
 	
 	  _starred: function (e) {
-	    e.preventDefault();
+	    e.stopPropagation();
 	    ApiUtil.toggleStarred(this.props.email);
 	  },
 	
 	  _important: function (e) {
-	    e.preventDefault();
+	    e.stopPropagation();
 	    ApiUtil.toggleImportant(this.props.email);
 	  },
 	
@@ -36174,21 +36174,19 @@
 	          onChange: this._marked,
 	          checked: this.state.marked })
 	      ),
-	      React.createElement(
-	        'span',
-	        { className: 'starred-box' },
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          onChange: this._starred,
-	          checked: this.props.email.starred })
+	      this.props.email.starred ? React.createElement(
+	        'div',
+	        { className: 'starred-box starred', onClick: this._starred },
+	        '★'
+	      ) : React.createElement(
+	        'div',
+	        { className: 'starred-box unstarred', onClick: this._starred },
+	        '☆'
 	      ),
 	      React.createElement(
-	        'span',
-	        { className: 'important-box' },
-	        React.createElement('input', {
-	          type: 'checkbox',
-	          onChange: this._important,
-	          checked: this.props.email.important })
+	        'div',
+	        { className: 'important-box' + (this.props.email.important ? ' important' : ' unimportant'), onClick: this._important },
+	        '!'
 	      )
 	    );
 	  }
