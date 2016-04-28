@@ -36720,14 +36720,15 @@
 	    ['FirstName', 'LastName', 'Username', 'Password', 'PasswordConfirmation', 'BirthdayMonth', 'BirthdayDay', 'BirthdayYear', 'Gender'].forEach(function (option) {
 	      this._entered(option, true);
 	    }.bind(this));
-	    // var router = this.context.router;
-	    // if (this.state.password !== this.state.passwordConfirmation) {
-	    //   alert("Passwords have to match");
-	    // } else {
-	    //   ApiUtil.signup(this.state, function () {
-	    //     router.push('/inbox/');
-	    //   });
-	    // }
+	
+	    var router = this.context.router;
+	    if (this.state.password !== this.state.passwordConfirmation) {
+	      alert("Passwords have to match");
+	    } else {
+	      ApiUtil.signup(this.state, function () {
+	        router.push('/inbox/1');
+	      });
+	    }
 	  },
 	
 	  _update: function (option, e) {
