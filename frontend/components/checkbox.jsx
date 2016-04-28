@@ -30,12 +30,12 @@ var Checkboxes = React.createClass({
   },
 
   _starred: function (e) {
-    e.preventDefault();
+    e.stopPropagation();
     ApiUtil.toggleStarred(this.props.email);
   },
 
   _important: function (e) {
-    e.preventDefault();
+    e.stopPropagation();
     ApiUtil.toggleImportant(this.props.email);
   },
 
@@ -46,14 +46,14 @@ var Checkboxes = React.createClass({
           type='checkbox'
           onChange={this._marked}
           checked={this.state.marked}></input></span>
-        <span className='starred-box'><input
-           type='checkbox'
-           onChange={this._starred}
-           checked={this.props.email.starred}></input></span>
-        <span className='important-box'><input
-          type='checkbox'
-          onChange={this._important}
-          checked={this.props.email.important}></input></span>
+
+        {this.props.email.starred ?
+        <div className='starred-box starred'  onClick={this._starred}>★</div> :
+        <div className='starred-box unstarred'  onClick={this._starred}>☆</div>}
+
+
+
+        <div className={'important-box' + (this.props.email.important ? ' important' : ' unimportant')} onClick={this._important}>!</div>
       </div>
     );
   }

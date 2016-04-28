@@ -76,7 +76,7 @@ var EmailPreviewTable = React.createClass({
             className={'email-preview-subject email-preview-link'  + (email.read ? ' normal' : ' bold')}
             >{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</div>
           <span className={ (email.body) ? 'subject-dash-body' : 'hidden' }>-</span>
-          <div className='email-preview-body email-preview-link' >{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (100 - email.subject.length)) }</div>
+          <div className='email-preview-body email-preview-link' >{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (125 - email.subject.length)) }</div>
           <div className='email-preview-link end-content' ></div>
         </div>
       );
