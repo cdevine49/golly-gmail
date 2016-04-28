@@ -22,17 +22,13 @@ document.addEventListener('DOMContentLoaded', function () {
     <Router history={hashHistory}>
       <Route path='/' component={App} onEnter={_ensureLoggedIn} >
         <IndexRoute component={EmailPreviewTable} />
-        <Route path='inbox' component={EmailPreviewTable} />
-          <Route path='inbox/:id' component={EmailDetails} />
-        <Route path='starred' component={EmailPreviewTable}/>
-          <Route path='starred/:id' component={EmailDetails} />
-        <Route path='important' component={EmailPreviewTable}/>
-          <Route path='important/:id' component={EmailDetails} />
-        <Route path='outbox' component={EmailPreviewTable}/>
-          <Route path='outbox/:id' component={EmailDetails}/>
-        <Route path='search-results' component={EmailPreviewTable}/>
-          <Route path='search-results/:id' component={EmailDetails}/>
-        <Route path='drafts' component={DraftPreviewTable} />
+        <Route path='inbox/:num' component={EmailPreviewTable} />
+          <Route path='email/:id' component={EmailDetails} />
+        <Route path='starred/:num' component={EmailPreviewTable}/>
+        <Route path='important/:num' component={EmailPreviewTable}/>
+        <Route path='outbox/:num' component={EmailPreviewTable}/>
+        <Route path='search-results/:num' component={EmailPreviewTable}/>
+        <Route path='drafts/:num' component={EmailPreviewTable} />
       </Route>
 
       <Route path='/login' component={LoginForm}/>

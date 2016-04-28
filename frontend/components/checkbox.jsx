@@ -23,15 +23,10 @@ var Checkboxes = React.createClass({
 
   _onChange: function () {
     this.setState({ marked: MarkStore.includes(this.props.email.id) });
-    // if (this.props.email.id === 319 || this.props.email.id === 185) {
-    //   debugger
-    // }
   },
 
   _marked: function (e) {
-    // e.preventDefault();
     MarkActions.markEmail(this.props.email);
-    // ApiUtil.toggleMarked(this.props.email);
   },
 
   _starred: function (e) {
@@ -44,11 +39,6 @@ var Checkboxes = React.createClass({
     ApiUtil.toggleImportant(this.props.email);
   },
 
-  // checked={this.props.email.marked}></input></span>
-  // if (this.props.email.id === 319 || this.props.email.id === 185) {
-  //   console.log(MarkStore.all());
-  //   debugger
-  // }
   render: function() {
     return (
       <div>

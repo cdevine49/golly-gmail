@@ -11,7 +11,7 @@ Email.destroy_all
 User.create!(
   first_name: "Conor",
   last_name: "Devine",
-  username: "conor",
+  username: "conord",
   password: "password",
   gollygmail: "conor@gollygmail.com",
   birthday: Date.new(1990,1,1),
@@ -33,7 +33,7 @@ User.create!(
 User.create!(
   first_name: "Simon",
   last_name: "Denis",
-  username: "simon",
+  username: "simond",
   password: "password",
   gollygmail: "simon@gollygmail.com",
   birthday: Date.new(1990,1,1),
@@ -54,7 +54,7 @@ User.create!(
 User.create!(
   first_name: "Dane",
   last_name: "S",
-  username: "dane",
+  username: "danesr",
   password: "password",
   gollygmail: "dane@gollygmail.com",
   birthday: Date.new(1995,1,1),
@@ -120,6 +120,13 @@ User.create!(
    end
    [a, b, c, d].each do |email|
      email.sent = true
+   end
+   a.save
+   b.save
+   c.save
+   d.save
+   [a, b, c, d].each do |email|
+     email.received = true
    end
    a.save
    b.save

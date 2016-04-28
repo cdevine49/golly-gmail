@@ -4,31 +4,27 @@ class Api::EmailsController < ApplicationController
     case params[:path]
     when 'starred'
       @emails = Email
-      .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
+      .where("(emails.to = ? AND emails.received = ?) OR (emails.from_email = ? AND emails.received = ?)", current_user.gollygmail, true, current_user.gollygmail, false)
       .where(starred: true)
-      .where(sent: true)
     when 'important'
       @emails = Email
-      .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
+      .where("(emails.to = ? AND emails.received = ?) OR (emails.from_email = ? AND emails.received = ?)", current_user.gollygmail, true, current_user.gollygmail, false)
       .where(important: true)
-      .where(sent: true)
     when 'outbox'
       @emails = Email
-      .where("emails.from_email = ?", current_user.gollygmail)
-      .where(sent: true)
+      .where("emails.from_email = ? AND emails.sent = ? AND emails.received = ?", current_user.gollygmail, true, false)
     when 'search-results'
       @emails = Email
+      .where("(emails.to = ? AND emails.received = ?) OR emails.from_email = ?", current_user.gollygmail, true, current_user.gollygmail)
       .search_emails(params[:query])
-      .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
-      .where(sent: true)
     when 'drafts'
       @emails = Email
       .where("emails.from_email = ?", current_user.gollygmail)
-      .where(sent: false)
+      .where("emails.sent = ?", false)
     else
       @emails = Email
       .where("emails.to = ?", current_user.gollygmail)
-      .where(sent: true)
+      .where("received = ?", true)
     end
     @emails = @emails
     .order(created_at: :desc)
@@ -39,29 +35,29 @@ class Api::EmailsController < ApplicationController
     @email = Email
     .where("emails.id = ?", params[:id])
     case params[:path]
-    when 'starred'
+    when '/starred/'
       @email
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(starred: true)
       .where(sent: true)
-    when 'important'
+    when '/important/'
       @email
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(important: true)
       .where(sent: true)
-    when 'outbox'
+    when '/outbox/'
       @email
       .where("emails.from_email = ?", current_user.gollygmail)
       .where(sent: true)
-    when 'search-results'
+    when '/search-results/'
       @email
       .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
       .where(sent: true)
-    when 'inbox'
+    when '/inbox/'
       @email
       .where("emails.to = ?", current_user.gollygmail)
       .where(sent: true)
-    when 'drafts'
+    when '/drafts/'
       @email
       .where("emails.from_email", current_user.gollygmail)
       .where(sent: false)
@@ -78,7 +74,9 @@ class Api::EmailsController < ApplicationController
     email = Email.new(email_params)
     email.from_name = current_user.first_name + ' ' + current_user.last_name
     email.from_email = current_user.gollygmail
+    email.read = true unless email.received
     if email.save
+      sendEmail(User.find_by(gollygmail: email.to).id, "NEW_EMAIL") if email.received
       render json: email
     else
       render json: { message: "No such user" }
@@ -87,13 +85,8 @@ class Api::EmailsController < ApplicationController
 
   def update
     @email = Email.find_by(id: params[:id])
-    if @email.update(email_params)
-      if !params[:sent]
-        render :show
-      elsif user = User.find_by(gollygmail: email.to)
-        # sendEmail(user.id, "NEW_EMAIL")
-        render :show
-      end
+    if @email && @email.update(email_params) && (!params[:sent] || user = User.find_by(gollygmail: email.to))
+      render :show
     else
       render json: { message: "Couldn't update"}
     end
@@ -104,7 +97,7 @@ class Api::EmailsController < ApplicationController
     params.require(:email).permit(
       :subject, :body, :to, :image,
       :starred, :important, :sent,
-      :read, :page, :query)
+      :received, :read, :page, :query)
   end
 
 end

@@ -33,7 +33,7 @@ ApiActions = {
 
   receiveDraft: function(draft) {
     var action = {
-      actionType: DraftConstants.DRAFT_RECEIVED,
+      actionType: EmailConstants.DRAFT_RECEIVED,
       draft: draft
     };
     AppDispatcher.dispatch(action);

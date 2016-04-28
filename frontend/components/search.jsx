@@ -62,10 +62,10 @@ var Search = React.createClass({
             <div className='search-result-email-pic'></div>
             <li className='search-result-fixed-li'>
               <Link className='search-result-fixed-link search-result-subject'
-                to={ {pathname: '/search-results/' + result.id, query: {query: this.state.query} }}>
+                to={ {pathname: '/email/' + result.id, query: {query: this.state.query} }}>
                 { result.subject.slice(0, 40) }</Link>
               <Link className='search-result-fixed-link search-result-name'
-                to={ {pathname:'/search-results/' + result.id, query: {query: this.state.query} }}>
+                to={ {pathname:'/email/' + result.id, query: {query: this.state.query} }}>
                 { result.from_name }</Link>
             </li>
           </div>
@@ -90,7 +90,7 @@ var Search = React.createClass({
             onChange={this.handleInput}
             value={this.state.query}></input>
         </form>
-        <Link to={ {pathname:'/search-results/', query: {query: this.state.query} }}  className='search-button'>B</Link>
+        <Link to={ {pathname:'/search-results/1', query: {query: this.state.query} }}  className='search-button'>B</Link>
         <ul className={ this.state.searchBox ? 'search-results-fixed' : 'search-results-fixed hidden' }>
           { this.results() }
         </ul>

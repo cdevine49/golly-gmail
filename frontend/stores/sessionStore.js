@@ -25,7 +25,7 @@ SessionStore.__onDispatch = function (payload) {
     case SessionConstants.CURRENT_USER_RECEIVED:
       _currentUser = payload.currentUser;
       _currentUserFetched = true;
-      // ApiUtil.subscribe(currentUser.id);
+      ApiUtil.subscribe(_currentUser.id);
       SessionStore.__emitChange();
       break;
     case SessionConstants.LOGOUT:

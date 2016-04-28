@@ -10,7 +10,7 @@ var App = React.createClass({
 
   getInitialState: function() {
     return {
-      composeForm: false,
+      composeForms: [],
       draft: null
     };
   },
@@ -28,19 +28,11 @@ var App = React.createClass({
   },
 
   _createDraft: function () {
-    if (!this.state.composeForm) {
-      var formData = new FormData();
-      formData.append("email[subject]", '');
-      formData.append("email[body]", '');
-      formData.append("email[to]", '');
-      ApiUtil.createEmail(formData, this._toggleForm);
-    } else {
-      this._toggleForm();
-    }
+      this.setState({ composeForms: this.state.composeForms.concat([<ComposeForm key={this.state.composeForms.length} close={this._closeForm.bind(null, this.state.composeForms.length)} />]) });
   },
 
-  _toggleForm: function () {
-    this.setState({ composeForm: !this.state.composeForm });
+  _closeForm: function (index) {
+    this.setState({ composeForms: this.state.composeForms.slice(0, index).concat(this.state.composeForms.slice(index + 1)) });
   },
 
   _click: function (e) {
@@ -53,7 +45,7 @@ var App = React.createClass({
       <main onClick={this._click}>
         <TopNav />
         <SideNav onCompose={this._createDraft} />
-        {this.state.composeForm ? <ComposeForm draft={this.state.draft} close={this._toggleForm}/> : ''}
+        {this.state.composeForms}
         {this.props.children}
       </main>
     );

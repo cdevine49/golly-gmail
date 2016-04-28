@@ -20,11 +20,11 @@ var EmailPreviewTable = React.createClass({
   componentDidMount: function () {
     this.emailStoreToken = EmailStore.addListener(this._onChange);
     this.markStoreToken = MarkStore.addListener(this._onChange);
-    ApiUtil.fetchEmails(this.props.route.path, 1, this.props.location.query);
+    ApiUtil.fetchEmails(this.props.location.pathname, this.props.location.query);
   },
 
   componentWillReceiveProps: function (newProps) {
-    ApiUtil.fetchEmails(newProps.route.path, 1, newProps.location.query);
+    ApiUtil.fetchEmails(newProps.location.pathname, newProps.location.query);
   },
 
   componentWillUnmount: function () {
@@ -34,12 +34,14 @@ var EmailPreviewTable = React.createClass({
 
   nextPage: function () {
     var meta = EmailStore.meta();
-    ApiUtil.fetchEmails(this.props.route.path, meta.page + 1, this.props.location.query);
+    this.context.router.push('/' + this.props.route.path.slice(0, -4) + (meta.page + 1));
+    // ApiUtil.fetchEmails('/' + this.props.route.path.slice(0, -4) + (meta.page + 1), this.props.location.query);
   },
 
   previousPage: function () {
     var meta = EmailStore.meta();
-    ApiUtil.fetchEmails(this.props.route.path, meta.page - 1, this.props.location.query);
+    this.context.router.push('/' + this.props.route.path.slice(0, -4) + (meta.page - 1));
+    // ApiUtil.fetchEmails('/' + this.props.route.path.slice(0, -4) + meta.page - 1, this.props.location.query);
   },
 
   _onChange: function () {
@@ -50,20 +52,32 @@ var EmailPreviewTable = React.createClass({
     });
   },
 
+  goToDetail: function (id, e) {
+    if (e.target.type !== "checkbox") {
+      this.context.router.push('/email/' + id);
+    }
+  },
+
+  openCompose: function (email) {
+    if (e.target.type !== "checkbox") {
+
+    }
+  },
+
   render: function () {
     var emails = this.state.emails || [];
     var emailPreviews = emails.map(function (email, i) {
-      var path = (this.props.location.pathname = "/" ? '/inbox/' : this.props.location.pathname ) + email.id;
+      var path = (this.props.location.pathname === "/" ? '/inbox/1/' : this.props.location.pathname ) + email.id;
       return (
-        <div key={ i } className={'email-preview-item group' + (MarkStore.includes(email.id) ? ' email-marked' : ' email-unmarked') + (email.read ? ' email-read' : ' email-unread')}>
+        <div key={ i } onClick={ email.sent ? this.goToDetail.bind(null, email.id) : this.openCompose.bind(null, email)} className={'email-preview-item group' + (MarkStore.includes(email.id) ? ' email-marked' : ' email-unmarked') + (email.read ? ' email-read' : ' email-unread')}>
           <Checkboxes email={email}/>
-          <Link className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} to={path}>{ SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name }</Link>
-          <Link
+          <div className={'email-preview-sender email-preview-link' + (email.read ? ' normal' : ' bold')} >{ SessionStore.currentUser().gollygmail === email.from_email ? 'me' : email.from_name }</div>
+          <div
             className={'email-preview-subject email-preview-link'  + (email.read ? ' normal' : ' bold')}
-            to={path}>{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</Link>
+            >{ email.subject ? (email.subject.length > 80 ? email.subject.slice(0, 80) + '...' : email.subject) : '(no subject)' }</div>
           <span className={ (email.body) ? 'subject-dash-body' : 'hidden' }>-</span>
-          <Link className='email-preview-body email-preview-link' to={path}>{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (100 - email.subject.length)) }</Link>
-          <Link className='email-preview-link end-content' to={path}></Link>
+          <div className='email-preview-body email-preview-link' >{ email.subject.length > 80 ? email.body.slice(0, 20) : email.body.slice(0, (100 - email.subject.length)) }</div>
+          <div className='email-preview-link end-content' ></div>
         </div>
       );
     }.bind(this));

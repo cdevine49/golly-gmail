@@ -1,8 +1,7 @@
 # GollyGmail
 
-[Heroku link][http://ggmail.herokuapp.com/]
+[Heroku link][http://www.gollygmail.com]
 
-[heroku]: http://www.herokuapp.com
 
 ## Current Functionality
   Redirect to login when user tries to enter site if not currently logged in
