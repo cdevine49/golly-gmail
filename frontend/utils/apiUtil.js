@@ -62,6 +62,21 @@ ApiUtil = {
     });
   },
 
+  fetchDraft: function (id) {
+    $.ajax({
+      type: 'GET',
+      url: 'api/emails/' + id,
+      dataType: 'json',
+      data: {id: id},
+      success: function (draft) {
+        draft && ApiActions.receiveDraft(draft);
+      },
+      error: function () {
+        console.log('ApiUtil#fetchEmails error');
+      }
+    });
+  },
+
   createEmail: function (formData, callback) {
     $.ajax({
       type: 'POST',

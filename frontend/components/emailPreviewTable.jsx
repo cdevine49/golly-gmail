@@ -14,7 +14,8 @@ var EmailPreviewTable = React.createClass({
   },
 
   getInitialState: function () {
-    return { emails: null };
+    return {
+      emails: null };
   },
 
   componentDidMount: function () {
@@ -58,9 +59,9 @@ var EmailPreviewTable = React.createClass({
     }
   },
 
-  openCompose: function (email) {
+  openCompose: function (email, e) {
     if (e.target.type !== "checkbox") {
-
+      this.props.updateDraft(email);
     }
   },
 

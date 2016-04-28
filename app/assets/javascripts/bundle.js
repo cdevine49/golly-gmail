@@ -24805,7 +24805,7 @@
 	  },
 	
 	  _createDraft: function () {
-	    this.setState({ composeForms: this.state.composeForms.concat([React.createElement(ComposeForm, { key: this.state.composeForms.length, close: this._closeForm.bind(null, this.state.composeForms.length) })]) });
+	    this.setState({ composeForms: this.state.composeForms.concat([React.createElement(ComposeForm, { key: this.state.composeForms.length, close: this._closeForm.bind(null, this.state.composeForms.length), draft: null })]) });
 	  },
 	
 	  _closeForm: function (index) {
@@ -24816,7 +24816,15 @@
 	    ClickActions.receiveClick();
 	  },
 	
+	  _updateDraft: function (email) {
+	    this.setState({ composeForms: this.state.composeForms.concat([React.createElement(ComposeForm, { key: this.state.composeForms.length, close: this._closeForm.bind(null, this.state.composeForms.length), draft: email })]) });
+	  },
+	
 	  render: function () {
+	    var children = React.Children.map(this.props.children, function (child) {
+	      return React.cloneElement(child, {
+	        updateDraft: this._updateDraft });
+	    }.bind(this));
 	
 	    return React.createElement(
 	      'main',
@@ -24824,7 +24832,11 @@
 	      React.createElement(TopNav, null),
 	      React.createElement(SideNav, { onCompose: this._createDraft }),
 	      this.state.composeForms,
-	      this.props.children
+	      React.createElement(
+	        'div',
+	        null,
+	        children
+	      )
 	    );
 	  }
 	
@@ -25022,6 +25034,21 @@
 	      data: { path: path, id: id },
 	      success: function (email) {
 	        email && ApiActions.receiveEmail(email);
+	      },
+	      error: function () {
+	        console.log('ApiUtil#fetchEmails error');
+	      }
+	    });
+	  },
+	
+	  fetchDraft: function (id) {
+	    $.ajax({
+	      type: 'GET',
+	      url: 'api/emails/' + id,
+	      dataType: 'json',
+	      data: { id: id },
+	      success: function (draft) {
+	        draft && ApiActions.receiveDraft(draft);
 	      },
 	      error: function () {
 	        console.log('ApiUtil#fetchEmails error');
@@ -35315,10 +35342,11 @@
 	
 	  getInitialState: function () {
 	    return {
+	      id: this.props.draft && this.props.draft.id,
 	      minimized: false,
-	      subject: "",
-	      body: "",
-	      to: "",
+	      subject: this.props.draft && this.props.draft.subject || "",
+	      body: this.props.draft && this.props.draft.body || "",
+	      to: this.props.draft && this.props.draft.to || "",
 	      sent: false,
 	      imageUrl: null,
 	      imageFile: null
@@ -35754,10 +35782,12 @@
 	};
 	
 	var newDraft = function (draft) {
+	  debugger;
 	  _newDraft = draft;
 	};
 	
 	var resetDrafts = function (drafts) {
+	  debugger;
 	  _drafts = {};
 	  drafts.forEach(function (draft) {
 	    _drafts[draft.id] = draft;
@@ -35813,7 +35843,8 @@
 	  },
 	
 	  getInitialState: function () {
-	    return { emails: null };
+	    return {
+	      emails: null };
 	  },
 	
 	  componentDidMount: function () {
@@ -35856,8 +35887,10 @@
 	    }
 	  },
 	
-	  openCompose: function (email) {
-	    if (e.target.type !== "checkbox") {}
+	  openCompose: function (email, e) {
+	    if (e.target.type !== "checkbox") {
+	      this.props.updateDraft(email);
+	    }
 	  },
 	
 	  render: function () {

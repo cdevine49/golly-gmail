@@ -752,13 +752,14 @@ button, article, footer, small {
   margin-left: 0;
   text-align: center;
 
-  margin-top: 10px;
+  margin-top: 9px;
   padding: .5px .5px;
   border-radius: 100%;
   color: green;
   cursor: default;
-  background-color: lightblue;
+  /*background-color: lightblue;*/
   line-height: 1.4;
+  border: 1px solid #e5e5e5;
 }
 
 .important {

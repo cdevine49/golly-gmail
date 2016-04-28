@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <Route path='starred/:num' component={EmailPreviewTable}/>
         <Route path='important/:num' component={EmailPreviewTable}/>
         <Route path='outbox/:num' component={EmailPreviewTable}/>
-        <Route path='search-results/:num' component={EmailPreviewTable}/>
+        <Route path='search-results/:num' component={EmailPreviewTable} />
         <Route path='drafts/:num' component={EmailPreviewTable} />
       </Route>
 
