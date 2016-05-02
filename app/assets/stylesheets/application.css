@@ -67,7 +67,7 @@ button, article, footer, small {
  /* Sign Up Header */
 
  .sign-up-page {
-   overflow: scroll;
+   /*overflow: scroll;*/
  }
 
  .sign-up-header {
@@ -276,7 +276,7 @@ button, article, footer, small {
   margin: 0 auto;
   background-color: #FFFFFF;
   text-align: center;
-
+  overflow: scroll;
 }
 
 .GollyGmail-logo-login {
@@ -694,8 +694,8 @@ button, article, footer, small {
   margin-left: 208px;
   width: 1048px;
   width: auto;
-  height: 500px;
-  overflow: scroll;
+  height: calc(100% - 250px;);
+  overflow-y: scroll;
 }
 
 .email-preview-item {
