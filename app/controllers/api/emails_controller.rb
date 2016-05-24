@@ -34,34 +34,7 @@ class Api::EmailsController < ApplicationController
   def show
     @email = Email
     .where("emails.id = ?", params[:id])
-    # case params[:path]
-    # when '/starred/'
-    #   @email
-    #   .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
-    #   .where(starred: true)
-    #   .where(sent: true)
-    # when '/important/'
-    #   @email
-    #   .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
-    #   .where(important: true)
-    #   .where(sent: true)
-    # when '/outbox/'
-    #   @email
-    #   .where("emails.from_email = ?", current_user.gollygmail)
-    #   .where(sent: true)
-    # when '/search-results/'
-    #   @email
-    #   .where("emails.to = ? OR emails.from_email = ?", current_user.gollygmail, current_user.gollygmail)
-    #   .where(sent: true)
-    # when '/inbox/'
-    #   @email
-    #   .where("emails.to = ?", current_user.gollygmail)
-    #   .where(sent: true)
-    # when '/drafts/'
-    #   @email
-    #   .where("emails.from_email", current_user.gollygmail)
-    #   .where(sent: false)
-    # end
+
     @email = @email.order(created_at: :desc).first
     if @email
       render :show
