@@ -1,34 +1,33 @@
 class Api::EmailsController < ApplicationController
   before_action :require_logged_in!
   def index
-    @emails = params[:path] ? Email.send(params[:path]) : Email.inbox
-
-    # case params[:path]
-    # when 'starred'
-    #   @emails = Email
-    #   .where("(emails.to = ? AND emails.received = ?) OR (emails.from_email = ? AND emails.received = ?)", current_user.gollygmail, true, current_user.gollygmail, false)
-    #   .where(starred: true)
-    # when 'important'
-    #   @emails = Email
-    #   .where("(emails.to = ? AND emails.received = ?) OR (emails.from_email = ? AND emails.received = ?)", current_user.gollygmail, true, current_user.gollygmail, false)
-    #   .where(important: true)
-    # when 'outbox'
-    #   @emails = Email
-    #   .where("emails.from_email = ? AND emails.sent = ? AND emails.received = ?", current_user.gollygmail, true, false)
-    # when 'search-results'
-    #   @emails = Email
-    #   .where("(emails.to = ? AND emails.received = ?) OR emails.from_email = ?", current_user.gollygmail, true, current_user.gollygmail)
-    #   .search_emails(params[:query])
-    # when 'drafts'
-    #   @emails = Email
-    #   .where("emails.from_email = ?", current_user.gollygmail)
-    #   .where("emails.sent = ?", false)
-    # else
-    #   @emails = Email
-    #   .where("emails.to = ?", current_user.gollygmail)
-    #   .where("received = ?", true)
-    # end
-    @emails.order(created_at: :desc)
+    case params[:path]
+    when 'starred'
+      @emails = Email
+      .where("(emails.to = ? AND emails.received = ?) OR (emails.from_email = ? AND emails.received = ?)", current_user.gollygmail, true, current_user.gollygmail, false)
+      .where(starred: true)
+    when 'important'
+      @emails = Email
+      .where("(emails.to = ? AND emails.received = ?) OR (emails.from_email = ? AND emails.received = ?)", current_user.gollygmail, true, current_user.gollygmail, false)
+      .where(important: true)
+    when 'outbox'
+      @emails = Email
+      .where("emails.from_email = ? AND emails.sent = ? AND emails.received = ?", current_user.gollygmail, true, false)
+    when 'search-results'
+      @emails = Email
+      .where("(emails.to = ? AND emails.received = ?) OR emails.from_email = ?", current_user.gollygmail, true, current_user.gollygmail)
+      .search_emails(params[:query])
+    when 'drafts'
+      @emails = Email
+      .where("emails.from_email = ?", current_user.gollygmail)
+      .where("emails.sent = ?", false)
+    else
+      @emails = Email
+      .where("emails.to = ?", current_user.gollygmail)
+      .where("received = ?", true)
+    end
+    @emails = @emails
+    .order(created_at: :desc)
     .page(params[:page]).per(50)
   end
 
