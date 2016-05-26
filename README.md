@@ -1,6 +1,6 @@
 # GollyGmail
 
-[Heroku link][http://www.gollygmail.com]
+[Live](http://www.gollygmail.com)
 
 
 ## Current Functionality
