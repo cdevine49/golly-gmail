@@ -1,5 +1,5 @@
 UserConstants = {
-  USERS: 'USERS'
+  USER_FOUND: 'USER_FOUND'
 };
 
 module.exports = UserConstants;
