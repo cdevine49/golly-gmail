@@ -683,6 +683,11 @@ button, article, footer, small {
   border-right: none;
 }
 
+.previous-page-button:hover,
+.next-page-button:hover {
+  background: #e5e5e5;
+}
+
 /* Email Previews Table */
 
 .email-previews-table-container {
