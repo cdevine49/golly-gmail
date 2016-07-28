@@ -10,8 +10,15 @@ GollyGmail is a single-page web application built on Rails with a React/Flux fro
 
 ## Log In
 
-![log-in]
+![log-in](app/assets/images/log-in.png)
 
+## Inbox
+
+![log-in](app/assets/images/inbox.png)
+
+## Email Compose Form
+
+![log-in](app/assets/images/compose-form.png)
 
 ## Current Functionality
   Redirect to login when user tries to enter site if not currently logged in
