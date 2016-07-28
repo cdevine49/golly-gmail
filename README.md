@@ -1,6 +1,16 @@
 # GollyGmail
 
+GollyGmail is a single-page web application built on Rails with a React/Flux front-end.
+
 [Live](http://www.gollygmail.com)
+
+## Sign Up
+
+![sign-up](app/assets/images/sign-up.png)
+
+## Log In
+
+![log-in]
 
 
 ## Current Functionality

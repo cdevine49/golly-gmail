@@ -47,6 +47,11 @@ var TopNav = React.createClass({
     this.setState({account_dropdown: !this.state.account_dropdown});
   },
 
+  _newAccount: function() {
+    var callback = function () { this.context.router.push("/signup/"); }.bind(this);
+    ApiUtil.logout(callback);
+  },
+
   render: function() {
     return (
       <header className='main-header header-top group'>
@@ -66,7 +71,7 @@ var TopNav = React.createClass({
             </div>
           </div>
           <div className='signin-signup-links group'>
-            <Link className='new-account-link' to={'/signup/'}>Add account</Link>
+            <button className='new-account-link' onClick={this._newAccount}>Add account</button>
             <button className='account-box-logout-button' onClick={ApiUtil.logout}>Logout</button>
           </div>
         </div>

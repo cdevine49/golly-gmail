@@ -36,7 +36,6 @@ var EmailPreviewTable = React.createClass({
   nextPage: function () {
     var meta = EmailStore.meta();
     this.context.router.push('/' + this.props.route.path.slice(0, -4) + (meta.page + 1));
-    // ApiUtil.fetchEmails('/' + this.props.route.path.slice(0, -4) + (meta.page + 1), this.props.location.query);
   },
 
   previousPage: function () {

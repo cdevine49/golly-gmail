@@ -24899,6 +24899,13 @@
 	    this.setState({ account_dropdown: !this.state.account_dropdown });
 	  },
 	
+	  _newAccount: function () {
+	    var callback = function () {
+	      this.context.router.push("/signup/");
+	    }.bind(this);
+	    ApiUtil.logout(callback);
+	  },
+	
 	  render: function () {
 	    return React.createElement(
 	      'header',
@@ -24954,8 +24961,8 @@
 	          'div',
 	          { className: 'signin-signup-links group' },
 	          React.createElement(
-	            Link,
-	            { className: 'new-account-link', to: '/signup/' },
+	            'button',
+	            { className: 'new-account-link', onClick: this._newAccount },
 	            'Add account'
 	          ),
 	          React.createElement(
@@ -25194,13 +25201,14 @@
 	    });
 	  },
 	
-	  logout: function () {
+	  logout: function (callback) {
 	    $.ajax({
 	      type: "DELETE",
 	      url: "/api/session",
 	      dataType: "json",
 	      success: function () {
 	        ApiActions.logout();
+	        callback && callback();
 	      },
 	      error: function () {
 	        console.log('ApiUtil#logout error');
@@ -25681,7 +25689,7 @@
 /***/ function(module, exports) {
 
 	UserConstants = {
-	  USERS: 'USERS'
+	  USER_FOUND: 'USER_FOUND'
 	};
 	
 	module.exports = UserConstants;
@@ -35865,7 +35873,6 @@
 	  nextPage: function () {
 	    var meta = EmailStore.meta();
 	    this.context.router.push('/' + this.props.route.path.slice(0, -4) + (meta.page + 1));
-	    // ApiUtil.fetchEmails('/' + this.props.route.path.slice(0, -4) + (meta.page + 1), this.props.location.query);
 	  },
 	
 	  previousPage: function () {
