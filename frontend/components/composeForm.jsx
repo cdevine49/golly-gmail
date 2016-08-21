@@ -49,7 +49,6 @@ var ComposeForm = React.createClass({
       } else {
         ApiUtil.createEmail(formData, this._setId);
       }
-    
     clearInterval(this.draftTimer);
     this.draftTimer = 0;
   },

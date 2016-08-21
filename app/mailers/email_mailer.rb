@@ -3,12 +3,11 @@ class EmailMailer < ApplicationMailer
     @email = email
     mail(
       to: email.to,
-      from: 'conorjdevine@gmail.com',
-      subject: email.subject,
-      body:   email.body
+      from: email.from_email,
+      subject: email.subject
       ) do |format|
-        format.text { render 'email.text.erb'}
-        format.html { render 'email.html.erb'}
+        format.html { render html: email.body}
+        format.text { render text: email.body}
       end
   end
 end
