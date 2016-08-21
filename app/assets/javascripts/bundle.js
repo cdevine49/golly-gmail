@@ -25006,9 +25006,7 @@
 	      success: function (response) {
 	        ApiActions.receiveEmails(response);
 	      },
-	      error: function () {
-	        console.log('ApiUtil#fetchEmails error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25027,9 +25025,7 @@
 	      success: function (response) {
 	        ApiActions.receiveDrafts(response);
 	      },
-	      error: function () {
-	        console.log('ApiUtil#fetchDrafts error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25042,9 +25038,7 @@
 	      success: function (email) {
 	        email && ApiActions.receiveEmail(email);
 	      },
-	      error: function () {
-	        console.log('ApiUtil#fetchEmails error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25057,9 +25051,7 @@
 	      success: function (draft) {
 	        draft && ApiActions.receiveDraft(draft);
 	      },
-	      error: function () {
-	        console.log('ApiUtil#fetchEmails error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25078,9 +25070,7 @@
 	          ApiUtil.fetchEmails('/drafts/' + window.location.hash.split('/')[2].split('?')[0]);
 	        }
 	      },
-	      error: function () {
-	        console.log('ApiUtil#createEmails error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25104,9 +25094,7 @@
 	          // ApiActions.receiveDraft(email);
 	        }
 	      },
-	      error: function () {
-	        console.log('ApiUtil#createEmails error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25119,9 +25107,7 @@
 	      success: function (email) {
 	        ApiActions.receiveEmail(email);
 	      },
-	      error: function () {
-	        console.log('ApiUtil#fetchEmails error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25134,9 +25120,7 @@
 	      success: function (email) {
 	        ApiActions.receiveEmail(email);
 	      },
-	      error: function () {
-	        console.log('ApiUtil#fetchEmails error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25149,9 +25133,7 @@
 	      success: function (email) {
 	        ApiActions.receiveEmail(email);
 	      },
-	      error: function () {
-	        console.log('ApiUtil#fetchEmails error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25165,9 +25147,7 @@
 	        ApiActions.currentUserReceived(currentUser);
 	        callback && callback();
 	      },
-	      error: function () {
-	        console.log('ApiUtil#login error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25181,9 +25161,7 @@
 	        ApiActions.currentUserReceived(currentUser);
 	        callback && callback();
 	      },
-	      error: function () {
-	        console.log('ApiUtil#signin error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25195,9 +25173,7 @@
 	      success: function (usernames) {
 	        ApiActions.users(usernames);
 	      },
-	      error: function () {
-	        console.log('ApiUtil#usernameExists error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25210,9 +25186,7 @@
 	        ApiActions.logout();
 	        callback && callback();
 	      },
-	      error: function () {
-	        console.log('ApiUtil#logout error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -25224,9 +25198,7 @@
 	      success: function (currentUser) {
 	        ApiActions.currentUserReceived(currentUser);
 	      },
-	      error: function () {
-	        console.log('ApiUtil#fetchCurrentUser error');
-	      },
+	      error: function () {},
 	      complete: function () {
 	        completion && completion();
 	      }
@@ -25242,9 +25214,7 @@
 	      success: function (response) {
 	        SearchActions.receiveResults(response);
 	      },
-	      error: function () {
-	        console.log('ApiUtil#search error');
-	      }
+	      error: function () {}
 	    });
 	  },
 	
@@ -35302,29 +35272,49 @@
 	        'div',
 	        { className: 'sidenav-links' },
 	        React.createElement(
-	          'a',
-	          { href: '#/inbox/1' },
-	          'Inbox'
+	          'div',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#/inbox/1' },
+	            'Inbox'
+	          )
 	        ),
 	        React.createElement(
-	          'a',
-	          { href: '#/starred/1' },
-	          'Starred'
+	          'div',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#/starred/1' },
+	            'Starred'
+	          )
 	        ),
 	        React.createElement(
-	          'a',
-	          { href: '#/important/1' },
-	          'Important'
+	          'div',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#/important/1' },
+	            'Important'
+	          )
 	        ),
 	        React.createElement(
-	          'a',
-	          { href: '#/outbox/1' },
-	          'Sent Mail'
+	          'div',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#/outbox/1' },
+	            'Sent Mail'
+	          )
 	        ),
 	        React.createElement(
-	          'a',
-	          { href: '#/drafts/1' },
-	          'Drafts'
+	          'div',
+	          null,
+	          React.createElement(
+	            'a',
+	            { href: '#/drafts/1' },
+	            'Drafts'
+	          )
 	        )
 	      )
 	    );
@@ -35786,12 +35776,10 @@
 	};
 	
 	var newDraft = function (draft) {
-	  debugger;
 	  _newDraft = draft;
 	};
 	
 	var resetDrafts = function (drafts) {
-	  debugger;
 	  _drafts = {};
 	  drafts.forEach(function (draft) {
 	    _drafts[draft.id] = draft;

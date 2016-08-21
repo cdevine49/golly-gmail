@@ -23,11 +23,11 @@ var SideNav = React.createClass({
       <nav className='sidenav'>
         <button className='compose-button' onClick={this.props.onCompose}>Compose</button>
         <div className='sidenav-links'>
-          <a href='#/inbox/1'>Inbox</a>
-          <a href='#/starred/1'>Starred</a>
-          <a href='#/important/1'>Important</a>
-          <a href='#/outbox/1'>Sent Mail</a>
-          <a href='#/drafts/1'>Drafts</a>
+          <div><a href='#/inbox/1'>Inbox</a></div>
+          <div><a href='#/starred/1'>Starred</a></div>
+          <div><a href='#/important/1'>Important</a></div>
+          <div><a href='#/outbox/1'>Sent Mail</a></div>
+          <div><a href='#/drafts/1'>Drafts</a></div>
         </div>
       </nav>
     );

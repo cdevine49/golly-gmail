@@ -21,7 +21,7 @@ ApiUtil = {
         ApiActions.receiveEmails(response);
       },
       error: function () {
-        console.log('ApiUtil#fetchEmails error');
+
       }
     });
   },
@@ -42,7 +42,7 @@ ApiUtil = {
         ApiActions.receiveDrafts(response);
       },
       error: function () {
-        console.log('ApiUtil#fetchDrafts error');
+
       }
     });
   },
@@ -57,7 +57,7 @@ ApiUtil = {
         email && ApiActions.receiveEmail(email);
       },
       error: function () {
-        console.log('ApiUtil#fetchEmails error');
+
       }
     });
   },
@@ -72,7 +72,7 @@ ApiUtil = {
         draft && ApiActions.receiveDraft(draft);
       },
       error: function () {
-        console.log('ApiUtil#fetchEmails error');
+
       }
     });
   },
@@ -93,7 +93,7 @@ ApiUtil = {
         }
       },
       error: function () {
-        console.log('ApiUtil#createEmails error');
+
       },
     });
   },
@@ -120,7 +120,7 @@ ApiUtil = {
 
       },
       error: function () {
-        console.log('ApiUtil#createEmails error');
+
       },
     });
   },
@@ -135,7 +135,7 @@ ApiUtil = {
         ApiActions.receiveEmail(email);
       },
       error: function () {
-        console.log('ApiUtil#fetchEmails error');
+
       }
     });
   },
@@ -150,7 +150,7 @@ ApiUtil = {
         ApiActions.receiveEmail(email);
       },
       error: function () {
-        console.log('ApiUtil#fetchEmails error');
+
       }
     });
   },
@@ -165,7 +165,7 @@ ApiUtil = {
         ApiActions.receiveEmail(email);
       },
       error: function () {
-        console.log('ApiUtil#fetchEmails error');
+
       }
     });
   },
@@ -181,7 +181,7 @@ ApiUtil = {
         callback && callback();
       },
       error: function () {
-        console.log('ApiUtil#login error');
+
       },
     });
   },
@@ -197,7 +197,7 @@ ApiUtil = {
         callback && callback();
       },
       error: function () {
-        console.log('ApiUtil#signin error');
+
       },
     });
   },
@@ -211,7 +211,7 @@ ApiUtil = {
         ApiActions.users(usernames);
       },
       error: function () {
-        console.log('ApiUtil#usernameExists error');
+
       },
     });
   },
@@ -226,7 +226,7 @@ ApiUtil = {
         callback && callback();
       },
       error: function () {
-        console.log('ApiUtil#logout error');
+
       },
     });
   },
@@ -240,7 +240,7 @@ ApiUtil = {
         ApiActions.currentUserReceived(currentUser);
       },
       error: function () {
-        console.log('ApiUtil#fetchCurrentUser error');
+
       },
       complete: function () {
         completion && completion();
@@ -258,7 +258,7 @@ ApiUtil = {
         SearchActions.receiveResults(response);
       },
       error: function () {
-        console.log('ApiUtil#search error');
+
       }
     });
   },
