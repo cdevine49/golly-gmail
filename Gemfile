@@ -42,11 +42,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 
-<<<<<<< HEAD
 gem 'letter_opener'
 
-=======
->>>>>>> addfe7587b2feb2c964f1ef332c3c08984b8b3c5
 # Use Unicorn as the app server
 # gem 'unicorn'
 
