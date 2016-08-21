@@ -35373,31 +35373,28 @@
 	    if (sent) {
 	      e.preventDefault();
 	    }
-	    if (this.state.to.slice(-15) === "@gollygmail.com" || !sent) {
-	      var formData = new FormData();
-	      formData.append("email[subject]", this.state.subject);
-	      formData.append("email[body]", this.state.body);
-	      formData.append("email[to]", this.state.to);
-	      formData.append("email[sent]", sent);
-	      if (this.state.imageFile) {
-	        formData.append("email[image]", this.state.imageFile);
-	      }
-	      if (id && sent) {
-	        ApiUtil.updateEmail(formData, id, this.props.close);
-	        formData.append("email[received]", true);
-	        ApiUtil.createEmail(formData);
-	      } else if (id) {
-	        ApiUtil.updateEmail(formData, id);
-	      } else if (sent) {
-	        ApiUtil.createEmail(formData);
-	        formData.append("email[received]", true);
-	        ApiUtil.createEmail(formData, this.props.close);
-	      } else {
-	        ApiUtil.createEmail(formData, this._setId);
-	      }
-	    } else {
-	      console.log("Not a valid email");
+	    var formData = new FormData();
+	    formData.append("email[subject]", this.state.subject);
+	    formData.append("email[body]", this.state.body);
+	    formData.append("email[to]", this.state.to);
+	    formData.append("email[sent]", sent);
+	    if (this.state.imageFile) {
+	      formData.append("email[image]", this.state.imageFile);
 	    }
+	    if (id && sent) {
+	      ApiUtil.updateEmail(formData, id, this.props.close);
+	      formData.append("email[received]", true);
+	      ApiUtil.createEmail(formData);
+	    } else if (id) {
+	      ApiUtil.updateEmail(formData, id);
+	    } else if (sent) {
+	      ApiUtil.createEmail(formData);
+	      formData.append("email[received]", true);
+	      ApiUtil.createEmail(formData, this.props.close);
+	    } else {
+	      ApiUtil.createEmail(formData, this._setId);
+	    }
+	
 	    clearInterval(this.draftTimer);
 	    this.draftTimer = 0;
 	  },

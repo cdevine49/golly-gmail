@@ -49,7 +49,14 @@ class Api::EmailsController < ApplicationController
     email.from_email = current_user.gollygmail
     email.read = true unless email.received
     if email.save
-      sendEmail(User.find_by(gollygmail: email.to).id, "NEW_EMAIL") if email.received
+      if email.received
+        to = User.find_by(gollygmail: email.to)
+        if to
+          sendEmail(to.id, "NEW_EMAIL")
+        else
+          EmailMailer.send_email(email).deliver_later
+        end
+      end
       render json: email
     else
       render json: { message: "No such user" }

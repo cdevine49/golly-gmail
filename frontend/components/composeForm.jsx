@@ -28,7 +28,6 @@ var ComposeForm = React.createClass({
 
   updateEmail: function (id, sent, e) {
     if (sent) { e.preventDefault(); }
-    if (this.state.to.slice(-15) === "@gollygmail.com" || !sent) {
       var formData = new FormData();
       formData.append("email[subject]", this.state.subject);
       formData.append("email[body]", this.state.body);
@@ -50,9 +49,7 @@ var ComposeForm = React.createClass({
       } else {
         ApiUtil.createEmail(formData, this._setId);
       }
-    } else {
-      console.log("Not a valid email");
-    }
+    
     clearInterval(this.draftTimer);
     this.draftTimer = 0;
   },
