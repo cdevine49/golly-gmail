@@ -6,7 +6,6 @@ class EmailMailer < ApplicationMailer
       from: email.from_email,
       subject: email.subject
       ) do |format|
-        format.html { render html: email.body}
         format.text { render text: email.body}
       end
   end
